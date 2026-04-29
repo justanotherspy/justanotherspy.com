@@ -1,0 +1,972 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>justanotherspy — Visual Identity v0.5</title>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg:         #F5F2EE;
+      --bg-dark:    #1A1814;
+      --text:       #1A1814;
+      --text-light: #F5F2EE;
+      --accent:     #A85C3A;
+      --accent-dk:  #C4704A;
+      --muted:      #6B6560;
+      --border:     #D8D4CF;
+      --surface:    #EDEAE5;
+      --surface-dk: #252220;
+      --border-dk:  #2E2B28;
+      --muted-dk:   #7A7470;
+      --serif:      'DM Serif Display', Georgia, serif;
+      --sans:       -apple-system, 'Helvetica Neue', Arial, sans-serif;
+      --mono:       'SFMono-Regular', Consolas, 'Liberation Mono', monospace;
+      --sp1:8px; --sp2:16px; --sp3:24px; --sp4:32px;
+      --sp5:40px; --sp6:64px; --sp7:80px;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background: var(--bg); color: var(--text);
+      font-family: var(--sans); font-size: 15px;
+      line-height: 1.65; -webkit-font-smoothing: antialiased;
+    }
+
+    /* ── Cover ───────────────────────────────── */
+    .cover {
+      background: var(--bg-dark);
+      padding: var(--sp7) 80px var(--sp6);
+      display: flex; flex-direction: column; gap: var(--sp7);
+    }
+    .cover-wordmark {
+      font-family: var(--serif); font-size: 52px;
+      font-weight: normal; color: var(--text-light);
+      letter-spacing: -0.5px; line-height: 1;
+    }
+    .cover-foot { display: flex; justify-content: space-between; align-items: flex-end; }
+    .cover-title { font-size: 12px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--text-light); opacity: 0.5; }
+    .cover-meta { font-size: 11px; font-family: var(--mono); color: var(--accent-dk); text-align: right; line-height: 1.8; }
+
+    /* ── Layout ──────────────────────────────── */
+    .content { max-width: 860px; margin: 0 auto; padding: var(--sp7) 60px; }
+    .section { margin-bottom: var(--sp7); }
+    .section-label { font-family: var(--mono); font-size: 11px; color: var(--accent); letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 4px; }
+    .section-title { font-family: var(--serif); font-size: 30px; font-weight: normal; margin-bottom: var(--sp3); padding-bottom: var(--sp2); border-bottom: 1px solid var(--border); line-height: 1.2; }
+    p { margin-bottom: 12px; }
+    p:last-child { margin-bottom: 0; }
+    code { font-size: 12px; background: var(--surface); padding: 1px 6px; border-radius: 3px; font-family: var(--mono); }
+    .meta-list { margin-top: var(--sp3); font-size: 13px; color: var(--muted); display: flex; flex-direction: column; gap: 8px; }
+    .meta-list strong { color: var(--text); font-weight: 500; }
+    .subsection-label { font-family: var(--mono); font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 12px; margin-top: 36px; }
+    .subsection-label:first-child { margin-top: 0; }
+
+    /* ── Light/Dark pair container ───────────── */
+    .pair {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0;
+      border: 0.5px solid var(--border);
+      border-radius: 10px;
+      overflow: hidden;
+      margin-bottom: 10px;
+    }
+    .pair-panel {
+      padding: var(--sp4) var(--sp3);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100px;
+      position: relative;
+    }
+    .pair-panel-light { background: var(--bg); border-right: 0.5px solid var(--border); }
+    .pair-panel-dark  { background: var(--bg-dark); }
+    .pair-mode-label {
+      position: absolute;
+      top: 8px; left: 10px;
+      font-family: var(--mono); font-size: 9px;
+      letter-spacing: 0.08em; text-transform: uppercase;
+      opacity: 0.35;
+    }
+    .pair-mode-label-light { color: var(--text); }
+    .pair-mode-label-dark  { color: var(--text-light); }
+    .pair-meta {
+      grid-column: 1 / -1;
+      padding: 12px 16px;
+      background: var(--surface);
+      border-top: 0.5px solid var(--border);
+      font-size: 12px; color: var(--muted); line-height: 1.5;
+    }
+    .pair-meta strong { color: var(--text); font-weight: 500; }
+
+    /* ── Swatches ────────────────────────────── */
+    .swatches { display: grid; grid-template-columns: repeat(4,1fr); gap: var(--sp2); margin: var(--sp4) 0 var(--sp3); }
+    .swatch-wrap { display: flex; flex-direction: column; gap: var(--sp1); }
+    .swatch { height: 88px; border-radius: 6px; }
+    .swatch-role { font-size: 10px; font-family: var(--mono); color: var(--muted); text-transform: uppercase; letter-spacing: 0.06em; line-height: 1.4; }
+    .swatch-name { font-size: 13px; font-weight: 500; color: var(--text); margin-top: 2px; }
+    .swatch-hex { font-size: 11px; font-family: var(--mono); color: var(--muted); }
+
+    /* ── Type specimens ──────────────────────── */
+    .specimen { display: flex; justify-content: space-between; align-items: center; padding: var(--sp3); border: 0.5px solid var(--border); border-radius: 8px; margin-bottom: 10px; gap: var(--sp3); }
+    .specimen-meta { font-size: 11px; font-family: var(--mono); color: var(--muted); text-align: right; flex-shrink: 0; line-height: 1.7; }
+
+    /* ── Spacing ─────────────────────────────── */
+    .sp-row { display: flex; align-items: center; gap: var(--sp2); margin-bottom: var(--sp1); }
+    .sp-bar { height: 12px; background: var(--accent); border-radius: 2px; opacity: 0.6; }
+    .sp-label { font-family: var(--mono); font-size: 11px; color: var(--muted); width: 80px; flex-shrink: 0; }
+    .sp-value { font-family: var(--mono); font-size: 11px; color: var(--text); width: 52px; flex-shrink: 0; text-align: right; }
+
+    /* ── Button A ─────────────────────────────  */
+    .btn-a-light { font-family: var(--sans); font-size: 14px; color: var(--accent); background: none; border: none; cursor: pointer; padding: 0; text-decoration: underline; text-underline-offset: 3px; text-decoration-thickness: 1px; }
+    .btn-a-dark  { font-family: var(--sans); font-size: 14px; color: var(--accent-dk); background: none; border: none; cursor: pointer; padding: 0; text-decoration: underline; text-underline-offset: 3px; text-decoration-thickness: 1px; }
+
+    /* ── Button C ────────────────────────────── */
+    .btn-c-light {
+      font-family: var(--sans); font-size: 13px; color: #fff;
+      background: var(--accent); border: none; border-radius: 4px;
+      cursor: pointer; padding: 9px 20px; letter-spacing: 0.02em;
+      box-shadow: 0 2px 6px rgba(168,92,58,0.30), 0 1px 2px rgba(0,0,0,0.12);
+      transition: transform 120ms ease, box-shadow 120ms ease;
+      display: inline-block;
+    }
+    .btn-c-light:hover { transform: translateY(-2px); box-shadow: 0 6px 18px rgba(168,92,58,0.35), 0 2px 4px rgba(0,0,0,0.15); }
+    .btn-c-dark {
+      font-family: var(--sans); font-size: 13px; color: #fff;
+      background: var(--accent-dk); border: none; border-radius: 4px;
+      cursor: pointer; padding: 9px 20px; letter-spacing: 0.02em;
+      box-shadow: 0 2px 8px rgba(196,112,74,0.40), 0 1px 3px rgba(0,0,0,0.30);
+      transition: transform 120ms ease, box-shadow 120ms ease;
+      display: inline-block;
+    }
+    .btn-c-dark:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(196,112,74,0.50), 0 2px 6px rgba(0,0,0,0.35); }
+
+    /* ── Project card ────────────────────────── */
+    .proj-card-light {
+      border: 0.5px solid var(--border); border-radius: 8px; border-top: 2px solid var(--accent);
+      padding: var(--sp3); display: flex; flex-direction: column; gap: 6px;
+      transition: transform 140ms ease, box-shadow 140ms ease; cursor: default; width: 100%;
+    }
+    .proj-card-light:hover { transform: translateY(-3px); box-shadow: 0 8px 24px rgba(0,0,0,0.08), 0 2px 6px rgba(0,0,0,0.06); }
+    .proj-card-dark {
+      border: 0.5px solid var(--border-dk); border-radius: 8px; border-top: 2px solid var(--accent-dk);
+      padding: var(--sp3); display: flex; flex-direction: column; gap: 6px;
+      transition: transform 140ms ease, box-shadow 140ms ease; cursor: default; width: 100%;
+      background: var(--surface-dk);
+    }
+    .proj-card-dark:hover { transform: translateY(-3px); box-shadow: 0 8px 28px rgba(0,0,0,0.40), 0 2px 8px rgba(0,0,0,0.30); }
+    .card-tag-light { font-family: var(--mono); font-size: 10px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.06em; }
+    .card-tag-dark  { font-family: var(--mono); font-size: 10px; color: var(--muted-dk); text-transform: uppercase; letter-spacing: 0.06em; }
+    .card-title-light { font-family: var(--serif); font-size: 18px; font-weight: normal; color: var(--text); line-height: 1.2; }
+    .card-title-dark  { font-family: var(--serif); font-size: 18px; font-weight: normal; color: var(--text-light); line-height: 1.2; }
+    .card-desc-light { font-size: 13px; color: var(--muted); line-height: 1.55; }
+    .card-desc-dark  { font-size: 13px; color: var(--muted-dk); line-height: 1.55; }
+    .card-link-light { font-size: 13px; color: var(--accent); text-decoration: none; margin-top: 4px; display: inline-block; }
+    .card-link-dark  { font-size: 13px; color: var(--accent-dk); text-decoration: none; margin-top: 4px; display: inline-block; }
+
+    /* ── Header ──────────────────────────────── */
+    .nav-light { width: 100%; display: flex; justify-content: space-between; align-items: center; padding: 18px 24px; background: var(--bg); }
+    .nav-dark  { width: 100%; display: flex; justify-content: space-between; align-items: center; padding: 18px 24px; background: var(--bg-dark); }
+    .nav-wm-light { font-family: var(--serif); font-size: 17px; font-weight: normal; color: var(--text); }
+    .nav-wm-dark  { font-family: var(--serif); font-size: 17px; font-weight: normal; color: var(--text-light); }
+    .nav-links { display: flex; gap: 20px; align-items: center; }
+    .nav-link-light { font-size: 13px; color: var(--muted); text-decoration: none; }
+    .nav-link-dark  { font-size: 13px; color: var(--muted-dk); text-decoration: none; }
+    .nav-link-active-light { font-size: 13px; color: var(--accent); text-decoration: none; }
+    .nav-link-active-dark  { font-size: 13px; color: var(--accent-dk); text-decoration: none; }
+    .nav-toggle-light { width: 13px; height: 13px; border-radius: 50%; border: 1px solid var(--border); background: none; cursor: pointer; flex-shrink: 0; }
+    .nav-toggle-dark  { width: 13px; height: 13px; border-radius: 50%; border: 1px solid var(--border-dk); background: none; cursor: pointer; flex-shrink: 0; }
+
+    /* ── Footer ──────────────────────────────── */
+    /* Footer is always dark -- only one version needed, but show it on both bg contexts */
+    .footer-preview {
+      width: 100%; display: flex; justify-content: space-between; align-items: center; padding: 22px 24px;
+      background: var(--bg-dark);
+    }
+    .footer-jas { font-family: var(--serif); font-style: italic; font-size: 18px; font-weight: normal; color: var(--text-light); opacity: 0.35; }
+    .footer-links { display: flex; gap: 20px; }
+    /* Fixed: much brighter hover -- was #4A4540 → hover #C4704A, now base is #7A7470 → hover #E8956A */
+    .footer-link {
+      font-size: 12px; font-family: var(--mono); color: #7A7470;
+      text-decoration: none; letter-spacing: 0.04em;
+      transition: color 150ms ease;
+    }
+    .footer-link:hover { color: #E8956A; }
+    .footer-link-demo-hover { color: #E8956A; } /* static hover state for demo */
+
+    /* ── Notes list ──────────────────────────── */
+    .note-item { border-bottom: 0.5px solid var(--border); padding: var(--sp3) 0; }
+    .note-item-dk { border-bottom: 0.5px solid var(--border-dk); padding: var(--sp3) 0; }
+    .note-item:last-child, .note-item-dk:last-child { border-bottom: none; }
+    .note-meta-light { font-family: var(--mono); font-size: 11px; color: var(--muted); margin-bottom: 4px; }
+    .note-meta-dark  { font-family: var(--mono); font-size: 11px; color: var(--muted-dk); margin-bottom: 4px; }
+    .note-title-light { font-family: var(--serif); font-size: 19px; font-weight: normal; color: var(--text); margin-bottom: 7px; text-decoration: none; display: block; }
+    .note-title-dark  { font-family: var(--serif); font-size: 19px; font-weight: normal; color: var(--text-light); margin-bottom: 7px; text-decoration: none; display: block; }
+    .note-title-light:hover { color: var(--accent); }
+    .note-title-dark:hover  { color: var(--accent-dk); }
+    .note-excerpt-light { font-size: 13px; color: var(--muted); line-height: 1.6; margin-bottom: 9px; }
+    .note-excerpt-dark  { font-size: 13px; color: var(--muted-dk); line-height: 1.6; margin-bottom: 9px; }
+    .note-expand-light { font-family: var(--mono); font-size: 11px; color: var(--accent); background: none; border: none; cursor: pointer; letter-spacing: 0.04em; padding: 0; text-transform: uppercase; }
+    .note-expand-dark  { font-family: var(--mono); font-size: 11px; color: var(--accent-dk); background: none; border: none; cursor: pointer; letter-spacing: 0.04em; padding: 0; text-transform: uppercase; }
+
+    /* ── Post image ──────────────────────────── */
+    .post-img-demo-light { width: 100%; background: var(--surface); border-radius: 6px; height: 100px; display: flex; align-items: center; justify-content: center; font-family: var(--mono); font-size: 11px; color: var(--muted); }
+    .post-img-demo-dark  { width: 100%; background: var(--surface-dk); border-radius: 6px; height: 100px; display: flex; align-items: center; justify-content: center; font-family: var(--mono); font-size: 11px; color: var(--muted-dk); }
+    .post-img-cap-light { font-size: 12px; font-family: var(--mono); color: var(--muted); margin-top: 8px; }
+    .post-img-cap-dark  { font-size: 12px; font-family: var(--mono); color: var(--muted-dk); margin-top: 8px; }
+
+    /* ── Project link at bottom of post ──────── */
+    .post-proj-rule-light { border-top: 0.5px solid var(--border); margin-top: var(--sp4); padding-top: var(--sp4); width: 100%; }
+    .post-proj-rule-dark  { border-top: 0.5px solid var(--border-dk); margin-top: var(--sp4); padding-top: var(--sp4); width: 100%; }
+    .post-proj-label-light { font-family: var(--mono); font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: var(--sp2); }
+    .post-proj-label-dark  { font-family: var(--mono); font-size: 11px; color: var(--muted-dk); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: var(--sp2); }
+
+    /* ── Back to notes ───────────────────────── */
+    .back-light { font-family: var(--mono); font-size: 12px; color: var(--accent); text-decoration: none; letter-spacing: 0.04em; }
+    .back-dark  { font-family: var(--mono); font-size: 12px; color: var(--accent-dk); text-decoration: none; letter-spacing: 0.04em; }
+
+    /* ── Do/Dont ─────────────────────────────── */
+    .do-dont { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: var(--sp3); }
+    .tone-box { padding: var(--sp3); border-radius: 8px; font-size: 13px; line-height: 1.75; }
+    .tone-box-do   { background: #EBF2E4; border: 0.5px solid #BDD9A8; }
+    .tone-box-dont { background: #F5ECEA; border: 0.5px solid #E0C0BA; }
+    .tone-label { font-size: 10px; font-family: var(--mono); letter-spacing: 0.1em; text-transform: uppercase; font-weight: 600; margin-bottom: 12px; }
+    .tone-label-do   { color: #3A7022; }
+    .tone-label-dont { color: #9E3020; }
+    .tone-box p { font-size: 13px; margin-bottom: 10px; }
+    .tone-box p:last-child { margin-bottom: 0; }
+
+    /* ── Rules ───────────────────────────────── */
+    .rule { display: flex; gap: 14px; align-items: flex-start; padding: 14px 16px; background: var(--surface); border-radius: 6px; margin-bottom: 8px; font-size: 13px; }
+    .rule-no { font-family: var(--mono); font-size: 11px; color: var(--accent); flex-shrink: 0; padding-top: 2px; }
+
+    /* ── Open items ──────────────────────────── */
+    .open-item { display: flex; gap: 12px; font-size: 13px; color: var(--muted); padding: 8px 0; border-bottom: 0.5px solid var(--border); }
+    .open-item:last-child { border-bottom: none; }
+    .open-dash { font-family: var(--mono); color: var(--accent); flex-shrink: 0; }
+
+    /* ── Wireframes ──────────────────────────── */
+    .wireframes-5col { display: grid; grid-template-columns: repeat(5,1fr); gap: 12px; margin-top: var(--sp3); }
+    .wf { border: 0.5px solid var(--border); border-radius: 8px; overflow: hidden; font-family: var(--mono); font-size: 9px; color: var(--muted); }
+    .wf-titlebar { background: var(--surface); padding: 6px 10px; border-bottom: 0.5px solid var(--border); font-size: 10px; color: var(--text); font-weight: 500; }
+    .wf-body { padding: 8px; display: flex; flex-direction: column; gap: 5px; }
+    .wf-nav-bar { background: var(--bg); border: 0.5px solid var(--border); border-radius: 3px; padding: 5px 8px; display: flex; justify-content: space-between; align-items: center; }
+    .wf-block { background: var(--surface); border: 0.5px dashed #C8C4BF; border-radius: 3px; padding: 6px 8px; text-align: center; color: var(--muted); }
+    .wf-grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 5px; }
+    .wf-list-item { display: flex; justify-content: space-between; padding: 4px 0; border-bottom: 0.5px solid var(--border); font-size: 9px; }
+    .wf-list-item:last-child { border-bottom: none; }
+    .wf-footer-bar { background: var(--bg-dark); padding: 6px 8px; margin-top: 5px; border-radius: 3px; display: flex; justify-content: space-between; }
+    .wf-img-block { background: var(--surface); border: 0.5px dashed #C8C4BF; border-radius: 3px; height: 36px; display: flex; align-items: center; justify-content: center; color: var(--muted); font-size: 9px; }
+    .wf-accent-top { border-top: 2px solid var(--accent); }
+    .wf-note-item { border-bottom: 0.5px solid var(--border); padding: 5px 0; }
+    .wf-note-item:last-child { border-bottom: none; }
+    .wf-btn-c { background: var(--accent); border-radius: 3px; padding: 3px 7px; color: #fff; font-size: 8px; display: inline-block; }
+    .wf-rule { border-top: 0.5px solid var(--border); margin: 4px 0; }
+
+    /* ── Code blocks ─────────────────────────── */
+    .code-block   { border-radius: 8px; overflow: hidden; font-family: var(--mono); font-size: 13px; line-height: 1.75; }
+    .code-block-l { background: #ECEAE5; border: 0.5px solid #D4D0CB; }
+    .code-block-d { background: #201E1B; border: 0.5px solid #2E2B28; }
+    .code-hdr     { display: flex; justify-content: space-between; align-items: center; padding: 7px 16px; font-size: 10px; letter-spacing: 0.07em; text-transform: uppercase; }
+    .code-hdr-l   { background: #D4D0CB; color: #948E88; border-bottom: 0.5px solid #D4D0CB; }
+    .code-hdr-d   { background: #161412; color: #6A6460; border-bottom: 0.5px solid #2E2B28; }
+    .code-body    { padding: 16px 20px; overflow-x: auto; white-space: pre; }
+
+    /* light tokens — hardcoded */
+    .tl   { color: #2A2520; }
+    .tl-c { color: #948E88; font-style: italic; }
+    .tl-k { color: #A85C3A; font-weight: 500; }
+    .tl-s { color: #4E7A40; }
+    .tl-n { color: #8B6418; }
+    .tl-p { color: #3F6080; }
+    .tl-o { color: #9A9490; }
+    /* dark tokens — hardcoded */
+    .td   { color: #E8E4DF; }
+    .td-c { color: #6A6460; font-style: italic; }
+    .td-k { color: #C4704A; font-weight: 500; }
+    .td-s { color: #7FAE65; }
+    .td-n { color: #C9A040; }
+    .td-p { color: #6AABD4; }
+    .td-o { color: #5A5450; }
+
+    /* ── Site footer ─────────────────────────── */
+    .site-footer { background: var(--bg-dark); padding: 28px 80px; display: flex; justify-content: space-between; align-items: center; }
+    .site-footer-wm { font-family: var(--serif); font-style: italic; font-size: 18px; font-weight: normal; color: var(--text-light); opacity: 0.35; }
+    .site-footer-note { font-size: 11px; font-family: var(--mono); color: #3D3830; }
+  </style>
+</head>
+<body>
+
+<!-- Cover -->
+<div class="cover">
+  <div class="cover-wordmark">justanotherspy</div>
+  <div class="cover-foot">
+    <div class="cover-title">Visual Identity</div>
+    <div class="cover-meta">v0.5 &mdash; April 2026<br>Working document</div>
+  </div>
+</div>
+
+<div class="content">
+
+  <!-- 01 Brand Brief -->
+  <div class="section">
+    <div class="section-label">01</div>
+    <div class="section-title">Brand Brief</div>
+    <p>justanotherspy.com is a personal site and project hub for a security and infrastructure engineer based in Cape Town. A professional presence, not a portfolio in the traditional sense. The name carries the personality so the design does not have to.</p>
+    <p>The site hosts a brief bio, a small number of projects (beginning with <em>garlic</em> and the site itself), and occasional writing on security, AI, and infrastructure. Built for engineers and technical hiring managers.</p>
+    <p style="color:var(--muted);font-size:13px;font-style:italic;margin-top:16px;padding-top:16px;border-top:0.5px solid var(--border);">Core character: dry, considered, unhurried. Never ironic. Never explaining itself.</p>
+  </div>
+
+  <!-- 02 Wordmark -->
+  <div class="section">
+    <div class="section-label">02</div>
+    <div class="section-title">Wordmark</div>
+    <p>Lowercase DM Serif Display. No icon, no tagline. The name does the work.</p>
+    <div class="pair" style="margin-top:24px;">
+      <div class="pair-panel pair-panel-light" style="min-height:120px;">
+        <span class="pair-mode-label pair-mode-label-light">light</span>
+        <span style="font-family:var(--serif);font-size:32px;font-weight:normal;color:var(--text);letter-spacing:-0.5px;">justanotherspy</span>
+      </div>
+      <div class="pair-panel pair-panel-dark" style="min-height:120px;">
+        <span class="pair-mode-label pair-mode-label-dark">dark</span>
+        <span style="font-family:var(--serif);font-size:32px;font-weight:normal;color:var(--text-light);letter-spacing:-0.5px;">justanotherspy</span>
+      </div>
+      <div class="pair-meta"><strong>Typeface:</strong> DM Serif Display (confirmed). Fallback: Georgia, serif. Always lowercase. Never bold or italic. Letter-spacing: &minus;0.5px at display, 0 at nav size. Min size: 16px.</div>
+    </div>
+    <div class="pair">
+      <div class="pair-panel pair-panel-light">
+        <span class="pair-mode-label pair-mode-label-light">light &mdash; small mark</span>
+        <span style="font-family:var(--serif);font-style:italic;font-size:22px;color:var(--text);opacity:0.4;">j.a.s.</span>
+      </div>
+      <div class="pair-panel pair-panel-dark">
+        <span class="pair-mode-label pair-mode-label-dark">dark &mdash; small mark</span>
+        <span style="font-family:var(--serif);font-style:italic;font-size:22px;color:var(--text-light);opacity:0.35;">j.a.s.</span>
+      </div>
+      <div class="pair-meta"><strong>Small mark:</strong> Italic DM Serif Display at low opacity. Footer and favicon only. Slightly lower opacity on dark to avoid competing with content.</div>
+    </div>
+  </div>
+
+  <!-- 03 Colour Palette -->
+  <div class="section">
+    <div class="section-label">03</div>
+    <div class="section-title">Colour Palette</div>
+    <p>Four values. No additions without a documented reason. The accent signals; it does not shout.</p>
+    <div class="swatches">
+      <div class="swatch-wrap">
+        <div class="swatch" style="background:#F5F2EE;border:0.5px solid var(--border);"></div>
+        <div class="swatch-role">background · light</div>
+        <div class="swatch-name">Warm White</div>
+        <div class="swatch-hex">#F5F2EE</div>
+      </div>
+      <div class="swatch-wrap">
+        <div class="swatch" style="background:#1A1814;"></div>
+        <div class="swatch-role">text &amp; bg · dark</div>
+        <div class="swatch-name">Near Black</div>
+        <div class="swatch-hex">#1A1814</div>
+      </div>
+      <div class="swatch-wrap">
+        <div class="swatch" style="background:#A85C3A;"></div>
+        <div class="swatch-role">accent · light</div>
+        <div class="swatch-name">Terracotta</div>
+        <div class="swatch-hex">#A85C3A</div>
+      </div>
+      <div class="swatch-wrap">
+        <div class="swatch" style="background:#C4704A;"></div>
+        <div class="swatch-role">accent · dark</div>
+        <div class="swatch-name">Terracotta Light</div>
+        <div class="swatch-hex">#C4704A</div>
+      </div>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:var(--sp3);">
+      <div style="padding:16px 20px;background:var(--bg);border:0.5px solid var(--border);border-left:3px solid var(--accent);border-radius:6px;">
+        <div style="font-size:11px;font-family:var(--mono);color:var(--muted);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:8px;">Light accent in use</div>
+        <p style="margin:0;font-size:14px;">Body copy with an <a href="#" style="color:var(--accent);text-decoration:underline;text-underline-offset:3px;text-decoration-thickness:1px;">inline link</a> in terracotta.</p>
+      </div>
+      <div style="padding:16px 20px;background:var(--bg-dark);border:0.5px solid var(--border-dk);border-left:3px solid var(--accent-dk);border-radius:6px;">
+        <div style="font-size:11px;font-family:var(--mono);color:var(--muted-dk);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:8px;">Dark accent in use</div>
+        <p style="margin:0;font-size:14px;color:var(--text-light);">Body copy with an <a href="#" style="color:var(--accent-dk);text-decoration:underline;text-underline-offset:3px;text-decoration-thickness:1px;">inline link</a> in terracotta light.</p>
+      </div>
+    </div>
+    <div class="meta-list">
+      <p><strong>Additional dark surface:</strong> <code>#252220</code> (--surface-dk) for card backgrounds on dark. <code>#2E2B28</code> (--border-dk) for borders on dark. <code>#7A7470</code> (--muted-dk) for muted text on dark.</p>
+      <p><strong>Theme:</strong> Respects <code>prefers-color-scheme</code> by default. Toggle overrides per session.</p>
+    </div>
+  </div>
+
+  <!-- 04 Typography -->
+  <div class="section">
+    <div class="section-label">04</div>
+    <div class="section-title">Typography</div>
+    <p>Two typefaces. Serif for display and headings. System sans-serif for body and UI. Monospace strictly for metadata, labels, and code.</p>
+    <div style="margin:28px 0;">
+      <div class="specimen">
+        <div style="font-family:var(--serif);font-size:38px;font-weight:normal;line-height:1;">Display heading</div>
+        <div class="specimen-meta">DM Serif Display<br>36–48px · normal · &minus;0.3px</div>
+      </div>
+      <div class="specimen">
+        <div style="font-family:var(--serif);font-size:24px;font-weight:normal;">Section heading</div>
+        <div class="specimen-meta">DM Serif Display<br>22–28px · normal</div>
+      </div>
+      <div class="specimen" style="align-items:flex-start;">
+        <div style="font-size:15px;line-height:1.7;max-width:400px;">Body text sits here. Readable, unhurried. Line height generous enough to breathe. The workhorse style for all prose and blog content on the site.</div>
+        <div class="specimen-meta">System sans-serif<br>15px · 400 · 1.7</div>
+      </div>
+      <div class="specimen">
+        <div style="font-family:var(--mono);font-size:12px;color:var(--muted);letter-spacing:0.08em;text-transform:uppercase;">label / metadata / caption</div>
+        <div class="specimen-meta">Monospace<br>11–12px · uppercase · tracked</div>
+      </div>
+      <div class="specimen">
+        <div style="font-family:var(--mono);font-size:13px;background:var(--surface);padding:6px 10px;border-radius:4px;">garlic session --today</div>
+        <div class="specimen-meta">Monospace<br>Code / CLI output</div>
+      </div>
+    </div>
+    <div class="meta-list">
+      <p><strong>Scale:</strong> 12 / 13 / 15 / 22 / 28 / 36–48px. No intermediate values.</p>
+      <p><strong>Weight:</strong> 400 throughout. 500 for UI labels only. No 600+ in content.</p>
+      <p><strong>Blog posts:</strong> Body at 15px, max line length ~65ch, generous vertical rhythm. No sidebar.</p>
+    </div>
+  </div>
+
+  <!-- 05 Spacing Scale -->
+  <div class="section">
+    <div class="section-label">05</div>
+    <div class="section-title">Spacing Scale</div>
+    <p>8px base grid. All spacing values are multiples of 8.</p>
+    <div style="margin-top:24px;">
+      <div class="sp-row"><div class="sp-label">--sp1</div><div style="flex:1;"><div class="sp-bar" style="width:8px;"></div></div><div class="sp-value">8px</div></div>
+      <div class="sp-row"><div class="sp-label">--sp2</div><div style="flex:1;"><div class="sp-bar" style="width:16px;"></div></div><div class="sp-value">16px</div></div>
+      <div class="sp-row"><div class="sp-label">--sp3</div><div style="flex:1;"><div class="sp-bar" style="width:24px;"></div></div><div class="sp-value">24px</div></div>
+      <div class="sp-row"><div class="sp-label">--sp4</div><div style="flex:1;"><div class="sp-bar" style="width:32px;"></div></div><div class="sp-value">32px</div></div>
+      <div class="sp-row"><div class="sp-label">--sp5</div><div style="flex:1;"><div class="sp-bar" style="width:40px;"></div></div><div class="sp-value">40px</div></div>
+      <div class="sp-row"><div class="sp-label">--sp6</div><div style="flex:1;"><div class="sp-bar" style="width:64px;"></div></div><div class="sp-value">64px</div></div>
+      <div class="sp-row"><div class="sp-label">--sp7</div><div style="flex:1;"><div class="sp-bar" style="width:80px;"></div></div><div class="sp-value">80px</div></div>
+    </div>
+  </div>
+
+  <!-- 06 Components -->
+  <div class="section">
+    <div class="section-label">06</div>
+    <div class="section-title">Components</div>
+    <p>Every component is shown in light and dark mode side by side. Left panel is always light, right panel is always dark. Hover states are live in this document.</p>
+
+    <!-- Buttons -->
+    <div class="subsection-label" style="margin-top:32px;">Button A &mdash; default link</div>
+    <div class="pair">
+      <div class="pair-panel pair-panel-light">
+        <span class="pair-mode-label pair-mode-label-light">light</span>
+        <button class="btn-a-light">view project &rarr;</button>
+      </div>
+      <div class="pair-panel pair-panel-dark">
+        <span class="pair-mode-label pair-mode-label-dark">dark</span>
+        <button class="btn-a-dark">view project &rarr;</button>
+      </div>
+      <div class="pair-meta">Text link with terracotta colour and underline. Default for all links in cards, nav, and prose. No visual container. Accent shifts from #A85C3A (light) to #C4704A (dark).</div>
+    </div>
+
+    <div class="subsection-label">Button C &mdash; primary action (max one per project page)</div>
+    <div class="pair">
+      <div class="pair-panel pair-panel-light">
+        <span class="pair-mode-label pair-mode-label-light">light — hover me</span>
+        <button class="btn-c-light">view on GitHub</button>
+      </div>
+      <div class="pair-panel pair-panel-dark">
+        <span class="pair-mode-label pair-mode-label-dark">dark — hover me</span>
+        <button class="btn-c-dark">view on GitHub</button>
+      </div>
+      <div class="pair-meta"><strong>Light:</strong> #A85C3A fill, shadow rgba(168,92,58,0.30). <strong>Dark:</strong> #C4704A fill, deeper shadow rgba(196,112,74,0.40) to compensate for dark bg. Hover: <code>translateY(-2px)</code> + deeper shadow over 120ms ease. Shadow is slightly stronger on dark mode so the lift reads clearly against the dark background.</div>
+    </div>
+
+    <!-- Project Cards -->
+    <div class="subsection-label">Project card</div>
+    <div class="pair">
+      <div class="pair-panel pair-panel-light" style="padding:20px;">
+        <span class="pair-mode-label pair-mode-label-light">light — hover me</span>
+        <div class="proj-card-light">
+          <div class="card-tag-light">cli tool</div>
+          <div class="card-title-light">garlic</div>
+          <div class="card-desc-light">Session-time tracking for Claude Code. Know where your hours go.</div>
+          <a href="#" class="card-link-light">view project &rarr;</a>
+        </div>
+      </div>
+      <div class="pair-panel pair-panel-dark" style="padding:20px;">
+        <span class="pair-mode-label pair-mode-label-dark">dark — hover me</span>
+        <div class="proj-card-dark">
+          <div class="card-tag-dark">cli tool</div>
+          <div class="card-title-dark">garlic</div>
+          <div class="card-desc-dark">Session-time tracking for Claude Code. Know where your hours go.</div>
+          <a href="#" class="card-link-dark">view project &rarr;</a>
+        </div>
+      </div>
+      <div class="pair-meta"><strong>Light:</strong> White bg, #D8D4CF border, #A85C3A top accent, shadow on hover uses rgba(0,0,0,0.08). <strong>Dark:</strong> #252220 surface bg, #2E2B28 border, #C4704A top accent, shadow on hover uses rgba(0,0,0,0.40) — much higher opacity needed to show against dark bg. Cursor: <code>default</code> on card, <code>pointer</code> on link only. Lift: <code>translateY(-3px)</code> over 140ms.</div>
+    </div>
+
+    <!-- Header -->
+    <div class="subsection-label">Header / Navigation</div>
+    <div class="pair">
+      <div class="pair-panel pair-panel-light" style="padding:0;align-items:stretch;">
+        <span class="pair-mode-label pair-mode-label-light" style="z-index:1;">light</span>
+        <div class="nav-light" style="width:100%;">
+          <div class="nav-wm-light">justanotherspy</div>
+          <div class="nav-links">
+            <a href="#" class="nav-link-active-light">home</a>
+            <a href="#" class="nav-link-light">projects</a>
+            <a href="#" class="nav-link-light">notes</a>
+            <button class="nav-toggle-light" title="toggle theme"></button>
+          </div>
+        </div>
+      </div>
+      <div class="pair-panel pair-panel-dark" style="padding:0;align-items:stretch;">
+        <span class="pair-mode-label pair-mode-label-dark" style="z-index:1;">dark</span>
+        <div class="nav-dark" style="width:100%;">
+          <div class="nav-wm-dark">justanotherspy</div>
+          <div class="nav-links">
+            <a href="#" class="nav-link-active-dark">home</a>
+            <a href="#" class="nav-link-dark">projects</a>
+            <a href="#" class="nav-link-dark">notes</a>
+            <button class="nav-toggle-dark" title="toggle theme"></button>
+          </div>
+        </div>
+      </div>
+      <div class="pair-meta">No border, no background fill (floats above content). Active page link uses the accent colour for the current mode. Inactive links: <code>#6B6560</code> (light) / <code>#7A7470</code> (dark). Theme toggle: small circle, border matches the mode's border colour. Small SVG sun/moon inside at implementation time.</div>
+    </div>
+
+    <!-- Footer -->
+    <div class="subsection-label">Footer</div>
+    <p style="font-size:13px;color:var(--muted);margin-bottom:16px;">The footer is always dark regardless of theme. Two states shown: default and hover on social links.</p>
+    <div class="pair">
+      <div class="pair-panel pair-panel-dark" style="padding:0;align-items:stretch;flex-direction:column;justify-content:center;">
+        <span class="pair-mode-label pair-mode-label-dark">default state</span>
+        <div class="footer-preview">
+          <div class="footer-jas">j.a.s.</div>
+          <div class="footer-links">
+            <a href="#" class="footer-link">linkedin</a>
+            <a href="#" class="footer-link">github</a>
+          </div>
+        </div>
+      </div>
+      <div class="pair-panel pair-panel-dark" style="padding:0;align-items:stretch;flex-direction:column;justify-content:center;border-left:0.5px solid #2E2B28;">
+        <span class="pair-mode-label pair-mode-label-dark">hover state (on a link)</span>
+        <div class="footer-preview">
+          <div class="footer-jas">j.a.s.</div>
+          <div class="footer-links">
+            <a href="#" class="footer-link footer-link-demo-hover">linkedin</a>
+            <a href="#" class="footer-link">github</a>
+          </div>
+        </div>
+      </div>
+      <div class="pair-meta">
+        <strong>Small mark:</strong> opacity 0.35 — present but recessive.<br>
+        <strong>Social links default:</strong> <code>#7A7470</code> — visible but not competing. (Previously too faint at #4A4540 — corrected in this version.)<br>
+        <strong>Social links hover:</strong> <code>#E8956A</code> — a warm, clearly readable highlight. Transition: 150ms ease. The hover colour is lighter than the dark-mode accent to ensure contrast against the near-black background.
+      </div>
+    </div>
+
+    <!-- Notes list -->
+    <div class="subsection-label">Notes list item</div>
+    <div class="pair">
+      <div class="pair-panel pair-panel-light" style="align-items:stretch;padding:20px;">
+        <span class="pair-mode-label pair-mode-label-light">light</span>
+        <div style="width:100%;">
+          <div class="note-item">
+            <div class="note-meta-light">2026-04-12 &nbsp;&bull;&nbsp; Daniel</div>
+            <a href="#" class="note-title-light">Introducing garlic</a>
+            <div class="note-excerpt-light">I spend a lot of time in Claude Code. More than I'd like to admit. Garlic started as a one-liner in my shell config and grew into something I actually find useful...</div>
+            <button class="note-expand-light">show more &darr;</button>
+          </div>
+        </div>
+      </div>
+      <div class="pair-panel pair-panel-dark" style="align-items:stretch;padding:20px;">
+        <span class="pair-mode-label pair-mode-label-dark">dark</span>
+        <div style="width:100%;">
+          <div class="note-item-dk">
+            <div class="note-meta-dark">2026-04-12 &nbsp;&bull;&nbsp; Daniel</div>
+            <a href="#" class="note-title-dark">Introducing garlic</a>
+            <div class="note-excerpt-dark">I spend a lot of time in Claude Code. More than I'd like to admit. Garlic started as a one-liner in my shell config and grew into something I actually find useful...</div>
+            <button class="note-expand-dark">show more &darr;</button>
+          </div>
+        </div>
+      </div>
+      <div class="pair-meta">Title links use the accent for their mode on hover. Divider between posts uses <code>#D8D4CF</code> (light) / <code>#2E2B28</code> (dark). "Show more" is monospace, uppercase, accent colour, no button chrome.</div>
+    </div>
+
+    <!-- Post image -->
+    <div class="subsection-label">Blog post image</div>
+    <div class="pair">
+      <div class="pair-panel pair-panel-light" style="align-items:stretch;padding:20px;flex-direction:column;justify-content:center;">
+        <span class="pair-mode-label pair-mode-label-light">light</span>
+        <div class="post-img-demo-light">screenshot or gif</div>
+        <div class="post-img-cap-light">garlic running a session summary.</div>
+      </div>
+      <div class="pair-panel pair-panel-dark" style="align-items:stretch;padding:20px;flex-direction:column;justify-content:center;">
+        <span class="pair-mode-label pair-mode-label-dark">dark</span>
+        <div class="post-img-demo-dark">screenshot or gif</div>
+        <div class="post-img-cap-dark">garlic running a session summary.</div>
+      </div>
+      <div class="pair-meta">No border. No shadow. <code>border-radius: 6px</code>. Caption in monospace, muted colour for mode. Surface behind image: <code>#EDEAE5</code> (light) / <code>#252220</code> (dark) — so a transparent screenshot background doesn't clash.</div>
+    </div>
+
+    <!-- Project link at end of post -->
+    <div class="subsection-label">Project link at end of post</div>
+    <div class="pair">
+      <div class="pair-panel pair-panel-light" style="align-items:stretch;padding:20px;">
+        <span class="pair-mode-label pair-mode-label-light">light</span>
+        <div class="post-proj-rule-light">
+          <div class="post-proj-label-light">related project</div>
+          <div class="proj-card-light">
+            <div class="card-tag-light">cli tool</div>
+            <div class="card-title-light">garlic</div>
+            <div class="card-desc-light">Session-time tracking for Claude Code.</div>
+            <a href="#" class="card-link-light">view project &rarr;</a>
+          </div>
+        </div>
+      </div>
+      <div class="pair-panel pair-panel-dark" style="align-items:stretch;padding:20px;">
+        <span class="pair-mode-label pair-mode-label-dark">dark</span>
+        <div class="post-proj-rule-dark">
+          <div class="post-proj-label-dark">related project</div>
+          <div class="proj-card-dark">
+            <div class="card-tag-dark">cli tool</div>
+            <div class="card-title-dark">garlic</div>
+            <div class="card-desc-dark">Session-time tracking for Claude Code.</div>
+            <a href="#" class="card-link-dark">view project &rarr;</a>
+          </div>
+        </div>
+      </div>
+      <div class="pair-meta">Appears after a thin rule at the bottom of the post. Reuses the standard project card. "Related project" label in muted monospace. Max one card per post.</div>
+    </div>
+
+    <!-- Back to notes -->
+    <div class="subsection-label">Back to notes link</div>
+    <div class="pair">
+      <div class="pair-panel pair-panel-light">
+        <span class="pair-mode-label pair-mode-label-light">light</span>
+        <a href="#" class="back-light">&larr; back to notes</a>
+      </div>
+      <div class="pair-panel pair-panel-dark">
+        <span class="pair-mode-label pair-mode-label-dark">dark</span>
+        <a href="#" class="back-dark">&larr; back to notes</a>
+      </div>
+      <div class="pair-meta">Sits directly below the header on the individual post page. Monospace, small, accent colour. No underline — the arrow is sufficient affordance.</div>
+    </div>
+
+    <!-- 404 -->
+    <div class="subsection-label">404 page</div>
+    <div class="pair">
+      <div class="pair-panel pair-panel-light" style="flex-direction:column;gap:8px;">
+        <span class="pair-mode-label pair-mode-label-light">light</span>
+        <div style="font-family:var(--serif);font-size:64px;font-weight:normal;color:var(--text);line-height:1;">404</div>
+        <div style="font-size:14px;color:var(--muted);">nothing here.</div>
+        <a href="#" style="font-size:13px;color:var(--accent);text-decoration:none;margin-top:8px;">go home &rarr;</a>
+      </div>
+      <div class="pair-panel pair-panel-dark" style="flex-direction:column;gap:8px;">
+        <span class="pair-mode-label pair-mode-label-dark">dark</span>
+        <div style="font-family:var(--serif);font-size:64px;font-weight:normal;color:var(--text-light);line-height:1;">404</div>
+        <div style="font-size:14px;color:var(--muted-dk);">nothing here.</div>
+        <a href="#" style="font-size:13px;color:var(--accent-dk);text-decoration:none;margin-top:8px;">go home &rarr;</a>
+      </div>
+      <div class="pair-meta">Large serif number. One dry line in muted body text. One link home in Button A style. Nothing else on the page besides the standard header and footer.</div>
+    </div>
+
+  </div>
+
+  <!-- 06b Code Blocks -->
+  <div class="section">
+    <div class="section-label">06b</div>
+    <div class="section-title">Code Blocks</div>
+    <p>Syntax highlighting is handled by Shiki, which ships with Astro. A custom Shiki theme JSON (derived from this spec) is configured in <code>astro.config.mjs</code> to output pre-highlighted HTML at build time -- no client-side JS. Two themes are registered: one for light, one for dark. CSS media query or a data attribute on <code>&lt;html&gt;</code> switches between them.</p>
+    <p>Code blocks always show a header bar with the language label and an optional filename. Token colours introduce a small satellite palette used exclusively inside code blocks -- they do not appear elsewhere in the UI.</p>
+
+    <div class="meta-list" style="margin-bottom: 28px;">
+      <p><strong>Token colour roles (code-only):</strong> keywords / flags use terracotta (already in palette). Strings use warm sage. Numbers and booleans use amber. Object keys and identifiers use slate blue. Comments are muted and italic. All other text uses near-black / warm white.</p>
+      <p><strong>Astro config:</strong> <code>shikiConfig: &#123; themes: &#123; light: './src/themes/jas-light.json', dark: './src/themes/jas-dark.json' &#125; &#125;</code></p>
+      <p><strong>Supported languages at launch:</strong> bash, json. Python to be added when needed -- same token colour spec applies.</p>
+    </div>
+
+    <!-- Colour token reference -->
+    <div class="subsection-label" style="margin-top:0;">Token colour reference</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:32px;">
+      <!-- Light tokens -->
+      <div style="border:0.5px solid var(--border);border-radius:8px;overflow:hidden;">
+        <div style="background:var(--surface);padding:8px 14px;font-size:10px;font-family:var(--mono);color:var(--muted);text-transform:uppercase;letter-spacing:0.07em;border-bottom:0.5px solid var(--border);">Light mode tokens</div>
+        <div style="padding:14px 16px;background:var(--bg);display:flex;flex-direction:column;gap:6px;">
+          <div style="display:flex;align-items:center;gap:10px;"><div style="width:16px;height:16px;border-radius:3px;background:#A85C3A;flex-shrink:0;"></div><div style="font-family:var(--mono);font-size:12px;"><span style="color:#A85C3A;">#A85C3A</span> &nbsp;<span style="color:var(--muted);">keyword / flag</span></div></div>
+          <div style="display:flex;align-items:center;gap:10px;"><div style="width:16px;height:16px;border-radius:3px;background:#4E7A40;flex-shrink:0;"></div><div style="font-family:var(--mono);font-size:12px;"><span style="color:#4E7A40;">#4E7A40</span> &nbsp;<span style="color:var(--muted);">string value</span></div></div>
+          <div style="display:flex;align-items:center;gap:10px;"><div style="width:16px;height:16px;border-radius:3px;background:#8B6418;flex-shrink:0;"></div><div style="font-family:var(--mono);font-size:12px;"><span style="color:#8B6418;">#8B6418</span> &nbsp;<span style="color:var(--muted);">number / boolean</span></div></div>
+          <div style="display:flex;align-items:center;gap:10px;"><div style="width:16px;height:16px;border-radius:3px;background:#3F6080;flex-shrink:0;"></div><div style="font-family:var(--mono);font-size:12px;"><span style="color:#3F6080;">#3F6080</span> &nbsp;<span style="color:var(--muted);">object key / identifier</span></div></div>
+          <div style="display:flex;align-items:center;gap:10px;"><div style="width:16px;height:16px;border-radius:3px;background:#948E88;flex-shrink:0;border:0.5px solid var(--border);"></div><div style="font-family:var(--mono);font-size:12px;"><span style="color:#948E88;">#948E88</span> &nbsp;<span style="color:var(--muted);">comment</span></div></div>
+          <div style="display:flex;align-items:center;gap:10px;"><div style="width:16px;height:16px;border-radius:3px;background:#2A2520;flex-shrink:0;"></div><div style="font-family:var(--mono);font-size:12px;"><span style="color:#2A2520;">#2A2520</span> &nbsp;<span style="color:var(--muted);">base text</span></div></div>
+          <div style="display:flex;align-items:center;gap:10px;"><div style="width:16px;height:16px;border-radius:3px;background:#ECEAE5;flex-shrink:0;border:0.5px solid var(--border);"></div><div style="font-family:var(--mono);font-size:12px;"><span style="color:var(--muted);">#ECEAE5</span> &nbsp;<span style="color:var(--muted);">background</span></div></div>
+        </div>
+      </div>
+      <!-- Dark tokens -->
+      <div style="border:0.5px solid #2E2B28;border-radius:8px;overflow:hidden;">
+        <div style="background:#161412;padding:8px 14px;font-size:10px;font-family:var(--mono);color:#6A6460;text-transform:uppercase;letter-spacing:0.07em;border-bottom:0.5px solid #2E2B28;">Dark mode tokens</div>
+        <div style="padding:14px 16px;background:#201E1B;display:flex;flex-direction:column;gap:6px;">
+          <div style="display:flex;align-items:center;gap:10px;"><div style="width:16px;height:16px;border-radius:3px;background:#C4704A;flex-shrink:0;"></div><div style="font-family:var(--mono);font-size:12px;"><span style="color:#C4704A;">#C4704A</span> &nbsp;<span style="color:#6A6460;">keyword / flag</span></div></div>
+          <div style="display:flex;align-items:center;gap:10px;"><div style="width:16px;height:16px;border-radius:3px;background:#7FAE65;flex-shrink:0;"></div><div style="font-family:var(--mono);font-size:12px;"><span style="color:#7FAE65;">#7FAE65</span> &nbsp;<span style="color:#6A6460;">string value</span></div></div>
+          <div style="display:flex;align-items:center;gap:10px;"><div style="width:16px;height:16px;border-radius:3px;background:#C9A040;flex-shrink:0;"></div><div style="font-family:var(--mono);font-size:12px;"><span style="color:#C9A040;">#C9A040</span> &nbsp;<span style="color:#6A6460;">number / boolean</span></div></div>
+          <div style="display:flex;align-items:center;gap:10px;"><div style="width:16px;height:16px;border-radius:3px;background:#6AABD4;flex-shrink:0;"></div><div style="font-family:var(--mono);font-size:12px;"><span style="color:#6AABD4;">#6AABD4</span> &nbsp;<span style="color:#6A6460;">object key / identifier</span></div></div>
+          <div style="display:flex;align-items:center;gap:10px;"><div style="width:16px;height:16px;border-radius:3px;background:#6A6460;flex-shrink:0;"></div><div style="font-family:var(--mono);font-size:12px;"><span style="color:#6A6460;">#6A6460</span> &nbsp;<span style="color:#6A6460;">comment</span></div></div>
+          <div style="display:flex;align-items:center;gap:10px;"><div style="width:16px;height:16px;border-radius:3px;background:#E8E4DF;flex-shrink:0;"></div><div style="font-family:var(--mono);font-size:12px;"><span style="color:#E8E4DF;">#E8E4DF</span> &nbsp;<span style="color:#6A6460;">base text</span></div></div>
+          <div style="display:flex;align-items:center;gap:10px;"><div style="width:16px;height:16px;border-radius:3px;background:#201E1B;flex-shrink:0;border:0.5px solid #2E2B28;"></div><div style="font-family:var(--mono);font-size:12px;"><span style="color:#6A6460;">#201E1B</span> &nbsp;<span style="color:#6A6460;">background</span></div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- bash example -->
+    <div class="subsection-label">bash — light / dark</div>
+    <div class="pair">
+      <div class="pair-panel pair-panel-light" style="padding:0;align-items:stretch;display:block;">
+        <span class="pair-mode-label pair-mode-label-light">light</span>
+        <div class="code-block code-block-l">
+          <div class="code-hdr code-hdr-l"><span>bash</span><span>garlic usage</span></div>
+          <div class="code-body tl"><span class="tl-c"># install garlic globally</span>
+<span class="tl-k">npm</span> install <span class="tl-o">-</span>g garlic<span class="tl-o">-</span>cli
+
+<span class="tl-c"># start a new session</span>
+<span class="tl-k">garlic</span> start
+
+<span class="tl-c"># view today's summary</span>
+<span class="tl-k">garlic</span> session <span class="tl-k">--today</span>
+
+<span class="tl-c"># export as JSON</span>
+<span class="tl-k">garlic</span> session <span class="tl-k">--today</span> <span class="tl-k">--json</span>
+
+<span class="tl-c"># show all sessions this week</span>
+<span class="tl-k">garlic</span> session <span class="tl-k">--week</span></div>
+        </div>
+      </div>
+      <div class="pair-panel pair-panel-dark" style="padding:0;align-items:stretch;display:block;">
+        <span class="pair-mode-label pair-mode-label-dark">dark</span>
+        <div class="code-block code-block-d">
+          <div class="code-hdr code-hdr-d"><span>bash</span><span>garlic usage</span></div>
+          <div class="code-body td"><span class="td-c"># install garlic globally</span>
+<span class="td-k">npm</span> install <span class="td-o">-</span>g garlic<span class="td-o">-</span>cli
+
+<span class="td-c"># start a new session</span>
+<span class="td-k">garlic</span> start
+
+<span class="td-c"># view today's summary</span>
+<span class="td-k">garlic</span> session <span class="td-k">--today</span>
+
+<span class="td-c"># export as JSON</span>
+<span class="td-k">garlic</span> session <span class="td-k">--today</span> <span class="td-k">--json</span>
+
+<span class="td-c"># show all sessions this week</span>
+<span class="td-k">garlic</span> session <span class="td-k">--week</span></div>
+        </div>
+      </div>
+      <div class="pair-meta">Commands and flags use terracotta (keyword colour). Comments are muted and italic. Hyphens and punctuation use the operator colour. The header bar shows language + optional filename.</div>
+    </div>
+
+    <!-- JSON example -->
+    <div class="subsection-label">json — light / dark</div>
+    <div class="pair">
+      <div class="pair-panel pair-panel-light" style="padding:0;align-items:stretch;display:block;">
+        <span class="pair-mode-label pair-mode-label-light">light</span>
+        <div class="code-block code-block-l">
+          <div class="code-hdr code-hdr-l"><span>json</span><span>garlic session --today --json</span></div>
+          <div class="code-body tl"><span class="tl-o">{</span>
+  <span class="tl-p">"date"</span><span class="tl-o">:</span> <span class="tl-s">"2026-04-12"</span><span class="tl-o">,</span>
+  <span class="tl-p">"sessions"</span><span class="tl-o">:</span> <span class="tl-o">[</span>
+    <span class="tl-o">{</span>
+      <span class="tl-p">"start"</span><span class="tl-o">:</span>    <span class="tl-s">"09:14:32"</span><span class="tl-o">,</span>
+      <span class="tl-p">"end"</span><span class="tl-o">:</span>      <span class="tl-s">"11:42:08"</span><span class="tl-o">,</span>
+      <span class="tl-p">"duration"</span><span class="tl-o">:</span> <span class="tl-s">"2h 27m"</span>
+    <span class="tl-o">},</span>
+    <span class="tl-o">{</span>
+      <span class="tl-p">"start"</span><span class="tl-o">:</span>    <span class="tl-s">"13:05:00"</span><span class="tl-o">,</span>
+      <span class="tl-p">"end"</span><span class="tl-o">:</span>      <span class="tl-s">"14:30:18"</span><span class="tl-o">,</span>
+      <span class="tl-p">"duration"</span><span class="tl-o">:</span> <span class="tl-s">"1h 25m"</span>
+    <span class="tl-o">}</span>
+  <span class="tl-o">],</span>
+  <span class="tl-p">"total"</span><span class="tl-o">:</span>    <span class="tl-s">"3h 52m"</span><span class="tl-o">,</span>
+  <span class="tl-p">"billable"</span><span class="tl-o">:</span> <span class="tl-n">true</span>
+<span class="tl-o">}</span></div>
+        </div>
+      </div>
+      <div class="pair-panel pair-panel-dark" style="padding:0;align-items:stretch;display:block;">
+        <span class="pair-mode-label pair-mode-label-dark">dark</span>
+        <div class="code-block code-block-d">
+          <div class="code-hdr code-hdr-d"><span>json</span><span>garlic session --today --json</span></div>
+          <div class="code-body td"><span class="td-o">{</span>
+  <span class="td-p">"date"</span><span class="td-o">:</span> <span class="td-s">"2026-04-12"</span><span class="td-o">,</span>
+  <span class="td-p">"sessions"</span><span class="td-o">:</span> <span class="td-o">[</span>
+    <span class="td-o">{</span>
+      <span class="td-p">"start"</span><span class="td-o">:</span>    <span class="td-s">"09:14:32"</span><span class="td-o">,</span>
+      <span class="td-p">"end"</span><span class="td-o">:</span>      <span class="td-s">"11:42:08"</span><span class="td-o">,</span>
+      <span class="td-p">"duration"</span><span class="td-o">:</span> <span class="td-s">"2h 27m"</span>
+    <span class="td-o">},</span>
+    <span class="td-o">{</span>
+      <span class="td-p">"start"</span><span class="td-o">:</span>    <span class="td-s">"13:05:00"</span><span class="td-o">,</span>
+      <span class="td-p">"end"</span><span class="td-o">:</span>      <span class="td-s">"14:30:18"</span><span class="td-o">,</span>
+      <span class="td-p">"duration"</span><span class="td-o">:</span> <span class="td-s">"1h 25m"</span>
+    <span class="td-o">}</span>
+  <span class="td-o">],</span>
+  <span class="td-p">"total"</span><span class="td-o">:</span>    <span class="td-s">"3h 52m"</span><span class="td-o">,</span>
+  <span class="td-p">"billable"</span><span class="td-o">:</span> <span class="td-n">true</span>
+<span class="td-o">}</span></div>
+        </div>
+      </div>
+      <div class="pair-meta">Object keys in slate blue. String values in sage green. Booleans and numbers in amber. Braces, brackets, colons, and commas in the muted operator colour. Filename in the header bar can be the actual command that produced the output -- useful for CLI documentation.</div>
+    </div>
+
+    <!-- Inline code -->
+    <div class="subsection-label">Inline code (in prose)</div>
+    <div class="pair">
+      <div class="pair-panel pair-panel-light" style="flex-direction:column;align-items:flex-start;padding:24px;">
+        <span class="pair-mode-label pair-mode-label-light">light</span>
+        <p style="font-size:15px;line-height:1.7;">Run <code style="background:#ECEAE5;border:0.5px solid #D4D0CB;padding:2px 7px;border-radius:4px;font-size:13px;color:#2A2520;font-family:var(--mono);">garlic start</code> to begin tracking. Use the <code style="background:#ECEAE5;border:0.5px solid #D4D0CB;padding:2px 7px;border-radius:4px;font-size:13px;color:#2A2520;font-family:var(--mono);">--json</code> flag to pipe output.</p>
+      </div>
+      <div class="pair-panel pair-panel-dark" style="flex-direction:column;align-items:flex-start;padding:24px;">
+        <span class="pair-mode-label pair-mode-label-dark">dark</span>
+        <p style="font-size:15px;line-height:1.7;color:var(--text-light);">Run <code style="background:#201E1B;border:0.5px solid #2E2B28;padding:2px 7px;border-radius:4px;font-size:13px;color:#E8E4DF;font-family:var(--mono);">garlic start</code> to begin tracking. Use the <code style="background:#201E1B;border:0.5px solid #2E2B28;padding:2px 7px;border-radius:4px;font-size:13px;color:#E8E4DF;font-family:var(--mono);">--json</code> flag to pipe output.</p>
+      </div>
+      <div class="pair-meta">Inline code uses the same background as the block code. A subtle border distinguishes it from the page surface. No syntax colouring on inline snippets -- just base text colour on the code background. Padding: 2px vertical, 7px horizontal.</div>
+    </div>
+
+  </div>
+
+  <!-- 07 Page Structure -->
+  <div class="section">
+    <div class="section-label">07</div>
+    <div class="section-title">Page Structure</div>
+    <p>Five views across three routes. All share the same header and footer.</p>
+    <div class="wireframes-5col">
+      <div class="wf">
+        <div class="wf-titlebar">Home</div>
+        <div class="wf-body">
+          <div class="wf-nav-bar"><span style="font-family:var(--serif);font-size:8px;">jas</span><span>home · proj · notes</span></div>
+          <div class="wf-block" style="height:40px;font-size:8px;display:flex;align-items:center;">intro paragraph</div>
+          <div style="font-size:8px;color:var(--muted);">projects</div>
+          <div class="wf-grid-2">
+            <div class="wf-block wf-accent-top" style="height:44px;display:flex;flex-direction:column;justify-content:center;gap:2px;"><span style="font-size:7px;color:var(--accent);">cli</span><span style="font-size:8px;">garlic</span></div>
+            <div class="wf-block wf-accent-top" style="height:44px;display:flex;flex-direction:column;justify-content:center;gap:2px;"><span style="font-size:7px;color:var(--accent);">site</span><span style="font-size:8px;">jas.com</span></div>
+          </div>
+          <div style="font-size:8px;color:var(--muted);">notes</div>
+          <div class="wf-block" style="padding:4px 6px;">
+            <div class="wf-list-item"><span>Post title one</span><span>Apr 12</span></div>
+            <div class="wf-list-item"><span>Post title two</span><span>Mar 28</span></div>
+            <div class="wf-list-item"><span>Post title three</span><span>Feb 20</span></div>
+          </div>
+          <div class="wf-footer-bar"><span style="font-family:var(--serif);font-style:italic;font-size:8px;color:#5A5450;">j.a.s.</span><span>li · gh</span></div>
+        </div>
+      </div>
+      <div class="wf">
+        <div class="wf-titlebar">Projects</div>
+        <div class="wf-body">
+          <div class="wf-nav-bar"><span style="font-family:var(--serif);font-size:8px;">jas</span><span>home · proj · notes</span></div>
+          <div class="wf-block" style="height:20px;display:flex;align-items:center;"><span style="font-family:var(--serif);font-size:10px;">garlic</span></div>
+          <div class="wf-img-block">gif / screenshot</div>
+          <div class="wf-block" style="height:28px;font-size:8px;display:flex;align-items:center;">description &amp; core ideas</div>
+          <div style="display:flex;gap:3px;"><div class="wf-block" style="flex:1;font-size:7px;padding:3px;">install</div><div class="wf-block" style="flex:1;font-size:7px;padding:3px;">usage</div><div class="wf-btn-c">GitHub &rarr;</div></div>
+          <div class="wf-rule"></div>
+          <div style="font-size:8px;color:var(--muted);">other projects</div>
+          <div class="wf-block wf-accent-top" style="height:28px;display:flex;align-items:center;font-size:8px;">justanotherspy.com</div>
+          <div class="wf-footer-bar"><span style="font-family:var(--serif);font-style:italic;font-size:8px;color:#5A5450;">j.a.s.</span><span>li · gh</span></div>
+        </div>
+      </div>
+      <div class="wf">
+        <div class="wf-titlebar">Notes</div>
+        <div class="wf-body">
+          <div class="wf-nav-bar"><span style="font-family:var(--serif);font-size:8px;">jas</span><span>home · proj · notes</span></div>
+          <div class="wf-block" style="height:16px;display:flex;align-items:center;"><span style="font-family:var(--serif);font-size:10px;">Notes</span></div>
+          <div class="wf-block" style="padding:4px 6px;">
+            <div class="wf-note-item"><div style="font-size:8px;color:var(--muted);">Apr 12 · Daniel</div><div style="font-size:8px;color:var(--accent);">Post title one</div><div style="font-size:7px;margin-top:2px;">Short excerpt...</div><div style="font-size:7px;color:var(--accent);margin-top:2px;">show more ↓</div></div>
+            <div class="wf-note-item"><div style="font-size:8px;color:var(--muted);">Mar 28 · Daniel</div><div style="font-size:8px;color:var(--accent);">Post title two</div><div style="font-size:7px;margin-top:2px;">Short excerpt...</div><div style="font-size:7px;color:var(--accent);margin-top:2px;">show more ↓</div></div>
+          </div>
+          <div class="wf-footer-bar"><span style="font-family:var(--serif);font-style:italic;font-size:8px;color:#5A5450;">j.a.s.</span><span>li · gh</span></div>
+        </div>
+      </div>
+      <div class="wf">
+        <div class="wf-titlebar">Post (individual)</div>
+        <div class="wf-body">
+          <div class="wf-nav-bar"><span style="font-family:var(--serif);font-size:8px;">jas</span><span>home · proj · notes</span></div>
+          <div style="font-size:7px;color:var(--accent);">&larr; back to notes</div>
+          <div class="wf-block" style="height:18px;display:flex;align-items:center;"><span style="font-family:var(--serif);font-size:10px;">Post title</span></div>
+          <div style="font-size:7px;color:var(--muted);">Apr 12 · Daniel</div>
+          <div class="wf-block" style="height:48px;font-size:7px;display:flex;align-items:center;">full prose (~65ch)</div>
+          <div class="wf-img-block" style="height:22px;font-size:7px;">image (borderless)</div>
+          <div class="wf-block" style="height:20px;font-size:7px;display:flex;align-items:center;">...more prose...</div>
+          <div class="wf-rule"></div>
+          <div class="wf-block wf-accent-top" style="height:22px;font-size:7px;display:flex;align-items:center;">related project card</div>
+          <div class="wf-footer-bar"><span style="font-family:var(--serif);font-style:italic;font-size:8px;color:#5A5450;">j.a.s.</span><span>li · gh</span></div>
+        </div>
+      </div>
+      <div class="wf">
+        <div class="wf-titlebar">404</div>
+        <div class="wf-body">
+          <div class="wf-nav-bar"><span style="font-family:var(--serif);font-size:8px;">jas</span><span>home · proj · notes</span></div>
+          <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;padding:24px 0;text-align:center;">
+            <div style="font-family:var(--serif);font-size:24px;color:var(--text);">404</div>
+            <div style="font-size:8px;color:var(--muted);">nothing here.</div>
+            <div style="font-size:7px;color:var(--accent);margin-top:4px;">go home &rarr;</div>
+          </div>
+          <div class="wf-footer-bar"><span style="font-family:var(--serif);font-style:italic;font-size:8px;color:#5A5450;">j.a.s.</span><span>li · gh</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 08 Voice & Tone -->
+  <div class="section">
+    <div class="section-label">08</div>
+    <div class="section-title">Voice &amp; Tone</div>
+    <p>Dry without being cold. Brief without being terse. The site does not sell anything.</p>
+    <div class="do-dont">
+      <div class="tone-box tone-box-do">
+        <div class="tone-label tone-label-do">Write like this</div>
+        <p>"A CLI tool for tracking time spent in Claude Code sessions. Nothing more."</p>
+        <p>"Notes from someone who spends too much time thinking about infrastructure."</p>
+        <p>"Security engineer. Cape Town."</p>
+      </div>
+      <div class="tone-box tone-box-dont">
+        <div class="tone-label tone-label-dont">Not like this</div>
+        <p>"I'm a passionate full-stack engineer who loves building things that matter!"</p>
+        <p>"Welcome to my corner of the internet where I share my journey."</p>
+        <p>"Check out my latest projects below 👇"</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- 09 Usage Guidelines -->
+  <div class="section">
+    <div class="section-label">09</div>
+    <div class="section-title">Usage Guidelines</div>
+    <p>Hard constraints. Not preferences.</p>
+    <div style="margin-top:20px;">
+      <div class="rule"><div class="rule-no">NO</div><div>Gradients. The palette is flat.</div></div>
+      <div class="rule"><div class="rule-no">NO</div><div>Drop shadows or blur effects, except the defined hover shadow on Button C and project cards. Those are the only permitted shadow moments.</div></div>
+      <div class="rule"><div class="rule-no">NO</div><div>Additional accent colours. Terracotta is the only hue.</div></div>
+      <div class="rule"><div class="rule-no">NO</div><div>Terminal or hacker aesthetics. Monospace is for metadata and labels only.</div></div>
+      <div class="rule"><div class="rule-no">NO</div><div>Wordmark in bold, italic, or all-caps. The small mark <span style="font-family:var(--serif);font-style:italic;">j.a.s.</span> uses italic deliberately and is the only exception.</div></div>
+      <div class="rule"><div class="rule-no">NO</div><div>Emojis, exclamation marks, or copy that sells anything.</div></div>
+      <div class="rule"><div class="rule-no">NO</div><div>Purposeless animation. Permitted: hover lift on Button C and cards, footer link colour transition, theme toggle fade. Nothing else.</div></div>
+      <div class="rule"><div class="rule-no">NO</div><div>Image borders or box shadows on post images. Rounded corners only.</div></div>
+      <div class="rule"><div class="rule-no">NO</div><div>Button C on home, notes list, or individual post pages. Project pages only, max once.</div></div>
+    </div>
+  </div>
+
+  <!-- 10 Open Items -->
+  <div class="section">
+    <div class="section-label">10</div>
+    <div class="section-title">Open Items</div>
+    <p>Remaining decisions before the Astro build begins.</p>
+    <div style="margin-top:20px;">
+      <div class="open-item"><span class="open-dash">&mdash;</span><span>Home page intro copy. To be written by the author. Required before launch.</span></div>
+      <div class="open-item"><span class="open-dash">&mdash;</span><span>garlic project content: animated gif or screenshot. To be produced once the CLI is stable enough to record.</span></div>
+      <div class="open-item"><span class="open-dash">&mdash;</span><span>Favicon. The <span style="font-family:var(--serif);font-style:italic;">j.a.s.</span> mark needs to be tested at 16px and 32px and exported as .ico / .png.</span></div>
+      <div class="open-item"><span class="open-dash">&mdash;</span><span>LinkedIn and GitHub URLs to be confirmed and added to the footer.</span></div>
+      <div class="open-item"><span class="open-dash">&mdash;</span><span>Theme toggle icon. Small sun/moon SVG or CSS-only circle transition. Decided at implementation time.</span></div>
+    </div>
+  </div>
+
+</div>
+
+<footer class="site-footer">
+  <div class="site-footer-wm">j.a.s.</div>
+  <div class="site-footer-note">Visual Identity v0.5 &mdash; April 2026 &mdash; Working document</div>
+</footer>
+
+</body>
+</html>
