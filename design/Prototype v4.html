@@ -1,0 +1,621 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>justanotherspy — prototype v4</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #F5F2EE;
+    --bg-dark: #1A1814;
+    --text: #1A1814;
+    --text-light: #F5F2EE;
+    --accent: #A85C3A;
+    --accent-dk: #C4704A;
+    --muted: #6B6560;
+    /* lighter on dark for legibility (Dan: too-dark text) */
+    --muted-dk: #A8A29C;
+    --border: #D8D4CF;
+    --border-dk: #2E2B28;
+    --surface: #EDEAE5;
+    --surface-dk: #252220;
+    --serif: 'DM Serif Display', Georgia, serif;
+    --sans: -apple-system, 'Helvetica Neue', Arial, sans-serif;
+    --mono: 'SFMono-Regular', Consolas, 'Liberation Mono', monospace;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { background: #E0DCD5; }
+  body {
+    font-family: var(--sans);
+    color: var(--text);
+    font-size: 15px;
+    line-height: 1.65;
+    -webkit-font-smoothing: antialiased;
+    padding: 28px 28px 80px;
+  }
+
+  /* doc chrome */
+  .doc-head { max-width: 1480px; margin: 0 auto 18px; display: flex; justify-content: space-between; align-items: flex-end; flex-wrap: wrap; gap: 20px; }
+  .doc-title { font-family: var(--serif); font-size: 28px; line-height: 1; letter-spacing: -0.4px; }
+  .doc-sub { font-family: var(--mono); font-size: 11px; color: var(--muted); letter-spacing: 0.06em; text-transform: uppercase; margin-top: 6px; }
+  .doc-controls { display: flex; gap: 14px; align-items: center; }
+  .ctrl-label { font-family: var(--mono); font-size: 11px; color: var(--muted); letter-spacing: 0.06em; text-transform: uppercase; }
+  .seg { display: inline-flex; border: 0.5px solid var(--border); border-radius: 4px; overflow: hidden; background: #fff; }
+  .seg button { font-family: var(--mono); font-size: 11px; padding: 6px 12px; background: #fff; color: var(--muted); border: none; cursor: pointer; letter-spacing: 0.06em; text-transform: uppercase; border-right: 0.5px solid var(--border); }
+  .seg button:last-child { border-right: none; }
+  .seg button.active { background: var(--text); color: var(--text-light); }
+
+  .tabs { max-width: 1480px; margin: 0 auto 14px; display: flex; gap: 4px; border-bottom: 0.5px solid var(--border); }
+  .tab { background: none; border: none; padding: 10px 16px; font-family: var(--mono); font-size: 11px; color: var(--muted); letter-spacing: 0.08em; text-transform: uppercase; cursor: pointer; border-bottom: 2px solid transparent; margin-bottom: -1px; }
+  .tab:hover { color: var(--text); }
+  .tab.active { color: var(--accent); border-bottom-color: var(--accent); }
+
+  .resp-note { max-width: 1480px; margin: 0 auto 16px; font-family: var(--mono); font-size: 11px; color: var(--muted); letter-spacing: 0.04em; line-height: 1.7; padding: 10px 14px; background: #FBFAF8; border: 0.5px solid var(--border); border-radius: 6px; }
+  .resp-note strong { color: var(--accent); font-weight: 500; }
+
+  /* page frame */
+  .page { max-width: 1480px; margin: 0 auto; background: var(--bg); border: 0.5px solid var(--border); border-radius: 8px; overflow: hidden; display: none; }
+  .page.active { display: block; }
+  /* Dan: dark mode too dark — lift the bg a touch */
+  body[data-theme="dark"] .page { background: #211E1A; border-color: var(--border-dk); }
+
+  /* Redaction — uses current text color so it's visible in both themes */
+  .redact { background: currentColor; padding: 0 6px; border-radius: 2px; user-select: none; position: relative; }
+  .redact span { color: transparent; }
+
+  /* ── Site nav ─────── */
+  .site-nav { display: flex; justify-content: space-between; align-items: center; padding: 22px 56px; }
+  .site-wm { font-family: var(--serif); font-size: 17px; color: var(--text); }
+  body[data-theme="dark"] .site-wm { color: var(--text-light); }
+  .site-nav-links { display: flex; gap: 22px; align-items: center; }
+  .site-nav-link { font-size: 13px; color: var(--muted); text-decoration: none; }
+  .site-nav-link:hover { color: var(--text); }
+  body[data-theme="dark"] .site-nav-link { color: var(--muted-dk); }
+  body[data-theme="dark"] .site-nav-link:hover { color: var(--text-light); }
+  .site-nav-link.active { color: var(--accent); }
+  body[data-theme="dark"] .site-nav-link.active { color: var(--accent-dk); }
+  .nav-toggle { width: 13px; height: 13px; border-radius: 50%; border: 1px solid var(--border); background: none; cursor: pointer; }
+  body[data-theme="dark"] .nav-toggle { border-color: var(--border-dk); background: var(--text-light); }
+
+  /* ── Site footer ─── */
+  .site-footer { background: var(--bg-dark); padding: 26px 56px; display: flex; justify-content: space-between; align-items: center; }
+  .site-footer-wm { font-family: var(--serif); font-style: italic; font-size: 18px; color: var(--text-light); opacity: 0.35; }
+  .footer-links { display: flex; gap: 22px; }
+  .footer-link { font-size: 12px; font-family: var(--mono); color: #A8A29C; text-decoration: none; letter-spacing: 0.04em; transition: color 150ms ease; }
+  .footer-link:hover { color: #E8956A; }
+
+  /* ── Content container ── */
+  .content { max-width: 860px; margin: 0 auto; padding: 56px 56px 80px; }
+  .content-wide { max-width: 1100px; margin: 0 auto; padding: 56px 56px 80px; }
+
+  /* ── Type ── (lowercase headings, per Dan) */
+  h1.display, h1.page-title, h2.section, h3.sub { text-transform: lowercase; }
+  h1.display { font-family: var(--serif); font-size: 56px; font-weight: normal; line-height: 1; letter-spacing: -0.6px; }
+  h1.page-title { font-family: var(--serif); font-size: 44px; font-weight: normal; line-height: 1.05; letter-spacing: -0.4px; }
+  h2.section { font-family: var(--serif); font-size: 26px; font-weight: normal; line-height: 1.2; }
+  h3.sub { font-family: var(--serif); font-size: 19px; font-weight: normal; line-height: 1.3; }
+  body[data-theme="dark"] h1.display, body[data-theme="dark"] h1.page-title, body[data-theme="dark"] h2.section, body[data-theme="dark"] h3.sub { color: var(--text-light); }
+  .lede { font-size: 17px; line-height: 1.6; color: var(--text); }
+  body[data-theme="dark"] .lede { color: var(--text-light); }
+  body[data-theme="dark"] p { color: var(--text-light); }
+  .meta { font-family: var(--mono); font-size: 11px; color: var(--muted); letter-spacing: 0.08em; text-transform: uppercase; }
+  body[data-theme="dark"] .meta { color: var(--muted-dk); }
+  .label { font-family: var(--mono); font-size: 11px; color: var(--accent); letter-spacing: 0.1em; text-transform: uppercase; }
+  body[data-theme="dark"] .label { color: var(--accent-dk); }
+  a.link { color: var(--accent); text-decoration: underline; text-underline-offset: 3px; text-decoration-thickness: 1px; }
+  body[data-theme="dark"] a.link { color: var(--accent-dk); }
+
+  /* ── Buttons ── */
+  .btn-primary {
+    display: inline-flex; align-items: center; gap: 10px;
+    font-family: var(--sans); font-size: 13px; color: #fff;
+    background: var(--accent); border: none; border-radius: 4px;
+    cursor: pointer; padding: 10px 22px; letter-spacing: 0.02em;
+    box-shadow: 0 2px 6px rgba(168,92,58,0.30), 0 1px 2px rgba(0,0,0,0.12);
+    transition: transform 120ms ease, box-shadow 120ms ease;
+    text-decoration: none;
+  }
+  .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 6px 18px rgba(168,92,58,0.35), 0 2px 4px rgba(0,0,0,0.15); }
+  body[data-theme="dark"] .btn-primary { background: var(--accent-dk); box-shadow: 0 2px 8px rgba(196,112,74,0.40), 0 1px 3px rgba(0,0,0,0.30); }
+  body[data-theme="dark"] .btn-primary:hover { box-shadow: 0 6px 20px rgba(196,112,74,0.50), 0 2px 6px rgba(0,0,0,0.35); }
+  .btn-primary svg { flex-shrink: 0; }
+
+  .btn-back { font-family: var(--mono); font-size: 12px; color: var(--accent); text-decoration: none; letter-spacing: 0.04em; }
+  body[data-theme="dark"] .btn-back { color: var(--accent-dk); }
+
+  /* ── Project / featured card ── */
+  .proj-card {
+    border: 0.5px solid var(--border);
+    border-top: 2px solid var(--accent);
+    border-radius: 8px;
+    padding: 24px;
+    display: flex; flex-direction: column; gap: 6px;
+    background: transparent;
+    transition: transform 140ms ease, box-shadow 140ms ease;
+  }
+  .proj-card:hover { transform: translateY(-3px); box-shadow: 0 8px 24px rgba(0,0,0,0.08), 0 2px 6px rgba(0,0,0,0.06); }
+  body[data-theme="dark"] .proj-card { background: var(--surface-dk); border-color: var(--border-dk); border-top-color: var(--accent-dk); }
+  body[data-theme="dark"] .proj-card:hover { box-shadow: 0 8px 28px rgba(0,0,0,0.40), 0 2px 8px rgba(0,0,0,0.30); }
+  .card-tag { font-family: var(--mono); font-size: 10px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.06em; }
+  body[data-theme="dark"] .card-tag { color: var(--muted-dk); }
+  .card-title { font-family: var(--serif); font-size: 22px; font-weight: normal; color: var(--text); line-height: 1.2; text-transform: lowercase; }
+  body[data-theme="dark"] .card-title { color: var(--text-light); }
+  .card-desc { font-size: 14px; color: var(--muted); line-height: 1.55; }
+  body[data-theme="dark"] .card-desc { color: var(--muted-dk); }
+  .card-link { font-size: 13px; color: var(--accent); text-decoration: none; margin-top: 4px; display: inline-block; }
+  body[data-theme="dark"] .card-link { color: var(--accent-dk); }
+
+  /* ── Image placeholder ── */
+  .img-placeholder {
+    width: 100%; background: var(--surface); border-radius: 6px;
+    min-height: 220px;
+    display: flex; align-items: center; justify-content: center;
+    font-family: var(--mono); font-size: 12px; color: var(--muted);
+    background-image:
+      repeating-linear-gradient(135deg, transparent 0 12px, rgba(168,92,58,0.04) 12px 13px);
+  }
+  body[data-theme="dark"] .img-placeholder {
+    background-color: var(--surface-dk); color: var(--muted-dk);
+    background-image:
+      repeating-linear-gradient(135deg, transparent 0 12px, rgba(196,112,74,0.06) 12px 13px);
+  }
+  .img-cap { font-family: var(--mono); font-size: 12px; color: var(--muted); margin-top: 10px; }
+  body[data-theme="dark"] .img-cap { color: var(--muted-dk); }
+
+  /* ── Code block ── (Dan: dark-mode contrast) */
+  .code {
+    border-radius: 8px; overflow: hidden; font-family: var(--mono); font-size: 13px; line-height: 1.75;
+    background: #ECEAE5; border: 0.5px solid #D4D0CB;
+  }
+  body[data-theme="dark"] .code { background: #0F0E0C; border-color: #2E2B28; }
+  .code-hdr { display: flex; justify-content: space-between; padding: 8px 16px; font-size: 10px; letter-spacing: 0.07em; text-transform: uppercase; background: #D4D0CB; color: #6B6560; }
+  body[data-theme="dark"] .code-hdr { background: #1A1814; color: #A8A29C; border-bottom: 0.5px solid #2E2B28; }
+  .code-body { padding: 16px 20px; overflow-x: auto; white-space: pre; color: #2A2520; }
+  body[data-theme="dark"] .code-body { color: #F2EEE8; }
+  .tk { color: #A85C3A; } .ts { color: #4E7A40; } .tc { color: #948E88; font-style: italic; } .tp { color: #3F6080; }
+  body[data-theme="dark"] .tk { color: #E69468; } body[data-theme="dark"] .ts { color: #9EC785; } body[data-theme="dark"] .tc { color: #8A847E; } body[data-theme="dark"] .tp { color: #84BFE0; }
+
+  /* inline code — dark contrast fix */
+  code.inline {
+    font-family: var(--mono); font-size: 13px;
+    background: var(--surface); padding: 1px 6px; border-radius: 3px; color: var(--text);
+  }
+  body[data-theme="dark"] code.inline { background: #0F0E0C; color: #F2EEE8; border: 0.5px solid #2E2B28; }
+
+  /* ── Notes & list ── */
+  .archive-row { display: grid; grid-template-columns: 90px 1fr auto; gap: 24px; align-items: baseline; padding: 14px 0; border-bottom: 0.5px solid var(--border); }
+  body[data-theme="dark"] .archive-row { border-bottom-color: var(--border-dk); }
+  .archive-row:last-child { border-bottom: none; }
+  .archive-title { font-family: var(--serif); font-size: 17px; color: var(--text); text-decoration: none; text-transform: lowercase; }
+  body[data-theme="dark"] .archive-title { color: var(--text-light); }
+  .archive-title:hover { color: var(--accent); }
+  body[data-theme="dark"] .archive-title:hover { color: var(--accent-dk); }
+
+  /* ── Project detail layout ── */
+  .pd-grid { display: grid; grid-template-columns: 1fr 280px; gap: 56px; align-items: start; }
+  @media (max-width: 900px) { .pd-grid { grid-template-columns: 1fr; } }
+
+  .pd-meta-card { border: 0.5px solid var(--border); border-radius: 8px; padding: 20px; background: #FBFAF8; }
+  body[data-theme="dark"] .pd-meta-card { border-color: var(--border-dk); background: #2A2724; }
+  .pd-meta-row { padding: 10px 0; border-bottom: 0.5px solid var(--border); }
+  body[data-theme="dark"] .pd-meta-row { border-bottom-color: var(--border-dk); }
+  .pd-meta-row:first-child { padding-top: 0; }
+  .pd-meta-row:last-child { border-bottom: none; padding-bottom: 0; }
+  .pd-meta-key { font-family: var(--mono); font-size: 10px; color: var(--muted); letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 4px; }
+  body[data-theme="dark"] .pd-meta-key { color: var(--muted-dk); }
+  .pd-meta-val { font-size: 14px; color: var(--text); }
+  body[data-theme="dark"] .pd-meta-val { color: var(--text-light); }
+  .pd-meta-mono { font-family: var(--mono); font-size: 13px; color: var(--text); }
+  body[data-theme="dark"] .pd-meta-mono { color: #F2EEE8; }
+
+  /* prose */
+  .prose p { font-size: 16px; line-height: 1.7; margin-bottom: 16px; max-width: 65ch; }
+  .prose p:last-child { margin-bottom: 0; }
+  .prose h2 { font-family: var(--serif); font-size: 24px; font-weight: normal; margin-top: 36px; margin-bottom: 12px; line-height: 1.2; text-transform: lowercase; }
+  body[data-theme="dark"] .prose h2 { color: var(--text-light); }
+  .prose ul { padding-left: 22px; margin-bottom: 16px; }
+  .prose ul li { font-size: 16px; line-height: 1.7; margin-bottom: 6px; }
+  body[data-theme="dark"] .prose ul li { color: var(--text-light); }
+
+  .stack-3 { display: flex; flex-direction: column; gap: 14px; }
+  .stack-4 { display: flex; flex-direction: column; gap: 22px; }
+  .row-between { display: flex; justify-content: space-between; align-items: baseline; gap: 20px; flex-wrap: wrap; }
+
+  hr.sep { border: none; border-top: 0.5px solid var(--border); margin: 32px 0; }
+  body[data-theme="dark"] hr.sep { border-top-color: var(--border-dk); }
+
+  .hero-img { aspect-ratio: 16 / 9; border-radius: 6px; }
+</style>
+</head>
+<body data-theme="light">
+
+<div class="doc-head">
+  <div>
+    <div class="doc-title">justanotherspy — prototype v4</div>
+    <div class="doc-sub">titles &amp; headings lowercase only · body / captions / stack values keep natural casing · redaction uses current text color</div>
+  </div>
+  <div class="doc-controls">
+    <span class="ctrl-label">theme</span>
+    <div class="seg" id="theme-seg">
+      <button data-theme="light" class="active">light</button>
+      <button data-theme="dark">dark</button>
+    </div>
+  </div>
+</div>
+
+<div class="tabs" id="tabs">
+  <button class="tab active" data-page="home">01 · home</button>
+  <button class="tab" data-page="project">02 · project · garlic</button>
+  <button class="tab" data-page="notes">03 · notes</button>
+  <button class="tab" data-page="note">04 · note · introducing garlic</button>
+</div>
+
+<div class="resp-note" id="resp-note"></div>
+
+<!-- ═══════════ HOME ═══════════ -->
+<div class="page active" id="page-home">
+  <nav class="site-nav">
+    <div class="site-wm">justanotherspy</div>
+    <div class="site-nav-links">
+      <a href="#" class="site-nav-link active">home</a>
+      <a href="#" class="site-nav-link">projects</a>
+      <a href="#" class="site-nav-link">notes</a>
+      <button class="nav-toggle" title="toggle theme"></button>
+    </div>
+  </nav>
+
+  <div class="content">
+    <!-- Opener — name & location redacted for style -->
+    <div class="stack-3" style="margin-bottom: 56px;">
+      <div class="label">/ A PERSONAL SITE /</div>
+      <h1 class="display">a small place for<br>projects &amp; thinking.</h1>
+      <p class="lede" style="max-width: 56ch; margin-top: 6px;">I&rsquo;m <span class="redact"><span>NameRedact</span></span>, a security and infrastructure engineer based in <span class="redact"><span>LocationRedact</span></span>. This is where I keep a few things I&rsquo;ve made and the occasional note about how they came to be.</p>
+    </div>
+
+    <!-- Projects -->
+    <div class="stack-4" style="margin-bottom: 56px;">
+      <div class="row-between">
+        <h2 class="section">projects</h2>
+        <a href="#" class="link" style="font-size:13px;">All projects →</a>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;">
+        <a href="#" style="text-decoration:none;color:inherit;display:block;"><div class="proj-card">
+          <div class="card-tag">CLI TOOL · PYTHON</div>
+          <div class="card-title">garlic</div>
+          <div class="card-desc">Session-time tracking for Claude Code. Know where your hours go.</div>
+          <span class="card-link">View project →</span>
+        </div></a>
+        <a href="#" style="text-decoration:none;color:inherit;display:block;"><div class="proj-card">
+          <div class="card-tag">SITE · ASTRO</div>
+          <div class="card-title">justanotherspy</div>
+          <div class="card-desc">This site. A working document for things I&rsquo;m thinking about.</div>
+          <span class="card-link">View project →</span>
+        </div></a>
+      </div>
+    </div>
+
+    <!-- Notes — featured most-recent + consistent list (matches notes page) -->
+    <div class="stack-4">
+      <div class="row-between">
+        <h2 class="section">recent notes</h2>
+        <a href="#" class="link" style="font-size:13px;">All notes →</a>
+      </div>
+
+      <!-- Featured (mirrors notes page) -->
+      <a href="#" style="text-decoration:none;color:inherit;display:block;">
+        <div class="proj-card" style="padding: 28px;">
+          <div class="card-tag">2026-04-12 · 6 MIN READ · LATEST</div>
+          <div class="card-title" style="font-size:26px;margin-top:6px;">introducing garlic</div>
+          <p style="margin-top:8px;font-size:14.5px;line-height:1.65;color:var(--muted);max-width:60ch;">A small CLI grew out of a one-line shell habit, and now I know where my Claude Code hours go. Here is the why.</p>
+          <span class="card-link" style="margin-top:6px;">Read →</span>
+        </div>
+      </a>
+
+      <!-- Consistent compact list (matches archive on notes page) -->
+      <div>
+        <a href="#" style="text-decoration:none;color:inherit;display:block;">
+          <div class="archive-row">
+            <div class="meta">MAR 30</div>
+            <div class="archive-title">on unhurried tooling</div>
+            <div class="meta">4 MIN</div>
+          </div>
+        </a>
+        <a href="#" style="text-decoration:none;color:inherit;display:block;">
+          <div class="archive-row">
+            <div class="meta">MAR 14</div>
+            <div class="archive-title">notes from a slow week</div>
+            <div class="meta">3 MIN</div>
+          </div>
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <footer class="site-footer">
+    <span class="site-footer-wm">j.a.s.</span>
+    <div class="footer-links">
+      <a href="#" class="footer-link">LinkedIn</a>
+      <a href="#" class="footer-link">GitHub</a>
+    </div>
+  </footer>
+</div>
+
+<!-- ═══════════ PROJECT — garlic ═══════════ -->
+<div class="page" id="page-project">
+  <nav class="site-nav">
+    <div class="site-wm">justanotherspy</div>
+    <div class="site-nav-links">
+      <a href="#" class="site-nav-link">home</a>
+      <a href="#" class="site-nav-link active">projects</a>
+      <a href="#" class="site-nav-link">notes</a>
+      <button class="nav-toggle" title="toggle theme"></button>
+    </div>
+  </nav>
+
+  <div class="content-wide">
+    <a href="#" class="btn-back">← Back to projects</a>
+
+    <div class="pd-grid" style="margin-top: 28px;">
+      <div>
+        <div class="meta" style="margin-bottom: 10px;">CLI TOOL · 2026</div>
+        <h1 class="page-title">garlic</h1>
+        <p class="lede" style="margin-top: 14px;">Session-time tracking for Claude Code. Know where your hours go.</p>
+
+        <div class="prose" style="margin-top: 36px;">
+          <h2>the problem</h2>
+          <p>I lose hours in Claude Code in the same way I used to lose hours in tmux: not because the work is unproductive, but because the boundaries are invisible. There is no end-of-shift bell. No clock-out. Without a record, the day collapses into a single shapeless block of &ldquo;coding&rdquo;.</p>
+          <p>I wanted a small, local thing that would notice when I was working, when I stopped, and at the end of the day tell me a single honest sentence about it.</p>
+
+          <h2>architecture</h2>
+          <p>garlic is a Click-based CLI with a SQLite store living under <code class="inline">~/.garlic/</code>. A lightweight session detector watches Claude Code&rsquo;s process tree and stdin/stdout activity; an idle threshold closes a session after 8 minutes of silence. Everything is local. No daemon, no telemetry, no network calls of any kind.</p>
+          <p>The summary command is the entire user interface. A single line: total time, session count, average length. That is the design.</p>
+
+          <h2>design decisions</h2>
+          <ul>
+            <li><strong>Local only.</strong> A session tracker that phones home is a contradiction. SQLite plus the file system, nothing else.</li>
+            <li><strong>One-line output.</strong> The whole point is to know without thinking. Anything more is noise.</li>
+            <li><strong>Passive capture.</strong> The user shouldn&rsquo;t start or stop anything. If they have to think about the tool, the tool has failed.</li>
+            <li><strong>Boring tech.</strong> Python, Click, SQLite. The novelty should be in the idea, not the stack.</li>
+          </ul>
+
+          <h2>install</h2>
+        </div>
+
+        <div class="code" style="margin-top: 14px;">
+          <div class="code-hdr"><span>BASH</span><span>INSTALL &amp; FIRST RUN</span></div>
+          <div class="code-body"><span class="tc"># install</span>
+<span class="tk">$</span> pipx install garlic
+
+<span class="tc"># run a summary</span>
+<span class="tk">$</span> garlic session <span class="tk">--today</span>
+<span class="tc">→ 04h 12m across 6 sessions, avg 42m</span></div>
+        </div>
+
+        <div class="prose" style="margin-top: 36px;">
+          <h2>what it doesn&rsquo;t do</h2>
+          <p>garlic doesn&rsquo;t categorise your work, score your productivity, or send you a weekly email. It also doesn&rsquo;t know what you were doing. Only that you were doing it. The point is to notice the shape of your day, not to perform it.</p>
+        </div>
+
+        <div style="margin-top: 28px;">
+          <div class="img-placeholder" style="aspect-ratio: 16/9;">SCREENSHOT · garlic session summary in a terminal</div>
+          <div class="img-cap">A typical morning, summarised in one line.</div>
+        </div>
+      </div>
+
+      <aside class="stack-3" style="position: sticky; top: 28px;">
+        <div class="pd-meta-card">
+          <div class="pd-meta-row">
+            <div class="pd-meta-key">STACK</div>
+            <div class="pd-meta-val">Python · Click · SQLite</div>
+          </div>
+          <div class="pd-meta-row">
+            <div class="pd-meta-key">VERSION</div>
+            <div class="pd-meta-val">v0.4.1 · April 2026</div>
+          </div>
+          <div class="pd-meta-row">
+            <div class="pd-meta-key">LICENCE</div>
+            <div class="pd-meta-val">MIT</div>
+          </div>
+        </div>
+
+        <a href="https://github.com/" target="_blank" rel="noopener" class="btn-primary" style="justify-content:center;">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 .5C5.65.5.5 5.65.5 12c0 5.08 3.29 9.39 7.86 10.91.58.11.79-.25.79-.56v-2.06c-3.2.7-3.87-1.36-3.87-1.36-.52-1.33-1.27-1.69-1.27-1.69-1.04-.71.08-.7.08-.7 1.15.08 1.76 1.18 1.76 1.18 1.02 1.75 2.69 1.25 3.34.95.1-.74.4-1.25.72-1.54-2.55-.29-5.24-1.28-5.24-5.7 0-1.26.45-2.29 1.18-3.09-.12-.29-.51-1.46.11-3.04 0 0 .97-.31 3.18 1.18a11.04 11.04 0 0 1 5.79 0c2.21-1.49 3.17-1.18 3.17-1.18.63 1.58.24 2.75.12 3.04.74.8 1.18 1.83 1.18 3.09 0 4.43-2.69 5.41-5.26 5.69.41.36.78 1.06.78 2.13v3.16c0 .31.21.67.8.55 4.56-1.52 7.85-5.83 7.85-10.91C23.5 5.65 18.35.5 12 .5Z"/></svg>
+          <span>View on GitHub</span>
+          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7"/><path d="M8 7h9v9"/></svg>
+        </a>
+
+        <div class="pd-meta-card">
+          <div class="pd-meta-key" style="margin-bottom:8px;">INSTALL</div>
+          <code class="pd-meta-mono">pipx install garlic</code>
+        </div>
+
+        <div>
+          <div class="pd-meta-key" style="margin-bottom:10px;">RELATED NOTE</div>
+          <a href="#" style="text-decoration:none;color:inherit;display:block;"><div class="proj-card" style="padding:18px;">
+            <div class="card-tag">2026-04-12 · 6 MIN READ</div>
+            <div class="card-title" style="font-size:18px;margin-top:4px;">introducing garlic</div>
+            <p style="margin-top:6px;font-size:13px;line-height:1.55;color:var(--muted);">The why behind it, and what it deliberately isn&rsquo;t.</p>
+            <span class="card-link" style="margin-top:4px;font-size:12px;">Read →</span>
+          </div></a>
+        </div>
+      </aside>
+    </div>
+  </div>
+
+  <footer class="site-footer">
+    <span class="site-footer-wm">j.a.s.</span>
+    <div class="footer-links">
+      <a href="#" class="footer-link">linkedin</a>
+      <a href="#" class="footer-link">github</a>
+    </div>
+  </footer>
+</div>
+
+<!-- ═══════════ NOTES ═══════════ -->
+<div class="page" id="page-notes">
+  <nav class="site-nav">
+    <div class="site-wm">justanotherspy</div>
+    <div class="site-nav-links">
+      <a href="#" class="site-nav-link">home</a>
+      <a href="#" class="site-nav-link">projects</a>
+      <a href="#" class="site-nav-link active">notes</a>
+      <button class="nav-toggle" title="toggle theme"></button>
+    </div>
+  </nav>
+
+  <div class="content">
+    <h1 class="page-title">notes</h1>
+    <p class="lede" style="margin-top: 10px; color: var(--muted); max-width: 56ch;">Occasional writing on security, AI, and the quiet parts of building software.</p>
+
+    <div class="meta" style="margin-top: 48px; margin-bottom: 14px;">LATEST</div>
+    <a href="#" style="text-decoration:none;color:inherit;display:block;">
+      <div class="proj-card" style="padding: 32px;">
+        <div class="card-tag" style="font-size:11px;">2026-04-12 · 6 MIN READ</div>
+        <div class="card-title" style="font-size:30px;margin-top:6px;">introducing garlic</div>
+        <p style="margin-top:10px;font-size:15px;line-height:1.65;color:var(--muted);max-width:60ch;">I spend a lot of time in Claude Code. More than I&rsquo;d like to admit. garlic started as a one-liner in my shell config and grew into something I actually find useful: a small CLI for knowing where my session hours go.</p>
+        <span class="card-link" style="margin-top:8px;">Read →</span>
+      </div>
+    </a>
+
+    <div class="meta" style="margin-top: 48px; margin-bottom: 8px;">EARLIER</div>
+    <div>
+      <a href="#" style="text-decoration:none;color:inherit;display:block;">
+        <div class="archive-row">
+          <div class="meta">MAR 30</div>
+          <div class="archive-title">on unhurried tooling</div>
+          <div class="meta">4 MIN</div>
+        </div>
+      </a>
+      <a href="#" style="text-decoration:none;color:inherit;display:block;">
+        <div class="archive-row">
+          <div class="meta">MAR 14</div>
+          <div class="archive-title">notes from a slow week</div>
+          <div class="meta">3 MIN</div>
+        </div>
+      </a>
+      <a href="#" style="text-decoration:none;color:inherit;display:block;">
+        <div class="archive-row">
+          <div class="meta">FEB 22</div>
+          <div class="archive-title">after the audit</div>
+          <div class="meta">5 MIN</div>
+        </div>
+      </a>
+      <a href="#" style="text-decoration:none;color:inherit;display:block;">
+        <div class="archive-row">
+          <div class="meta">JAN 08</div>
+          <div class="archive-title">a small thing about logs</div>
+          <div class="meta">2 MIN</div>
+        </div>
+      </a>
+      <a href="#" style="text-decoration:none;color:inherit;display:block;">
+        <div class="archive-row">
+          <div class="meta">DEC 14</div>
+          <div class="archive-title">reading old postmortems</div>
+          <div class="meta">7 MIN</div>
+        </div>
+      </a>
+    </div>
+  </div>
+
+  <footer class="site-footer">
+    <span class="site-footer-wm">j.a.s.</span>
+    <div class="footer-links">
+      <a href="#" class="footer-link">LinkedIn</a>
+      <a href="#" class="footer-link">GitHub</a>
+    </div>
+  </footer>
+</div>
+
+<!-- ═══════════ NOTE ═══════════ -->
+<div class="page" id="page-note">
+  <nav class="site-nav">
+    <div class="site-wm">justanotherspy</div>
+    <div class="site-nav-links">
+      <a href="#" class="site-nav-link">home</a>
+      <a href="#" class="site-nav-link">projects</a>
+      <a href="#" class="site-nav-link active">notes</a>
+      <button class="nav-toggle" title="toggle theme"></button>
+    </div>
+  </nav>
+
+  <div class="content">
+    <a href="#" class="btn-back">← Back to notes</a>
+
+    <div class="img-placeholder hero-img" style="margin-top: 24px;">SCREENSHOT · garlic running a session summary</div>
+
+    <div style="margin-top: 28px;">
+      <div class="meta" style="margin-bottom: 10px;">2026-04-12 · 6 MIN READ · 1,240 WORDS</div>
+      <h1 class="page-title">introducing garlic</h1>
+    </div>
+
+    <div class="prose" style="margin-top: 28px;">
+      <p>I spend a lot of time in Claude Code. More than I&rsquo;d like to admit. garlic started as a one-liner in my shell config and grew into something I actually find useful: a small CLI for knowing where my session hours go.</p>
+      <p>It does three things, in this order: it watches, it summarises, and it gets out of the way. Anything beyond that is creep.</p>
+
+      <h2>why this exists</h2>
+      <p>The honest answer is that I wanted a single sentence at the end of the day that told me what I&rsquo;d actually done, separate from what I felt I&rsquo;d done. Memory is a poor logger.</p>
+
+      <h2>what it isn&rsquo;t</h2>
+      <p>It is not a productivity tool. It does not score your work. It does not categorise, gamify, or summarise into a Slack channel. The whole user interface is one line of output, on demand.</p>
+
+      <h2>what&rsquo;s next</h2>
+      <p>Less than I&rsquo;d like, more than I have time for. The repository is open; the rest is on <a href="#" class="link">GitHub</a>.</p>
+    </div>
+
+    <hr class="sep">
+
+    <div class="meta" style="margin-bottom: 14px;">RELATED PROJECT</div>
+    <a href="#" style="text-decoration:none;color:inherit;display:block;"><div class="proj-card">
+      <div class="card-tag">CLI TOOL</div>
+      <div class="card-title">garlic</div>
+      <div class="card-desc">Session-time tracking for Claude Code.</div>
+      <span class="card-link">View project →</span>
+    </div></a>
+  </div>
+
+  <footer class="site-footer">
+    <span class="site-footer-wm">j.a.s.</span>
+    <div class="footer-links">
+      <a href="#" class="footer-link">LinkedIn</a>
+      <a href="#" class="footer-link">GitHub</a>
+    </div>
+  </footer>
+</div>
+
+<script>
+  const tabs = document.querySelectorAll('.tab');
+  const pages = document.querySelectorAll('.page');
+  const notes = {
+    home: '<strong>Home</strong> — lowercase titles &amp; headings only; body copy / sub-text / captions use natural casing. Stack values, &ldquo;Claude Code&rdquo;, and proper nouns capitalised. Redaction blocks now render in the page&rsquo;s text colour so they read as redactions in both themes.',
+    project: '<strong>Project · garlic</strong> — STACK / VERSION / LICENCE keys remain uppercase mono labels; values are properly cased (Python, Click, SQLite). &ldquo;View on GitHub&rdquo; properly cased.',
+    notes: '<strong>Notes</strong> — LATEST / EARLIER section labels remain uppercase; note titles lowercase; lede has natural casing.',
+    note: '<strong>Note</strong> — prose uses normal sentence casing; only the article title is lowercase.'
+  };
+  const note = document.getElementById('resp-note');
+  function setNote(k) { note.innerHTML = notes[k]; }
+  setNote('home');
+
+  tabs.forEach(t => {
+    t.addEventListener('click', () => {
+      tabs.forEach(x => x.classList.remove('active'));
+      pages.forEach(p => p.classList.remove('active'));
+      t.classList.add('active');
+      document.getElementById('page-' + t.dataset.page).classList.add('active');
+      setNote(t.dataset.page);
+      window.scrollTo({ top: 0, behavior: 'instant' });
+    });
+  });
+
+  const themeSeg = document.getElementById('theme-seg');
+  themeSeg.querySelectorAll('button').forEach(b => {
+    b.addEventListener('click', () => {
+      themeSeg.querySelectorAll('button').forEach(x => x.classList.remove('active'));
+      b.classList.add('active');
+      document.body.dataset.theme = b.dataset.theme;
+    });
+  });
+</script>
+
+</body>
+</html>
