@@ -1,0 +1,17 @@
+---
+interface Props {
+  href: string;
+  date: string;
+  title: string;
+  readingTime: string;
+}
+
+const { href, date, title, readingTime } = Astro.props;
+---
+<a href={href} class="card-link-wrap">
+  <div class="archive-row">
+    <div class="meta">{date}</div>
+    <div class="archive-title">{title}</div>
+    <div class="meta">{readingTime}</div>
+  </div>
+</a>

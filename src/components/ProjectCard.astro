@@ -1,0 +1,55 @@
+---
+interface Props {
+  href: string;
+  tag: string;
+  title: string;
+  description?: string;
+  ctaLabel?: string;
+  variant?: 'default' | 'featured' | 'compact';
+}
+
+const {
+  href,
+  tag,
+  title,
+  description,
+  ctaLabel = 'View project →',
+  variant = 'default',
+} = Astro.props;
+
+const cardStyle = variant === 'featured'
+  ? 'padding: 28px;'
+  : variant === 'compact'
+    ? 'padding: 18px;'
+    : '';
+
+const titleStyle = variant === 'featured'
+  ? 'font-size: 26px; margin-top: 6px;'
+  : variant === 'compact'
+    ? 'font-size: 18px; margin-top: 4px;'
+    : '';
+
+const descStyle = variant === 'featured'
+  ? 'margin-top: 8px; font-size: 14.5px; line-height: 1.65; color: var(--muted); max-width: 60ch;'
+  : variant === 'compact'
+    ? 'margin-top: 6px; font-size: 13px; line-height: 1.55; color: var(--muted);'
+    : '';
+
+const ctaStyle = variant === 'featured'
+  ? 'margin-top: 6px;'
+  : variant === 'compact'
+    ? 'margin-top: 4px; font-size: 12px;'
+    : '';
+---
+<a href={href} class="card-link-wrap">
+  <div class="proj-card" style={cardStyle}>
+    <div class="card-tag">{tag}</div>
+    <div class="card-title" style={titleStyle}>{title}</div>
+    {description && (
+      variant === 'default'
+        ? <div class="card-desc">{description}</div>
+        : <p style={descStyle}>{description}</p>
+    )}
+    <span class="card-link" style={ctaStyle}>{ctaLabel}</span>
+  </div>
+</a>

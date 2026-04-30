@@ -1,0 +1,78 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import ProjectCard from '../components/ProjectCard.astro';
+import ArchiveRow from '../components/ArchiveRow.astro';
+
+const projects = (await getCollection('projects'))
+  .sort((a, b) => (a.data.order ?? 99) - (b.data.order ?? 99));
+
+const allNotes = (await getCollection('notes'))
+  .sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
+
+const featuredNote = allNotes[0];
+const compactNotes = allNotes.slice(1, 3);
+
+const monthShort = (d: Date) =>
+  d.toLocaleDateString('en-US', { month: 'short', day: '2-digit' }).toUpperCase();
+
+const dateLabelLong = (d: Date) =>
+  d.toISOString().slice(0, 10);
+---
+<BaseLayout title="justanotherspy" active="home">
+  <div class="stack-3" style="margin-bottom: 56px;">
+    <div class="label">/ A PERSONAL SITE /</div>
+    <h1 class="display">a small place for<br />projects &amp; thinking.</h1>
+    <p class="lede" style="max-width: 56ch; margin-top: 6px;">
+      I&rsquo;m <span class="redact"><span>NameRedact</span></span>, a security and infrastructure engineer based in <span class="redact"><span>LocationRedact</span></span>. This is where I keep a few things I&rsquo;ve made and the occasional note about how they came to be.
+    </p>
+  </div>
+
+  <div class="stack-4" style="margin-bottom: 56px;">
+    <div class="row-between">
+      <h2 class="section">projects</h2>
+      <a href="/projects" class="link" style="font-size:13px;">All projects →</a>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;">
+      {projects.slice(0, 2).map(p => (
+        <ProjectCard
+          href={`/projects/${p.id}`}
+          tag={p.data.tag}
+          title={p.data.title}
+          description={p.data.description}
+        />
+      ))}
+    </div>
+  </div>
+
+  <div class="stack-4">
+    <div class="row-between">
+      <h2 class="section">recent notes</h2>
+      <a href="/notes" class="link" style="font-size:13px;">All notes →</a>
+    </div>
+
+    {featuredNote && (
+      <ProjectCard
+        href={`/notes/${featuredNote.id}`}
+        tag={`${dateLabelLong(featuredNote.data.date)} · ${featuredNote.data.readingTime} · LATEST`}
+        title={featuredNote.data.title}
+        description={featuredNote.data.excerpt}
+        ctaLabel="Read →"
+        variant="featured"
+      />
+    )}
+
+    {compactNotes.length > 0 && (
+      <div>
+        {compactNotes.map(n => (
+          <ArchiveRow
+            href={`/notes/${n.id}`}
+            date={monthShort(n.data.date)}
+            title={n.data.title}
+            readingTime={n.data.readingTime}
+          />
+        ))}
+      </div>
+    )}
+  </div>
+</BaseLayout>

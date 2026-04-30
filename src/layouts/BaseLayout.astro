@@ -1,0 +1,58 @@
+---
+import '../styles/global.css';
+import SiteNav from '../components/SiteNav.astro';
+import SiteFooter from '../components/SiteFooter.astro';
+
+interface Props {
+  title: string;
+  description?: string;
+  active?: 'home' | 'projects' | 'notes';
+  wide?: boolean;
+}
+
+const {
+  title,
+  description = 'A small place for projects and thinking.',
+  active,
+  wide = false,
+} = Astro.props;
+---
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <link rel="icon" href="/favicon.ico" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="generator" content={Astro.generator} />
+  <meta name="description" content={description} />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&display=swap" rel="stylesheet" />
+  <title>{title}</title>
+  <script is:inline>
+    (() => {
+      try {
+        const stored = localStorage.getItem('theme');
+        const prefers = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        const theme = stored ?? (prefers ? 'dark' : 'light');
+        const apply = () => { if (document.body) document.body.dataset.theme = theme; };
+        document.documentElement.dataset.theme = theme;
+        if (document.body) apply();
+        else document.addEventListener('DOMContentLoaded', apply, { once: true });
+      } catch {
+        const apply = () => { if (document.body) document.body.dataset.theme = 'light'; };
+        if (document.body) apply();
+        else document.addEventListener('DOMContentLoaded', apply, { once: true });
+      }
+    })();
+  </script>
+</head>
+<body data-theme="light">
+  <SiteNav active={active} />
+  <main class={wide ? 'content-wide' : 'content'}>
+    <slot />
+  </main>
+  <SiteFooter />
+</body>
+</html>

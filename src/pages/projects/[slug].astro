@@ -1,0 +1,71 @@
+---
+import { getCollection, getEntry, render } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import MetaCard from '../../components/MetaCard.astro';
+import ProjectCard from '../../components/ProjectCard.astro';
+
+export async function getStaticPaths() {
+  const projects = await getCollection('projects');
+  return projects.map(project => ({
+    params: { slug: project.id },
+    props: { project },
+  }));
+}
+
+const { project } = Astro.props;
+const { Content } = await render(project);
+
+const relatedNote = project.data.relatedNote
+  ? await getEntry(project.data.relatedNote)
+  : undefined;
+
+const isoDate = (d: Date) => d.toISOString().slice(0, 10);
+---
+<BaseLayout title={`${project.data.title} — justanotherspy`} active="projects" wide>
+  <a href="/projects" class="btn-back">← Back to projects</a>
+
+  <div class="pd-grid" style="margin-top: 28px;">
+    <div>
+      <div class="meta" style="margin-bottom: 10px;">{project.data.dateLabel}</div>
+      <h1 class="page-title">{project.data.title}</h1>
+      <p class="lede" style="margin-top: 14px;">{project.data.lede}</p>
+
+      <div class="prose" style="margin-top: 36px;">
+        <Content />
+      </div>
+    </div>
+
+    <aside class="stack-3" style="position: sticky; top: 28px;">
+      <MetaCard rows={[
+        { key: 'STACK', value: project.data.stack },
+        { key: 'VERSION', value: project.data.version },
+        { key: 'LICENCE', value: project.data.licence },
+      ]} />
+
+      <a href={project.data.github} target="_blank" rel="noopener" class="btn-primary" style="justify-content:center;">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 .5C5.65.5.5 5.65.5 12c0 5.08 3.29 9.39 7.86 10.91.58.11.79-.25.79-.56v-2.06c-3.2.7-3.87-1.36-3.87-1.36-.52-1.33-1.27-1.69-1.27-1.69-1.04-.71.08-.7.08-.7 1.15.08 1.76 1.18 1.76 1.18 1.02 1.75 2.69 1.25 3.34.95.1-.74.4-1.25.72-1.54-2.55-.29-5.24-1.28-5.24-5.7 0-1.26.45-2.29 1.18-3.09-.12-.29-.51-1.46.11-3.04 0 0 .97-.31 3.18 1.18a11.04 11.04 0 0 1 5.79 0c2.21-1.49 3.17-1.18 3.17-1.18.63 1.58.24 2.75.12 3.04.74.8 1.18 1.83 1.18 3.09 0 4.43-2.69 5.41-5.26 5.69.41.36.78 1.06.78 2.13v3.16c0 .31.21.67.8.55 4.56-1.52 7.85-5.83 7.85-10.91C23.5 5.65 18.35.5 12 .5Z"/></svg>
+        <span>View on GitHub</span>
+        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7"/><path d="M8 7h9v9"/></svg>
+      </a>
+
+      <div class="pd-meta-card">
+        <div class="pd-meta-key" style="margin-bottom:8px;">INSTALL</div>
+        <code class="pd-meta-mono">{project.data.install}</code>
+      </div>
+
+      {relatedNote && (
+        <div>
+          <div class="pd-meta-key" style="margin-bottom:10px;">RELATED NOTE</div>
+          <ProjectCard
+            href={`/notes/${relatedNote.id}`}
+            tag={`${isoDate(relatedNote.data.date)} · ${relatedNote.data.readingTime}`}
+            title={relatedNote.data.title}
+            description={relatedNote.data.excerpt}
+            ctaLabel="Read →"
+            variant="compact"
+          />
+        </div>
+      )}
+    </aside>
+  </div>
+</BaseLayout>

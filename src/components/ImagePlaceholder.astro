@@ -1,0 +1,17 @@
+---
+interface Props {
+  label: string;
+  caption?: string;
+  hero?: boolean;
+  aspect?: string;
+}
+
+const { label, caption, hero = false, aspect } = Astro.props;
+const style = aspect ? `aspect-ratio: ${aspect};` : undefined;
+const classes = ['img-placeholder'];
+if (hero) classes.push('hero-img');
+---
+<div>
+  <div class:list={classes} style={style}>{label}</div>
+  {caption && <div class="img-cap">{caption}</div>}
+</div>

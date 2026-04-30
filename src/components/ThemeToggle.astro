@@ -1,0 +1,14 @@
+---
+---
+<button class="nav-toggle" type="button" title="toggle theme" aria-label="Toggle theme" data-theme-toggle></button>
+
+<script>
+  const buttons = document.querySelectorAll<HTMLButtonElement>('[data-theme-toggle]');
+  buttons.forEach(btn => {
+    btn.addEventListener('click', () => {
+      const next = document.body.dataset.theme === 'dark' ? 'light' : 'dark';
+      document.body.dataset.theme = next;
+      try { localStorage.setItem('theme', next); } catch {}
+    });
+  });
+</script>
