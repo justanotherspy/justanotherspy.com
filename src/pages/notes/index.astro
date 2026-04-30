@@ -13,6 +13,8 @@ const monthShort = (d: Date) =>
   d.toLocaleDateString('en-US', { month: 'short', day: '2-digit' }).toUpperCase();
 
 const isoDate = (d: Date) => d.toISOString().slice(0, 10);
+
+const base = import.meta.env.BASE_URL.replace(/\/?$/, '/');
 ---
 <BaseLayout title="notes — justanotherspy" active="notes">
   <h1 class="page-title">notes</h1>
@@ -23,7 +25,7 @@ const isoDate = (d: Date) => d.toISOString().slice(0, 10);
   {latest && (
     <>
       <div class="meta" style="margin-top: 48px; margin-bottom: 14px;">LATEST</div>
-      <a href={`/notes/${latest.id}`} class="card-link-wrap">
+      <a href={`${base}notes/${latest.id}`} class="card-link-wrap">
         <div class="proj-card" style="padding: 32px;">
           <div class="card-tag" style="font-size:11px;">{isoDate(latest.data.date)} · {latest.data.readingTime}</div>
           <div class="card-title" style="font-size:30px;margin-top:6px;">{latest.data.title}</div>
@@ -40,7 +42,7 @@ const isoDate = (d: Date) => d.toISOString().slice(0, 10);
       <div>
         {earlier.map(n => (
           <ArchiveRow
-            href={`/notes/${n.id}`}
+            href={`${base}notes/${n.id}`}
             date={monthShort(n.data.date)}
             title={n.data.title}
             readingTime={n.data.readingTime}

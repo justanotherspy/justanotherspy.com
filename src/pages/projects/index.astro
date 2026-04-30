@@ -8,6 +8,8 @@ const projects = (await getCollection('projects'))
 
 const latest = projects[0];
 const earlier = projects.slice(1);
+
+const base = import.meta.env.BASE_URL.replace(/\/?$/, '/');
 ---
 <BaseLayout title="projects — justanotherspy" active="projects">
   <h1 class="page-title">projects</h1>
@@ -18,7 +20,7 @@ const earlier = projects.slice(1);
   {latest && (
     <>
       <div class="meta" style="margin-top: 48px; margin-bottom: 14px;">FEATURED</div>
-      <a href={`/projects/${latest.id}`} class="card-link-wrap">
+      <a href={`${base}projects/${latest.id}`} class="card-link-wrap">
         <div class="proj-card" style="padding: 32px;">
           <div class="card-tag" style="font-size:11px;">{latest.data.tag}</div>
           <div class="card-title" style="font-size:30px;margin-top:6px;">{latest.data.title}</div>
@@ -35,7 +37,7 @@ const earlier = projects.slice(1);
       <div>
         {earlier.map(p => (
           <ArchiveRow
-            href={`/projects/${p.id}`}
+            href={`${base}projects/${p.id}`}
             date={p.data.tag.split(' · ')[0]}
             title={p.data.title}
             readingTime={p.data.tag.split(' · ')[1] ?? ''}

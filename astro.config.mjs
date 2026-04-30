@@ -3,5 +3,7 @@ import { defineConfig } from 'astro/config';
 
 // https://astro.build/config
 export default defineConfig({
+  site: 'https://justanotherspy.github.io',
+  base: '/justanotherspy.com',
   integrations: [],
 });

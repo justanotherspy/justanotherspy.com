@@ -20,9 +20,11 @@ const relatedNote = project.data.relatedNote
   : undefined;
 
 const isoDate = (d: Date) => d.toISOString().slice(0, 10);
+
+const base = import.meta.env.BASE_URL.replace(/\/?$/, '/');
 ---
 <BaseLayout title={`${project.data.title} — justanotherspy`} active="projects" wide>
-  <a href="/projects" class="btn-back">← Back to projects</a>
+  <a href={`${base}projects`} class="btn-back">← Back to projects</a>
 
   <div class="pd-grid" style="margin-top: 28px;">
     <div>
@@ -57,7 +59,7 @@ const isoDate = (d: Date) => d.toISOString().slice(0, 10);
         <div>
           <div class="pd-meta-key" style="margin-bottom:10px;">RELATED NOTE</div>
           <ProjectCard
-            href={`/notes/${relatedNote.id}`}
+            href={`${base}notes/${relatedNote.id}`}
             tag={`${isoDate(relatedNote.data.date)} · ${relatedNote.data.readingTime}`}
             title={relatedNote.data.title}
             description={relatedNote.data.excerpt}
