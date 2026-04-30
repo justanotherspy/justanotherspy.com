@@ -20,9 +20,9 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd #v6.0.2
       - name: Type-check, build, and upload static site
-        uses: withastro/action@v5
+        uses: withastro/action@b7d53628f8b666036b0238aadb0b984a2a489f26 #v6.1.1
         with:
           build-cmd: bun astro check && bun run build
 
@@ -36,4 +36,4 @@ jobs:
     steps:
       - name: Deploy to GitHub Pages
         id: deployment
-        uses: actions/deploy-pages@v4
+        uses: actions/deploy-pages@b7d53628f8b666036b0238aadb0b984a2a489f26 #v5.0.0
