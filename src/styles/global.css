@@ -206,3 +206,102 @@ hr.sep { border: none; border-top: 0.5px solid var(--border); margin: 32px 0; }
 body[data-theme="dark"] hr.sep { border-top-color: var(--border-dk); }
 
 .hero-img { aspect-ratio: 16 / 9; border-radius: 6px; }
+
+/* ────────────────────────────────────────────────────────────────
+   Mobile overrides — three breakpoints, mobile-down only.
+   Nothing above 720px changes.
+   ──────────────────────────────────────────────────────────────── */
+
+/* ── 720px and down ───────── */
+@media (max-width: 720px) {
+
+  :root { --content-pad: 22px; }
+
+  .content,
+  .content-wide {
+    padding: 36px 22px 64px;
+  }
+
+  .site-nav { padding: 18px 22px; }
+  .site-nav-links { gap: 18px; }
+  .site-wm { font-size: 16px; }
+  .site-nav-link { font-size: 13px; }
+
+  .site-footer { padding: 22px; }
+
+  h1.display { font-size: 38px; line-height: 1.05; letter-spacing: -0.5px; }
+  h1.page-title { font-size: 34px; line-height: 1.05; }
+  h2.section { font-size: 22px; }
+
+  .lede { font-size: 16px; line-height: 1.55; }
+
+  .home-projects-grid {
+    grid-template-columns: 1fr !important;
+    gap: 16px !important;
+  }
+
+  .proj-card.is-featured-large {
+    padding: 22px !important;
+  }
+  .proj-card.is-featured-large .card-title {
+    font-size: 26px !important;
+  }
+
+  .pd-grid { grid-template-columns: 1fr; gap: 32px; }
+  .pd-grid > aside {
+    position: static !important;
+    top: auto !important;
+    gap: 18px;
+  }
+
+  .pd-grid .btn-primary {
+    width: 100%;
+    justify-content: center;
+    padding: 14px 20px;
+    font-size: 14px;
+  }
+
+  .archive-row {
+    grid-template-columns: 1fr;
+    gap: 6px;
+    padding: 18px 0;
+  }
+  .archive-row .meta:nth-child(3) {
+    grid-row: 1;
+    justify-self: start;
+    margin-left: 8px;
+  }
+  .archive-row .meta:nth-child(1) {
+    grid-row: 1;
+    justify-self: start;
+  }
+  .archive-row .meta:nth-child(1)::after { content: " ·"; margin-right: 6px; }
+  .archive-row .archive-title {
+    grid-row: 2;
+    font-size: 19px;
+    line-height: 1.25;
+  }
+
+  .code-body { padding: 14px 16px; font-size: 12.5px; }
+  .code-hdr  { padding: 7px 14px; }
+
+  .img-placeholder { min-height: 0; }
+
+  .prose p, .prose ul li { font-size: 16px; }
+
+  .pd-meta-card .pd-meta-mono {
+    word-break: break-word;
+    font-size: 13px;
+  }
+}
+
+/* ── 380px and down (iPhone SE / mini) ───────── */
+@media (max-width: 380px) {
+  .content, .content-wide { padding: 28px 18px 56px; }
+  .site-nav { padding: 16px 18px; }
+  .site-footer { padding: 20px 18px; }
+  .site-nav-links { gap: 14px; }
+  .site-nav-link { font-size: 12.5px; }
+  h1.display { font-size: 34px; }
+  h1.page-title { font-size: 30px; }
+}
