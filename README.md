@@ -16,6 +16,8 @@ Personal portfolio + notes site. Built with [Astro](https://astro.build) on bun.
 ├── design/                       # source of truth for the visual design
 │   ├── Prototype v4.html         # 4-page prototype (HTML/CSS) — the approved design
 │   ├── justanotherspy-identity-v05.html  # earlier identity document (input only)
+│   ├── dead-drop-design.md       # dead drop page / UX spec
+│   ├── dead-drop-api.md          # dead drop API contract (vendor-neutral)
 │   └── instructions.md           # design-handoff notes
 ├── public/                       # static assets served at site root
 └── src/
@@ -41,7 +43,8 @@ Personal portfolio + notes site. Built with [Astro](https://astro.build) on bun.
         ├── projects/index.astro  # all projects
         ├── projects/[slug].astro # project detail (case study + sticky sidebar)
         ├── notes/index.astro     # all notes
-        └── notes/[slug].astro    # note detail (prose + related project)
+        ├── notes/[slug].astro    # note detail (prose + related project)
+        └── dead-drop.astro       # anonymous message form (client POST to external API)
 ```
 
 ## Routes
@@ -53,8 +56,18 @@ Personal portfolio + notes site. Built with [Astro](https://astro.build) on bun.
 | `/projects/<slug>`          | `src/pages/projects/[slug].astro` ← `projects` collection |
 | `/notes`                    | `src/pages/notes/index.astro`                 |
 | `/notes/<slug>`             | `src/pages/notes/[slug].astro` ← `notes` collection |
+| `/dead-drop`                | `src/pages/dead-drop.astro`                   |
 
 The `<slug>` is the markdown filename (without `.md`) for each entry.
+
+## Dead drop
+
+`/dead-drop` is an anonymous, write-only message form. The site is static, so it POSTs
+client-side to an external API (built separately) whose URL is read from the
+`PUBLIC_DEADDROP_ENDPOINT` env var at build time (falls back to a placeholder if unset).
+Set it for production, or point it at a mock echo for local testing. Nothing the visitor
+types is reflected back into the page — success is just a confirmation popup. See
+`design/dead-drop-design.md` (page) and `design/dead-drop-api.md` (API contract).
 
 ## Content collections
 

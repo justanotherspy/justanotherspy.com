@@ -1,0 +1,170 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+
+const endpoint =
+  import.meta.env.PUBLIC_DEADDROP_ENDPOINT ?? 'https://api.justanotherspy.com/dead-drop';
+
+const MAX_MESSAGE = 2000;
+const MAX_ALIAS = 80;
+---
+<BaseLayout
+  title="dead drop"
+  description="Leave an anonymous message. It goes nowhere public — straight to a private channel."
+  active="deaddrop"
+>
+  <h1 class="page-title">dead drop</h1>
+  <p class="lede">
+    Leave a message. By default it is anonymous — nothing about you is collected or kept.
+    Nothing you type is shown back on this page; it goes straight to a private channel.
+  </p>
+
+  <form class="dd-form" data-endpoint={endpoint} novalidate>
+    <div class="dd-field">
+      <label class="dd-label" for="dd-message">message</label>
+      <textarea
+        id="dd-message"
+        name="message"
+        class="dd-textarea"
+        maxlength={MAX_MESSAGE}
+        placeholder="Say what you came to say."
+        required
+      ></textarea>
+      <span class="dd-count" data-count>0 / {MAX_MESSAGE}</span>
+    </div>
+
+    <div class="dd-check-row">
+      <input id="dd-anon" name="anonymous" type="checkbox" checked />
+      <label for="dd-anon">stay anonymous</label>
+    </div>
+
+    <div class="dd-field is-hidden" data-alias-field>
+      <label class="dd-label" for="dd-alias">name or alias <span class="dd-hint">(optional)</span></label>
+      <input
+        id="dd-alias"
+        name="alias"
+        class="dd-input"
+        type="text"
+        maxlength={MAX_ALIAS}
+        placeholder="What should we call you?"
+        autocomplete="off"
+      />
+    </div>
+
+    <div class="dd-hp" aria-hidden="true">
+      <label for="dd-company">Company</label>
+      <input id="dd-company" name="company" type="text" tabindex="-1" autocomplete="off" />
+    </div>
+
+    <div class="dd-actions">
+      <button type="submit" class="btn-primary" data-submit>drop it</button>
+      <span class="dd-error is-hidden" data-error role="alert"></span>
+    </div>
+  </form>
+
+  <dialog class="dd-modal" data-modal>
+    <h2 class="dd-modal-title">message dropped</h2>
+    <p class="dd-modal-body">Thanks. It's on its way to a private channel. Nothing was stored about you.</p>
+    <button type="button" class="btn-primary dd-modal-close" data-modal-close>done</button>
+  </dialog>
+</BaseLayout>
+
+<script>
+  const form = document.querySelector<HTMLFormElement>('.dd-form');
+  if (form) {
+    const endpoint = form.dataset.endpoint ?? '';
+    const message = form.querySelector<HTMLTextAreaElement>('#dd-message')!;
+    const counter = form.querySelector<HTMLElement>('[data-count]')!;
+    const anon = form.querySelector<HTMLInputElement>('#dd-anon')!;
+    const aliasField = form.querySelector<HTMLElement>('[data-alias-field]')!;
+    const alias = form.querySelector<HTMLInputElement>('#dd-alias')!;
+    const honeypot = form.querySelector<HTMLInputElement>('#dd-company')!;
+    const submit = form.querySelector<HTMLButtonElement>('[data-submit]')!;
+    const error = form.querySelector<HTMLElement>('[data-error]')!;
+    const modal = document.querySelector<HTMLDialogElement>('[data-modal]')!;
+    const modalClose = modal.querySelector<HTMLButtonElement>('[data-modal-close]')!;
+
+    const max = message.maxLength > 0 ? message.maxLength : 2000;
+
+    const renderCount = () => {
+      counter.textContent = `${message.value.length} / ${max}`;
+    };
+    message.addEventListener('input', renderCount);
+    renderCount();
+
+    const syncAlias = () => {
+      const showAlias = !anon.checked;
+      aliasField.classList.toggle('is-hidden', !showAlias);
+      if (!showAlias) alias.value = '';
+    };
+    anon.addEventListener('change', syncAlias);
+    syncAlias();
+
+    const showError = (text: string) => {
+      error.textContent = text;
+      error.classList.remove('is-hidden');
+    };
+    const clearError = () => {
+      error.textContent = '';
+      error.classList.add('is-hidden');
+    };
+
+    const succeed = () => {
+      form.reset();
+      renderCount();
+      syncAlias();
+      clearError();
+      if (typeof modal.showModal === 'function') modal.showModal();
+    };
+
+    modalClose.addEventListener('click', () => modal.close());
+
+    form.addEventListener('submit', async (event) => {
+      event.preventDefault();
+      clearError();
+
+      // Silently swallow bot submissions caught by the honeypot.
+      if (honeypot.value.trim() !== '') {
+        succeed();
+        return;
+      }
+
+      const text = message.value.trim();
+      if (text === '') {
+        showError('write something first.');
+        message.focus();
+        return;
+      }
+
+      const anonymous = anon.checked;
+      const aliasValue = alias.value.trim();
+      const payload: { message: string; anonymous: boolean; alias?: string } = {
+        message: text,
+        anonymous,
+      };
+      if (!anonymous && aliasValue !== '') payload.alias = aliasValue;
+
+      submit.disabled = true;
+      form.setAttribute('aria-busy', 'true');
+
+      try {
+        const res = await fetch(endpoint, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload),
+        });
+        if (res.ok) {
+          succeed();
+        } else if (res.status === 429) {
+          showError('too many messages right now — try again in a little while.');
+        } else {
+          showError('something went wrong. try again in a moment.');
+        }
+      } catch {
+        showError('could not reach the drop. check your connection and try again.');
+      } finally {
+        submit.disabled = false;
+        form.removeAttribute('aria-busy');
+      }
+    });
+  }
+</script>

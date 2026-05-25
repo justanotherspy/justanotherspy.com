@@ -2,7 +2,7 @@
 import ThemeToggle from './ThemeToggle.astro';
 
 interface Props {
-  active?: 'home' | 'projects' | 'notes';
+  active?: 'home' | 'projects' | 'notes' | 'deaddrop';
 }
 
 const { active } = Astro.props;
@@ -13,6 +13,7 @@ const { active } = Astro.props;
     <a href="/" class:list={['site-nav-link', active === 'home' && 'active']}>home</a>
     <a href="/projects" class:list={['site-nav-link', active === 'projects' && 'active']}>projects</a>
     <a href="/notes" class:list={['site-nav-link', active === 'notes' && 'active']}>notes</a>
+    <a href="/dead-drop" class:list={['site-nav-link', active === 'deaddrop' && 'active']}>dead drop</a>
     <ThemeToggle />
   </div>
 </nav>

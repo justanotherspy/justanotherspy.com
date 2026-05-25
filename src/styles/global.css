@@ -213,6 +213,67 @@ body[data-theme="dark"] hr.sep { border-top-color: var(--border-dk); }
 
 .hero-img { aspect-ratio: 16 / 9; border-radius: 6px; }
 
+/* ── Dead drop form ── */
+.dd-form { display: flex; flex-direction: column; gap: 24px; max-width: 640px; margin-top: 32px; }
+.dd-field { display: flex; flex-direction: column; gap: 8px; }
+.dd-label { font-family: var(--mono); font-size: 11px; color: var(--accent); letter-spacing: 0.1em; text-transform: uppercase; }
+body[data-theme="dark"] .dd-label { color: var(--accent-dk); }
+.dd-hint { font-family: var(--mono); font-size: 11px; color: var(--muted); letter-spacing: 0.04em; }
+body[data-theme="dark"] .dd-hint { color: var(--muted-dk); }
+
+.dd-textarea, .dd-input {
+  font-family: var(--sans); font-size: 15px; line-height: 1.6; color: var(--text);
+  background: #FBFAF8; border: 0.5px solid var(--border); border-radius: 6px;
+  padding: 14px 16px; width: 100%; resize: vertical;
+  transition: border-color 120ms ease, box-shadow 120ms ease;
+}
+.dd-textarea { min-height: 180px; }
+.dd-textarea::placeholder, .dd-input::placeholder { color: var(--muted); }
+.dd-textarea:focus, .dd-input:focus {
+  outline: none; border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(168,92,58,0.16);
+}
+body[data-theme="dark"] .dd-textarea,
+body[data-theme="dark"] .dd-input {
+  color: var(--text-light); background: #2A2724; border-color: var(--border-dk);
+}
+body[data-theme="dark"] .dd-textarea::placeholder,
+body[data-theme="dark"] .dd-input::placeholder { color: var(--muted-dk); }
+body[data-theme="dark"] .dd-textarea:focus,
+body[data-theme="dark"] .dd-input:focus {
+  border-color: var(--accent-dk); box-shadow: 0 0 0 3px rgba(196,112,74,0.22);
+}
+
+.dd-count { font-family: var(--mono); font-size: 11px; color: var(--muted); letter-spacing: 0.04em; align-self: flex-end; }
+body[data-theme="dark"] .dd-count { color: var(--muted-dk); }
+
+.dd-check-row { display: flex; align-items: center; gap: 10px; }
+.dd-check-row input[type="checkbox"] { width: 15px; height: 15px; accent-color: var(--accent); cursor: pointer; }
+body[data-theme="dark"] .dd-check-row input[type="checkbox"] { accent-color: var(--accent-dk); }
+.dd-check-row label { font-size: 14px; color: var(--text); cursor: pointer; }
+body[data-theme="dark"] .dd-check-row label { color: var(--text-light); }
+
+.dd-actions { display: flex; align-items: center; gap: 20px; }
+.dd-error { font-family: var(--mono); font-size: 12px; color: var(--accent); letter-spacing: 0.02em; }
+body[data-theme="dark"] .dd-error { color: var(--accent-dk); }
+
+/* off-screen honeypot — must stay invisible to humans but present in the DOM */
+.dd-hp { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
+
+.is-hidden { display: none !important; }
+
+/* ── Dead drop confirmation dialog ── */
+.dd-modal {
+  border: 0.5px solid var(--border); border-top: 2px solid var(--accent); border-radius: 8px;
+  background: #FBFAF8; color: var(--text); padding: 32px; max-width: 420px; width: calc(100% - 44px);
+}
+.dd-modal::backdrop { background: rgba(26,24,20,0.45); }
+body[data-theme="dark"] .dd-modal { background: var(--surface-dk); border-color: var(--border-dk); border-top-color: var(--accent-dk); color: var(--text-light); }
+.dd-modal-title { font-family: var(--serif); font-size: 24px; font-weight: normal; line-height: 1.2; text-transform: lowercase; margin-bottom: 12px; }
+.dd-modal-body { font-size: 15px; line-height: 1.6; color: var(--muted); margin-bottom: 24px; }
+body[data-theme="dark"] .dd-modal-body { color: var(--muted-dk); }
+.dd-modal-close { display: inline-flex; }
+
 /* ────────────────────────────────────────────────────────────────
    Mobile overrides — three breakpoints, mobile-down only.
    Nothing above 720px changes.
