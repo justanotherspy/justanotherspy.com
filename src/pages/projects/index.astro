@@ -1,13 +1,9 @@
 ---
 import { getCollection } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
-import ArchiveRow from '../../components/ArchiveRow.astro';
 
 const projects = (await getCollection('projects'))
   .sort((a, b) => (a.data.order ?? 99) - (b.data.order ?? 99));
-
-const latest = projects[0];
-const earlier = projects.slice(1);
 ---
 <BaseLayout title="projects — justanotherspy" active="projects">
   <h1 class="page-title">projects</h1>
@@ -15,33 +11,16 @@ const earlier = projects.slice(1);
     Things I&rsquo;ve made, in various states of finished.
   </p>
 
-  {latest && (
-    <>
-      <div class="meta" style="margin-top: 48px; margin-bottom: 14px;">FEATURED</div>
-      <a href={`/projects/${latest.id}`} class="card-link-wrap">
-        <div class="proj-card" style="padding: 32px;">
-          <div class="card-tag" style="font-size:11px;">{latest.data.tag}</div>
-          <div class="card-title" style="font-size:30px;margin-top:6px;">{latest.data.title}</div>
-          <p style="margin-top:10px;font-size:15px;line-height:1.65;color:var(--muted);max-width:60ch;">{latest.data.description}</p>
-          <span class="card-link" style="margin-top:8px;">View project →</span>
+  <div class="proj-grid" style="margin-top: 40px;">
+    {projects.map(p => (
+      <a href={`/projects/${p.id}`} class="card-link-wrap">
+        <div class="proj-card">
+          <div class="card-tag">{p.data.tag}</div>
+          <div class="card-title">{p.data.title}</div>
+          <div class="card-desc">{p.data.description}</div>
+          <span class="card-link">View project →</span>
         </div>
       </a>
-    </>
-  )}
-
-  {earlier.length > 0 && (
-    <>
-      <div class="meta" style="margin-top: 48px; margin-bottom: 8px;">EARLIER</div>
-      <div>
-        {earlier.map(p => (
-          <ArchiveRow
-            href={`/projects/${p.id}`}
-            date={p.data.tag.split(' · ')[0]}
-            title={p.data.title}
-            readingTime={p.data.tag.split(' · ')[1] ?? ''}
-          />
-        ))}
-      </div>
-    </>
-  )}
+    ))}
+  </div>
 </BaseLayout>
