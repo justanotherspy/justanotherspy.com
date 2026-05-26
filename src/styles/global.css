@@ -128,6 +128,10 @@ body[data-theme="dark"] .card-link { color: var(--accent-dk); }
 /* link wrappers around cards stay inert visually */
 .card-link-wrap { text-decoration: none; color: inherit; display: block; }
 
+/* ── Projects grid ── */
+.proj-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+@media (max-width: 720px) { .proj-grid { grid-template-columns: 1fr; } }
+
 /* ── Image placeholder ── */
 .img-placeholder {
   width: 100%; background: var(--surface); border-radius: 6px;
