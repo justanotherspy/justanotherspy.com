@@ -14,7 +14,7 @@ const featuredNote = allNotes[0];
 const compactNotes = allNotes.slice(1, 3);
 
 const monthShort = (d: Date) =>
-  d.toLocaleDateString('en-US', { month: 'short', day: '2-digit' }).toUpperCase();
+  d.toLocaleDateString('en-US', { month: 'short', day: '2-digit', timeZone: 'UTC' }).toUpperCase();
 
 const dateLabelLong = (d: Date) =>
   d.toISOString().slice(0, 10);

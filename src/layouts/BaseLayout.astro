@@ -16,39 +16,56 @@ const {
   active,
   wide = false,
 } = Astro.props;
+
+const canonical = new URL(Astro.url.pathname, Astro.site);
+const ogImage = new URL('/android-chrome-512x512.png', Astro.site);
 ---
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="utf-8" />
-  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-  <link rel="icon" href="/favicon.ico" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="generator" content={Astro.generator} />
+  <title>{title}</title>
   <meta name="description" content={description} />
+  <link rel="canonical" href={canonical} />
+
+  <link rel="icon" href="/favicon.ico" sizes="any" />
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+  <link rel="manifest" href="/site.webmanifest" />
+  <meta name="theme-color" content="#F5F2EE" media="(prefers-color-scheme: light)" />
+  <meta name="theme-color" content="#1A1814" media="(prefers-color-scheme: dark)" />
+
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="justanotherspy" />
+  <meta property="og:title" content={title} />
+  <meta property="og:description" content={description} />
+  <meta property="og:url" content={canonical} />
+  <meta property="og:image" content={ogImage} />
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content={title} />
+  <meta name="twitter:description" content={description} />
+
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&display=swap" rel="stylesheet" />
-  <title>{title}</title>
+</head>
+<body data-theme="light">
   <script is:inline>
+    // Apply the saved/preferred theme synchronously, before children paint,
+    // to avoid a flash of the default light theme for dark-mode visitors.
     (() => {
       try {
         const stored = localStorage.getItem('theme');
         const prefers = window.matchMedia('(prefers-color-scheme: dark)').matches;
         const theme = stored ?? (prefers ? 'dark' : 'light');
-        const apply = () => { if (document.body) document.body.dataset.theme = theme; };
         document.documentElement.dataset.theme = theme;
-        if (document.body) apply();
-        else document.addEventListener('DOMContentLoaded', apply, { once: true });
-      } catch {
-        const apply = () => { if (document.body) document.body.dataset.theme = 'light'; };
-        if (document.body) apply();
-        else document.addEventListener('DOMContentLoaded', apply, { once: true });
-      }
+        document.body.dataset.theme = theme;
+      } catch {}
     })();
   </script>
-</head>
-<body data-theme="light">
   <SiteNav active={active} />
   <main class={wide ? 'content-wide' : 'content'}>
     <slot />
