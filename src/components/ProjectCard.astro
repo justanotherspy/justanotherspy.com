@@ -42,7 +42,7 @@ const ctaStyle = variant === 'featured'
     : '';
 ---
 <a href={href} class="card-link-wrap">
-  <div class="proj-card" style={cardStyle}>
+  <div class:list={['proj-card', variant === 'featured' && 'is-featured-large']} style={cardStyle}>
     <div class="card-tag">{tag}</div>
     <div class="card-title" style={titleStyle}>{title}</div>
     {description && (

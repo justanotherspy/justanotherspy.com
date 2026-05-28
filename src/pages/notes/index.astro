@@ -10,7 +10,7 @@ const latest = allNotes[0];
 const earlier = allNotes.slice(1);
 
 const monthShort = (d: Date) =>
-  d.toLocaleDateString('en-US', { month: 'short', day: '2-digit' }).toUpperCase();
+  d.toLocaleDateString('en-US', { month: 'short', day: '2-digit', timeZone: 'UTC' }).toUpperCase();
 
 const isoDate = (d: Date) => d.toISOString().slice(0, 10);
 ---
@@ -24,7 +24,7 @@ const isoDate = (d: Date) => d.toISOString().slice(0, 10);
     <>
       <div class="meta" style="margin-top: 48px; margin-bottom: 14px;">LATEST</div>
       <a href={`/notes/${latest.id}`} class="card-link-wrap">
-        <div class="proj-card" style="padding: 32px;">
+        <div class="proj-card is-featured-large" style="padding: 32px;">
           <div class="card-tag" style="font-size:11px;">{isoDate(latest.data.date)} · {latest.data.readingTime}</div>
           <div class="card-title" style="font-size:30px;margin-top:6px;">{latest.data.title}</div>
           <p style="margin-top:10px;font-size:15px;line-height:1.65;color:var(--muted);max-width:60ch;">{latest.data.excerpt}</p>
