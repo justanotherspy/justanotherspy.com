@@ -269,8 +269,10 @@ body[data-theme="dark"] .dd-error { color: var(--accent-dk); }
 
 /* ── Dead drop confirmation dialog ── */
 .dd-modal {
+  position: fixed; inset: 0; margin: auto;
   border: 0.5px solid var(--border); border-top: 2px solid var(--accent); border-radius: 8px;
   background: #FBFAF8; color: var(--text); padding: 32px; max-width: 420px; width: calc(100% - 44px);
+  height: fit-content;
 }
 .dd-modal::backdrop { background: rgba(26,24,20,0.45); }
 body[data-theme="dark"] .dd-modal { background: var(--surface-dk); border-color: var(--border-dk); border-top-color: var(--accent-dk); color: var(--text-light); }
