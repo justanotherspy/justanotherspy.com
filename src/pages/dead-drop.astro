@@ -63,7 +63,7 @@ const MAX_ALIAS = 80;
 
   <dialog class="dd-modal" data-modal>
     <h2 class="dd-modal-title">message dropped</h2>
-    <p class="dd-modal-body">Thanks. It's on its way to a private channel. Nothing was stored about you.</p>
+    <p class="dd-modal-body" data-modal-body>Thanks. It's on its way to a private channel. Nothing was stored about you.</p>
     <button type="button" class="btn-primary dd-modal-close" data-modal-close>done</button>
   </dialog>
 </BaseLayout>
@@ -81,6 +81,7 @@ const MAX_ALIAS = 80;
     const submit = form.querySelector<HTMLButtonElement>('[data-submit]')!;
     const error = form.querySelector<HTMLElement>('[data-error]')!;
     const modal = document.querySelector<HTMLDialogElement>('[data-modal]')!;
+    const modalBody = modal.querySelector<HTMLElement>('[data-modal-body]')!;
     const modalClose = modal.querySelector<HTMLButtonElement>('[data-modal-close]')!;
 
     const max = message.maxLength > 0 ? message.maxLength : 2000;
@@ -108,7 +109,10 @@ const MAX_ALIAS = 80;
       error.classList.add('is-hidden');
     };
 
-    const succeed = () => {
+    const succeed = (storedName?: string) => {
+      modalBody.textContent = storedName
+        ? `Thanks. It's on its way to a private channel. We stored your name, ${storedName}, so it's signed.`
+        : "Thanks. It's on its way to a private channel. Nothing was stored about you.";
       form.reset();
       renderCount();
       syncAlias();
@@ -153,7 +157,7 @@ const MAX_ALIAS = 80;
           body: JSON.stringify(payload),
         });
         if (res.ok) {
-          succeed();
+          succeed(payload.alias);
         } else if (res.status === 429) {
           showError('too many messages right now — try again in a little while.');
         } else {
