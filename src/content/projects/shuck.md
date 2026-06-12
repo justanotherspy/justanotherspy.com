@@ -44,15 +44,9 @@ The shuck repo dogfoods all three — its own CI failures get debugged with shuc
 
 <div class="code" style="margin-top: 14px;">
   <div class="code-hdr"><span>BASH</span><span>INSTALL &amp; SET UP</span></div>
-  <div class="code-body"><span class="tc"># macOS or Linux — the Homebrew cask</span>
+  <div class="code-body"><span class="tc"># the Homebrew cask</span>
 <span class="tk">$</span> brew install --cask justanotherspy/tap/shuck
-
-<span class="tc"># or the install script (no toolchain needed)</span>
-<span class="tk">$</span> curl -fsSL https://raw.githubusercontent.com/justanotherspy/shuck/main/install.sh | bash
-
-<span class="tc"># or build from source</span>
-<span class="tk">$</span> go install github.com/justanotherspy/shuck@latest
-
+&nbsp;
 <span class="tc"># then wire the skill + MCP server into Claude Code</span>
 <span class="tk">$</span> shuck setup</div>
 </div>
@@ -65,13 +59,13 @@ Releases are built by GoReleaser with a keyless cosign signature over the checks
   <div class="code-hdr"><span>BASH</span><span>A TYPICAL RED ✕</span></div>
   <div class="code-body"><span class="tc"># why is PR 42 failing?</span>
 <span class="tk">$</span> shuck logs justanotherspy/shuck 42
-
+&nbsp;
 <span class="tc"># the whole picture — CI + reviews + security</span>
 <span class="tk">$</span> shuck 42
-
+&nbsp;
 <span class="tc"># push, then wait for the verdict</span>
 <span class="tk">$</span> shuck --watch 42
-
+&nbsp;
 <span class="tc"># pin an action to a SHA, properly</span>
 <span class="tk">$</span> shuck action actions/checkout</div>
 </div>
