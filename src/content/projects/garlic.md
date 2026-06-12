@@ -8,7 +8,7 @@ stack: 'Rust · clap · serde'
 version: 'v0.3.4 · 2026'
 licence: MIT
 github: 'https://github.com/justanotherspy/garlic'
-install: 'cargo install garlic-ward'
+install: 'brew install --cask justanotherspy/tap/garlic'
 relatedNote: introducing-garlic
 order: 1
 ---
@@ -47,20 +47,14 @@ One last thing worth saying. Every nudge garlic can send is hardcoded in the sou
 
 <div class="code" style="margin-top: 14px;">
   <div class="code-hdr"><span>BASH</span><span>INSTALL &amp; SET UP</span></div>
-  <div class="code-body"><span class="tc"># macOS — the Homebrew cask</span>
+  <div class="code-body"><span class="tc"># the Homebrew cask</span>
 <span class="tk">$</span> brew install --cask justanotherspy/tap/garlic
-
-<span class="tc"># anywhere with a Rust toolchain</span>
-<span class="tk">$</span> cargo install garlic-ward
-
-<span class="tc"># no toolchain? grab a prebuilt binary</span>
-<span class="tk">$</span> cargo binstall garlic-ward
-
+&nbsp;
 <span class="tc"># then wire the hooks into Claude Code</span>
 <span class="tk">$</span> garlic setup</div>
 </div>
 
-On macOS the easiest path is the Homebrew cask; the tap is republished on every release, so `brew upgrade --cask garlic` keeps it current. Anywhere with a Rust toolchain, `cargo install garlic-ward` builds it from source — and if you'd rather not, `cargo binstall garlic-ward` pulls a prebuilt binary instead. Either way, `garlic setup` walks through the key preferences — or takes `-y` and just uses the defaults — then adds the hooks to `~/.claude/settings.json`. It's idempotent, so it's safe to re-run whenever you need to repair things.
+The tap is republished on every release, so `brew upgrade --cask garlic` keeps it current. `garlic setup` walks through the key preferences — or takes `-y` and just uses the defaults — then adds the hooks to `~/.claude/settings.json`. It's idempotent, so it's safe to re-run whenever you need to repair things.
 
 garlic also ships as a Claude Code plugin via my central marketplace, [justanotherspy/claude-plugins](https://github.com/justanotherspy/claude-plugins) — the same hooks and `/garlic` command, without touching `~/.claude/settings.json`. Pick one mechanism, not both: the plugin and `garlic setup` register the same hooks, and running both counts every event twice.
 
@@ -72,13 +66,13 @@ Day to day I barely touch it; that's the point. The one command I actually look 
   <div class="code-hdr"><span>BASH</span><span>A TYPICAL DAY</span></div>
   <div class="code-body"><span class="tc"># how long have I been clauding today?</span>
 <span class="tk">$</span> garlic status
-
+&nbsp;
 <span class="tc"># feed one line into the status bar → 🧛 2h 15m / 4h · agent 1h 30m · user 45m</span>
 <span class="tk">$</span> garlic statusline
-
+&nbsp;
 <span class="tc"># turn up the bedside manner</span>
 <span class="tk">$</span> garlic set nudge_style=spicy
-
+&nbsp;
 <span class="tc"># done thinking about it for today (tracking continues)</span>
 <span class="tk">$</span> garlic ignore</div>
 </div>
