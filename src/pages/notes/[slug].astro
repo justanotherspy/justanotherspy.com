@@ -1,7 +1,6 @@
 ---
 import { getCollection, getEntry, render } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
-import ImagePlaceholder from '../../components/ImagePlaceholder.astro';
 import ProjectCard from '../../components/ProjectCard.astro';
 
 export async function getStaticPaths() {
@@ -24,23 +23,22 @@ const metaLine = [isoDate, note.data.readingTime, note.data.wordCount]
   .filter(Boolean)
   .join(' · ');
 ---
-<BaseLayout title={`${note.data.title} — justanotherspy`} active="notes">
+<BaseLayout
+  title={`${note.data.title} — justanotherspy`}
+  description={note.data.excerpt}
+  active="notes"
+  ogType="article"
+>
   <a href="/notes" class="btn-back">← Back to notes</a>
-
-  {note.data.hero && (
-    <div style="margin-top: 24px;">
-      <ImagePlaceholder label={note.data.hero} hero />
-    </div>
-  )}
 
   <div style="margin-top: 28px;">
     <div class="meta" style="margin-bottom: 10px;">{metaLine}</div>
     <h1 class="page-title">{note.data.title}</h1>
   </div>
 
-  <div class="prose" style="margin-top: 28px;">
+  <article class="prose" style="margin-top: 28px;">
     <Content />
-  </div>
+  </article>
 
   {related && (
     <>

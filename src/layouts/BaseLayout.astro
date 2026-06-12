@@ -8,6 +8,8 @@ interface Props {
   description?: string;
   active?: 'home' | 'projects' | 'notes' | 'deaddrop';
   wide?: boolean;
+  ogType?: 'website' | 'article';
+  noindex?: boolean;
 }
 
 const {
@@ -15,6 +17,8 @@ const {
   description = 'A small place for projects and thinking.',
   active,
   wide = false,
+  ogType = 'website',
+  noindex = false,
 } = Astro.props;
 
 const canonical = new URL(Astro.url.pathname, Astro.site);
@@ -28,7 +32,9 @@ const ogImage = new URL('/android-chrome-512x512.png', Astro.site);
   <meta name="generator" content={Astro.generator} />
   <title>{title}</title>
   <meta name="description" content={description} />
+  {noindex && <meta name="robots" content="noindex" />}
   <link rel="canonical" href={canonical} />
+  <link rel="sitemap" href="/sitemap.xml" />
 
   <link rel="icon" href="/favicon.ico" sizes="any" />
   <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
@@ -38,12 +44,13 @@ const ogImage = new URL('/android-chrome-512x512.png', Astro.site);
   <meta name="theme-color" content="#F5F2EE" media="(prefers-color-scheme: light)" />
   <meta name="theme-color" content="#1A1814" media="(prefers-color-scheme: dark)" />
 
-  <meta property="og:type" content="website" />
+  <meta property="og:type" content={ogType} />
   <meta property="og:site_name" content="justanotherspy" />
   <meta property="og:title" content={title} />
   <meta property="og:description" content={description} />
   <meta property="og:url" content={canonical} />
   <meta property="og:image" content={ogImage} />
+  <meta property="og:image:alt" content="justanotherspy logo" />
   <meta name="twitter:card" content="summary" />
   <meta name="twitter:title" content={title} />
   <meta name="twitter:description" content={description} />
@@ -66,8 +73,9 @@ const ogImage = new URL('/android-chrome-512x512.png', Astro.site);
       } catch {}
     })();
   </script>
+  <a href="#main" class="skip-link">skip to content</a>
   <SiteNav active={active} />
-  <main class={wide ? 'content-wide' : 'content'}>
+  <main id="main" class={wide ? 'content-wide' : 'content'}>
     <slot />
   </main>
   <SiteFooter />

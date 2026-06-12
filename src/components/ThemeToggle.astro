@@ -4,11 +4,21 @@
 
 <script>
   const buttons = document.querySelectorAll<HTMLButtonElement>('[data-theme-toggle]');
+
+  const syncPressed = () => {
+    const dark = document.body.dataset.theme === 'dark';
+    buttons.forEach(btn => btn.setAttribute('aria-pressed', String(dark)));
+  };
+  syncPressed();
+
   buttons.forEach(btn => {
     btn.addEventListener('click', () => {
       const next = document.body.dataset.theme === 'dark' ? 'light' : 'dark';
+      // html carries the theme too, so the overscroll background matches
+      document.documentElement.dataset.theme = next;
       document.body.dataset.theme = next;
       try { localStorage.setItem('theme', next); } catch {}
+      syncPressed();
     });
   });
 </script>

@@ -28,7 +28,6 @@ const notes = defineCollection({
     readingTime: z.string(),
     wordCount: z.string().optional(),
     excerpt: z.string(),
-    hero: z.string().optional(),
     relatedProject: reference('projects').optional(),
   }),
 });

@@ -33,7 +33,7 @@ const dateLabelLong = (d: Date) =>
       <h2 class="section">projects</h2>
       <a href="/projects" class="link" style="font-size:13px;">All projects →</a>
     </div>
-    <div class="home-projects-grid" style="display:grid;grid-template-columns:1fr 1fr;gap:20px;">
+    <div class="home-projects-grid">
       {projects.slice(0, 2).map(p => (
         <ProjectCard
           href={`/projects/${p.id}`}

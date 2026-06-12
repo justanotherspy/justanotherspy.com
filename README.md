@@ -36,15 +36,16 @@ Personal portfolio + notes site. Built with [Astro](https://astro.build) on bun.
     │   ├── ProjectCard.astro     # default / featured / compact variants
     │   ├── ArchiveRow.astro      # date · title · reading-time row
     │   ├── MetaCard.astro        # the sidebar key/value card on project pages
-    │   ├── CodeBlock.astro       # framed code panel (header + body slot)
-    │   └── ImagePlaceholder.astro
+    │   └── CodeBlock.astro       # framed code panel (header + body slot)
     └── pages/
         ├── index.astro           # home
         ├── projects/index.astro  # all projects
         ├── projects/[slug].astro # project detail (case study + sticky sidebar)
         ├── notes/index.astro     # all notes
         ├── notes/[slug].astro    # note detail (prose + related project)
-        └── dead-drop.astro       # anonymous message form (client POST to external API)
+        ├── dead-drop.astro       # anonymous message form (client POST to external API)
+        ├── 404.astro             # not-found page (GitHub Pages serves 404.html)
+        └── sitemap.xml.ts        # hand-rolled sitemap endpoint (no integration dep)
 ```
 
 ## Routes
@@ -82,7 +83,6 @@ Both collections use Astro's build-time `glob()` loader and Zod schemas defined 
 
 **`notes`** frontmatter:
 - `title`, `date` (ISO), `readingTime`, `wordCount?`, `excerpt`
-- `hero?` — placeholder label for the hero image (until real art exists)
 - `relatedProject?` — slug of a `projects` entry
 
 ## Design system
@@ -116,4 +116,4 @@ bun astro check    # type-check Astro + collection schemas
 
 To add a project or note, drop a new `.md` file into the relevant `src/content/<collection>/` directory with the frontmatter shown above. The slug comes from the filename. Routes are generated at build time.
 
-Project case studies often interleave prose, a code snippet, and a screenshot. Markdown body content can include raw HTML (`<div class="code">…</div>`, `<div class="img-placeholder">…</div>`) at the right insertion points — this is how `src/content/projects/garlic.md` preserves the prototype's exact layout.
+Project case studies often interleave prose, code snippets, and screenshots. Markdown body content can include raw HTML (`<div class="code">…</div>` for the framed code panel, `<img>` + `<div class="img-cap">` for a captioned screenshot) at the right insertion points — this is how `src/content/projects/garlic.md` and `shuck.md` preserve the prototype's exact layout.

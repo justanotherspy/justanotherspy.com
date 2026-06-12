@@ -86,8 +86,3 @@ Day to day I barely touch it; that's the point. The one command I actually look 
 ## what it doesn't do
 
 garlic doesn't score my productivity, categorise my work, or mail me a weekly report. It doesn't know what I was doing — only that I was doing it, and for how long. It was built with Claude Code, which is either ironic or exactly right. The point was never to perform the day. It's to notice when the candle's burning low, and put it down for the night.
-
-<div style="margin-top: 28px;">
-  <div class="img-placeholder" style="aspect-ratio: 16/9;">SCREENSHOT · garlic nudging toward a break in Claude Code</div>
-  <div class="img-cap">Where the day went, in one line — and a hint to stop.</div>
-</div>

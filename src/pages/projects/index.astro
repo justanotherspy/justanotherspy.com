@@ -5,9 +5,13 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
 const projects = (await getCollection('projects'))
   .sort((a, b) => (a.data.order ?? 99) - (b.data.order ?? 99));
 ---
-<BaseLayout title="projects — justanotherspy" active="projects">
+<BaseLayout
+  title="projects — justanotherspy"
+  description="Things I've made, in various states of finished."
+  active="projects"
+>
   <h1 class="page-title">projects</h1>
-  <p class="lede" style="margin-top: 10px; color: var(--muted); max-width: 56ch;">
+  <p class="lede is-muted">
     Things I&rsquo;ve made, in various states of finished.
   </p>
 

@@ -14,9 +14,13 @@ const monthShort = (d: Date) =>
 
 const isoDate = (d: Date) => d.toISOString().slice(0, 10);
 ---
-<BaseLayout title="notes — justanotherspy" active="notes">
+<BaseLayout
+  title="notes — justanotherspy"
+  description="Occasional writing on security, AI, and the quiet parts of building software."
+  active="notes"
+>
   <h1 class="page-title">notes</h1>
-  <p class="lede" style="margin-top: 10px; color: var(--muted); max-width: 56ch;">
+  <p class="lede is-muted">
     Occasional writing on security, AI, and the quiet parts of building software.
   </p>
 
@@ -24,11 +28,11 @@ const isoDate = (d: Date) => d.toISOString().slice(0, 10);
     <>
       <div class="meta" style="margin-top: 48px; margin-bottom: 14px;">LATEST</div>
       <a href={`/notes/${latest.id}`} class="card-link-wrap">
-        <div class="proj-card is-featured-large" style="padding: 32px;">
-          <div class="card-tag" style="font-size:11px;">{isoDate(latest.data.date)} · {latest.data.readingTime}</div>
-          <div class="card-title" style="font-size:30px;margin-top:6px;">{latest.data.title}</div>
-          <p style="margin-top:10px;font-size:15px;line-height:1.65;color:var(--muted);max-width:60ch;">{latest.data.excerpt}</p>
-          <span class="card-link" style="margin-top:8px;">Read →</span>
+        <div class="proj-card is-hero">
+          <div class="card-tag">{isoDate(latest.data.date)} · {latest.data.readingTime}</div>
+          <div class="card-title">{latest.data.title}</div>
+          <div class="card-desc">{latest.data.excerpt}</div>
+          <span class="card-link">Read →</span>
         </div>
       </a>
     </>
