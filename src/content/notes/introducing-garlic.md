@@ -4,7 +4,6 @@ date: 2026-04-12
 readingTime: '3 MIN READ'
 wordCount: '320 WORDS'
 excerpt: 'Steve Yegge says AI tools have a vampiric effect on us — not because they''re bad at the work, but because they''re so good at it. garlic is the small CLI I built to ward that off: it counts my Claude Code hours and tells me when to stop.'
-hero: 'SCREENSHOT · garlic nudging me toward a break'
 relatedProject: garlic
 ---
 
