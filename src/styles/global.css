@@ -165,11 +165,13 @@ body[data-theme="dark"] .card-tag { color: var(--muted-dk); }
 body[data-theme="dark"] .card-title { color: var(--text-light); }
 .card-desc { font-size: 14px; color: var(--muted); line-height: 1.55; }
 body[data-theme="dark"] .card-desc { color: var(--muted-dk); }
-.card-link { font-size: 13px; color: var(--accent); text-decoration: none; margin-top: 4px; display: inline-block; transition: transform 160ms ease; }
+.card-link { font-size: 13px; color: var(--accent); text-decoration: none; margin-top: auto; padding-top: 4px; display: inline-block; transition: transform 160ms ease; }
 body[data-theme="dark"] .card-link { color: var(--accent-dk); }
 
-/* link wrappers around cards stay inert visually */
-.card-link-wrap { text-decoration: none; color: inherit; display: block; }
+/* link wrappers around cards stay inert visually; full height so grid rows
+   stretch the card, not just the anchor */
+.card-link-wrap { text-decoration: none; color: inherit; display: block; height: 100%; }
+.card-link-wrap .proj-card { height: 100%; }
 .card-link-wrap:hover .card-title { color: var(--accent); }
 body[data-theme="dark"] .card-link-wrap:hover .card-title { color: var(--accent-dk); }
 .card-link-wrap:hover .card-link { transform: translateX(4px); }
