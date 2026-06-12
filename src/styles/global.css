@@ -257,7 +257,7 @@ body[data-theme="dark"] .pd-meta-val { color: var(--text-light); }
 body[data-theme="dark"] .pd-meta-mono { color: #F2EEE8; }
 
 /* prose */
-.prose p { font-size: 16px; line-height: 1.7; margin-bottom: 16px; max-width: 65ch; text-wrap: pretty; }
+.prose p { font-size: 16px; line-height: 1.7; margin-bottom: 16px; max-width: 65ch; text-align: justify; text-wrap: pretty; }
 .prose p:last-child { margin-bottom: 0; }
 .prose h2 { font-family: var(--serif); font-size: 24px; font-weight: normal; margin-top: 36px; margin-bottom: 12px; line-height: 1.2; text-transform: lowercase; scroll-margin-top: 24px; }
 body[data-theme="dark"] .prose h2 { color: var(--text-light); }
