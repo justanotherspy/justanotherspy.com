@@ -3,6 +3,7 @@ import { getCollection, getEntry, render } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import MetaCard from '../../components/MetaCard.astro';
 import ProjectCard from '../../components/ProjectCard.astro';
+import { latestVersionLabel } from '../../lib/latest-release';
 
 export async function getStaticPaths() {
   const projects = await getCollection('projects');
@@ -18,6 +19,10 @@ const { Content } = await render(project);
 const relatedNote = project.data.relatedNote
   ? await getEntry(project.data.relatedNote)
   : undefined;
+
+// Latest release from the GitHub API at build time; frontmatter `version`
+// is the fallback when the API is unreachable.
+const version = (await latestVersionLabel(project.data.github)) ?? project.data.version;
 
 const isoDate = (d: Date) => d.toISOString().slice(0, 10);
 ---
@@ -44,7 +49,7 @@ const isoDate = (d: Date) => d.toISOString().slice(0, 10);
     <aside class="stack-3" style="position: sticky; top: 28px;">
       <MetaCard rows={[
         { key: 'STACK', value: project.data.stack },
-        { key: 'VERSION', value: project.data.version },
+        { key: 'VERSION', value: version },
         { key: 'LICENCE', value: project.data.licence },
       ]} />
 

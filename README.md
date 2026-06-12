@@ -25,6 +25,8 @@ Personal portfolio + notes site. Built with [Astro](https://astro.build) on bun.
     ├── content/
     │   ├── projects/*.md         # project entries (frontmatter + body)
     │   └── notes/*.md            # note entries (frontmatter + body)
+    ├── lib/
+    │   └── latest-release.ts     # build-time GitHub latest-release lookup
     ├── styles/
     │   └── global.css            # all design tokens + component classes
     ├── layouts/
@@ -80,6 +82,23 @@ Both collections use Astro's build-time `glob()` loader and Zod schemas defined 
 - `github` (URL), `install` (string for the install panel)
 - `relatedNote?` — slug of a `notes` entry (typed via `reference('notes')`)
 - `order?` — number, controls sort on the home grid + projects index
+
+### Project versions track the latest release
+
+The `VERSION` shown on a project page is **not** the frontmatter value: at
+build time `src/lib/latest-release.ts` asks the GitHub API for the latest
+release of the repo in the entry's `github` URL (drafts and pre-releases
+excluded) and renders its tag, e.g. `v0.4.2 · 2026`. The frontmatter
+`version` is only the fallback when the lookup fails (offline local build,
+API error) — keep it roughly current, but don't bother bumping it on every
+release.
+
+To keep the deployed site current, `ci.yml` also rebuilds on:
+- `repository_dispatch` (type `release-published`) — sent by the release
+  workflows in `justanotherspy/garlic` and `justanotherspy/shuck` when a
+  release goes live (they need a `WEBSITE_DISPATCH_TOKEN` secret with
+  `contents: write` on this repo);
+- a daily `schedule` cron, as a safety net if a dispatch is missed.
 
 **`notes`** frontmatter:
 - `title`, `date` (ISO), `readingTime`, `wordCount?`, `excerpt`
