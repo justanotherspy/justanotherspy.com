@@ -5,7 +5,7 @@ description: 'Ward off the AI vampire. Track your Claude Code hours and get nudg
 lede: 'Ward off the AI vampire. Track your Claude Code hours and get nudged to rest.'
 dateLabel: 'CLI TOOL · 2026'
 stack: 'Rust · clap · serde'
-version: 'v0.3.2 · 2026'
+version: 'v0.3.4 · 2026'
 licence: MIT
 github: 'https://github.com/justanotherspy/garlic'
 install: 'cargo install garlic-ward'
@@ -21,7 +21,7 @@ The idea came straight from [his article](https://steve-yegge.medium.com/the-ai-
 
 ## how it works
 
-garlic hooks into Claude Code through its [hooks system](https://docs.anthropic.com/en/docs/claude-code/hooks). It listens for a handful of moments — a session starting, a prompt going out, Claude stopping — and from those it reconstructs the shape of the day, across however many sessions I've got running at once.
+garlic hooks into Claude Code through its [hooks system](https://docs.anthropic.com/en/docs/claude-code/hooks). It listens for a handful of moments — a session starting, a prompt going out, Claude stopping, a session ending — and from those it reconstructs the shape of the day, across however many sessions I've got running at once.
 
 The model is built from intervals. The span from my prompt to Claude's stop is *agent time* — the machine working. The span from stop to my next prompt is *user time* — me reading, thinking, typing. `garlic status` shows the split, so I can see how an hour actually divided between the two.
 
@@ -31,7 +31,7 @@ A few decisions keep the count honest rather than flattering:
 - Any single response is capped (two hours by default), so a forgotten session left running overnight can't quietly inflate the total.
 - Run two agents at once and the overlapping time counts once, not twice. Babysitting two agents is more draining, not more productive, so garlic never rewards it.
 
-As the hours add up, garlic nudges. Every thirty minutes or so it asks Claude to suggest a break — once per threshold, so it isn't nagging on every prompt — and the last one is more of a "session's over." If I'm still going in the hour before the daily reset, it sends a distinct bedtime nudge: wrap up, get some sleep. How sharp those nudges get is up to me: gentle, firm, or spicy.
+As the hours add up, garlic nudges. Every thirty minutes or so it asks Claude to suggest a break — once per threshold, so it isn't nagging on every prompt — and the last one is more of a "session's over." If I'm still going in the hour before the daily reset, it sends a distinct bedtime nudge: wrap up, get some sleep. How sharp those nudges get is up to me: gentle, firm, or spicy. Whatever the style, each nudge reaches Claude wrapped in a fixed relay instruction — pass this along at the next natural moment, don't change what you're doing — so even the spiciest "session's over" never derails the task in flight.
 
 ## how it's built
 
@@ -60,7 +60,9 @@ One last thing worth saying. Every nudge garlic can send is hardcoded in the sou
 <span class="tk">$</span> garlic setup</div>
 </div>
 
-On macOS the easiest path is the Homebrew cask; the tap is republished on every release, so `brew upgrade --cask garlic` keeps it current. Anywhere with a Rust toolchain, `cargo install garlic-ward` builds it from source — and if you'd rather not, `cargo binstall garlic-ward` pulls a prebuilt binary instead. Either way, `garlic setup` writes a default config and adds the hooks to `~/.claude/settings.json`. It's idempotent, so it's safe to re-run whenever you need to repair things.
+On macOS the easiest path is the Homebrew cask; the tap is republished on every release, so `brew upgrade --cask garlic` keeps it current. Anywhere with a Rust toolchain, `cargo install garlic-ward` builds it from source — and if you'd rather not, `cargo binstall garlic-ward` pulls a prebuilt binary instead. Either way, `garlic setup` walks through the key preferences — or takes `-y` and just uses the defaults — then adds the hooks to `~/.claude/settings.json`. It's idempotent, so it's safe to re-run whenever you need to repair things.
+
+garlic also ships as a Claude Code plugin via my central marketplace, [justanotherspy/claude-plugins](https://github.com/justanotherspy/claude-plugins) — the same hooks and `/garlic` command, without touching `~/.claude/settings.json`. Pick one mechanism, not both: the plugin and `garlic setup` register the same hooks, and running both counts every event twice.
 
 ## using it
 
@@ -71,7 +73,7 @@ Day to day I barely touch it; that's the point. The one command I actually look 
   <div class="code-body"><span class="tc"># how long have I been clauding today?</span>
 <span class="tk">$</span> garlic status
 
-<span class="tc"># feed one line into the status bar → 🧄 2h 15m / 4h</span>
+<span class="tc"># feed one line into the status bar → 🧛 2h 15m / 4h · agent 1h 30m · user 45m</span>
 <span class="tk">$</span> garlic statusline
 
 <span class="tc"># turn up the bedside manner</span>
@@ -81,7 +83,7 @@ Day to day I barely touch it; that's the point. The one command I actually look 
 <span class="tk">$</span> garlic ignore</div>
 </div>
 
-`garlic statusline` feeds a single line into Claude Code's status bar — `🧄 2h 15m / 4h`, my accumulated time against the daily target — and there's a `/garlic` slash command so I can check the same numbers without leaving the conversation. Settings live in `~/.garlic/config.toml`, but `garlic set` edits them in place when I can't be bothered to open the file.
+`garlic statusline` feeds a single line into Claude Code's status bar — `🧛 2h 15m / 4h · agent 1h 30m · user 45m`, my accumulated time against the daily target, split into agent and user time. The icon is the vampire while I'm working — being drained — and flashes to garlic 🧄 for one refresh when a fresh nudge has just fired, so the ward briefly shows when garlic speaks up. There's also a `/garlic` slash command so I can check the same numbers without leaving the conversation. Settings live in `~/.garlic/config.toml`, but `garlic set` edits them in place when I can't be bothered to open the file.
 
 ## what it doesn't do
 
