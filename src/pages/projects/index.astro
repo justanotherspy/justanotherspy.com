@@ -16,9 +16,10 @@ const projects = (await getCollection('projects'))
   </p>
 
   <div class="proj-grid" style="margin-top: 40px;">
-    {projects.map(p => (
+    {projects.map((p, i) => (
       <a href={`/projects/${p.id}`} class="card-link-wrap">
         <div class="proj-card">
+          <span class="card-index">{String(i + 1).padStart(2, '0')}</span>
           <div class="card-tag">{p.data.tag}</div>
           <div class="card-title">{p.data.title}</div>
           <div class="card-desc">{p.data.description}</div>
