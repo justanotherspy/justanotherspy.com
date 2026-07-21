@@ -40,6 +40,39 @@ The honest reason shuck exists: I kept watching coding agents debug CI the hard 
 
 The shuck repo dogfoods all three — its own CI failures get debugged with shuck, which is both the fastest feedback loop and the best test of whether the output is actually good enough.
 
+## v2: pushed, not polled
+
+An agent working a pull request doesn't know when CI fails. Finding out means polling, and every poll spends tokens and wall-clock time inside the agent's context window to discover a fact — the run went red, here's the failing step — that a webhook already knew seconds earlier. The v2 story is what happens when you want the kernel **pushed to you** the instant CI finishes, instead of paying an agent to poll for it.
+
+So shuck now has two modes, and the compatibility contract between them is the whole design discipline of the project:
+
+1. **Portable mode (the default).** Everything above: CLI + MCP + a GitHub token. Pull-based, zero infrastructure. Nothing below changes it.
+2. **Self-hosted mode (strictly opt-in).** An event router you host: GitHub App → webhook ingest → queue → worker → gateway → a channel shim inside your Claude Code session. Push-based. Active only when an operator deploys the backend *and* a user installs the shim with a minted token.
+
+CI enforces this literally: the portable binary's import graph is checked so it never links the AWS SDK, the WebSocket stack, or any backend package. The backend is separate binaries. You can adopt the router and still use every pull-based tool; you can ignore the router entirely and lose nothing.
+
+## the constraint that shaped it: a stdio channel
+
+Claude Code channels are stdio MCP servers. That single fact drove the delivery design. The shim is a tiny MCP server that runs **once per session**, opens an **outbound** WebSocket to your gateway, and turns pushed events into channel notifications the session sees. Outbound-only means no inbound port on the developer's machine. One shim per session means the session identity has to be part of every subscription key — which is why the whole system is keyed on `user_id#session_id`. And an unconfigured shim is **inert**: no token, no sockets, no timers, no stderr. Opt-in all the way down.
+
+The identity model follows from there. You are your token: a `shk_` token, minted by a self-service portal only after GitHub identity verification and an org-membership check, and the server stores only its SHA-256 — you see the plaintext once. The `user_id` half of every key comes from the token, never from the client, so presenting someone else's session id gets you into their namespace only if you also hold their token — which is to say, it gets you nothing. Offboarding is GitHub org membership: a daily sweep revokes departed members, but a validation *error* is always "unknown", never a revoke, so an API blip can't nuke everyone's access.
+
+## the trust story
+
+The router is **single-operator, multi-user** — one org, one App installation, one backend, all data in your infrastructure. Not multi-tenant SaaS. The public surface is exactly one stateless endpoint that HMAC-verifies GitHub's signature before it parses a byte; everything else is authenticated or private. Secrets are env-injected everywhere — no secret-store reads baked into the binaries. And the project is honest about the one boundary it can only narrow, not close: a distilled CI or review summary is still attacker-influenceable text entering an agent's context, so it's treated as untrusted external data, exactly like the PR it came from. The full analysis is the repo's threat model.
+
+Every parser of untrusted input is fuzzed, with minimized crashers committed as regression seeds before the bug is fixed — the log parser, the distiller, the webhook filter, the portal's cookie codec, and more.
+
+## a dead end worth recording
+
+The serverless gateway was supposed to run on AWS App Runner. It can't: App Runner has no WebSocket support, so an App Runner "gateway" could never accept a shim connection. Fargate + ALB works but carries a fixed idle cost — against a design goal of *idle cost near zero*.
+
+The resolution was to re-architect onto an **API Gateway WebSocket API**, with the gateway logic running as per-invocation Lambda handlers. The interesting part is that this became the *second shape of one gateway* rather than a fork: the resident WebSocket server (for Kubernetes) and the serverless Lambda handlers (for the cheap solo path) share one set of DynamoDB stores, one wire protocol, and one deliver contract. A single shim serves both through a small additive protocol superset — because API Gateway can't send application WebSocket close codes, the `unauthorized`/`replaced` verdicts also exist as in-band control frames, and a five-minute app-level ping defeats API Gateway's idle timeout. The resident server simply ignores the extra frames. Workers and shims never know which gateway they're talking to.
+
+The payoff: the serverless target has no fixed-cost component — idle rounds to $0. The routine reconnects forced by API Gateway's 2-hour connection cap are invisible, because delivery is write-then-push with buffered replay: the buffer is the source of truth, the socket is a latency optimisation, and a reconnect just replays whatever wasn't acked.
+
+Hosting it is one `terraform apply` to your own AWS account, or the Helm chart for Kubernetes. Both walkthroughs, the architecture, and the threat model live in the repo.
+
 ## install
 
 <div class="code" style="margin-top: 14px;">
