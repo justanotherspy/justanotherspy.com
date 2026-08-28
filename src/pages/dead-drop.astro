@@ -9,13 +9,13 @@ const MAX_ALIAS = 80;
 ---
 <BaseLayout
   title="dead drop"
-  description="Leave an anonymous message. It goes nowhere public — straight to a private channel."
+  description="Leave an anonymous message. It goes nowhere public, straight to a private channel."
   active="deaddrop"
 >
   <div class="label" style="margin-bottom: 14px;">/ ANONYMOUS · WRITE-ONLY /</div>
   <h1 class="page-title">dead drop</h1>
   <p class="lede" style="margin-top: 16px; max-width: 56ch;">
-    Leave a message. By default it is anonymous — nothing about you is collected or kept.
+    Leave a message. By default it is anonymous: nothing about you is collected or kept.
     Nothing you type is shown back on this page; it goes straight to a private channel.
   </p>
 
@@ -160,7 +160,7 @@ const MAX_ALIAS = 80;
         if (res.ok) {
           succeed(payload.alias);
         } else if (res.status === 429) {
-          showError('too many messages right now — try again in a little while.');
+          showError('too many messages right now. try again in a little while.');
         } else {
           showError('something went wrong. try again in a moment.');
         }

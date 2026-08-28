@@ -5,13 +5,13 @@
  * frontmatter: at build time we ask the GitHub API for the repo's latest
  * release (drafts and pre-releases excluded) and render its tag. The
  * frontmatter `version` stays as the fallback so an API hiccup can never
- * break the build — it just builds with the last known value.
+ * break the build; it just builds with the last known value.
  */
 
 const API_VERSION = '2022-11-28';
 
-// One in-flight/settled promise per repo so the two fetch sites per page
-// (and any future ones) cost at most one request per repo per build.
+// One in-flight/settled promise per repo, so however many pages ask for a
+// repo's release, each repo costs at most one request per build.
 const cache = new Map<string, Promise<string | null>>();
 
 /** `https://github.com/owner/repo` → `owner/repo`, or null if not a repo URL. */
@@ -59,9 +59,9 @@ async function fetchLatest(repo: string): Promise<string | null> {
 
 /**
  * Latest-release label for the sidebar MetaCard, e.g. `v0.4.2 · 2026`
- * (matching the frontmatter `version` format). Returns null — caller falls
- * back to frontmatter — when the URL isn't a GitHub repo or the API is
- * unavailable.
+ * (matching the frontmatter `version` format). Returns null (the caller
+ * falls back to frontmatter) when the URL isn't a GitHub repo or the API
+ * is unavailable.
  */
 export function latestVersionLabel(githubUrl: string): Promise<string | null> {
   const repo = repoFromGithubUrl(githubUrl);

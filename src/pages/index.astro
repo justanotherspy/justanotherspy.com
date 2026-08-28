@@ -7,34 +7,32 @@ import ArchiveRow from '../components/ArchiveRow.astro';
 const projects = (await getCollection('projects'))
   .sort((a, b) => (a.data.order ?? 99) - (b.data.order ?? 99));
 
-const allNotes = (await getCollection('notes'))
-  .sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
-
-const featuredNote = allNotes[0];
-const compactNotes = allNotes.slice(1, 3);
-
-const monthShort = (d: Date) =>
-  d.toLocaleDateString('en-US', { month: 'short', day: '2-digit', timeZone: 'UTC' }).toUpperCase();
-
-const dateLabelLong = (d: Date) =>
-  d.toISOString().slice(0, 10);
+const talks = [
+  {
+    date: 'AUG 27 2026',
+    title: 'claude code',
+    venue: 'Claude community event',
+    href: 'https://github.com/justanotherspy/talks/tree/main/claude-code/27-aug',
+  },
+];
 ---
 <BaseLayout title="justanotherspy" active="home">
   <div class="stack-3" style="margin-bottom: 56px;">
     <div class="label">/ A PERSONAL SITE /</div>
-    <h1 class="display">a small place for<br />projects <span class="amp">&amp;</span> thinking.</h1>
+    <h1 class="display">small tools,<br />built to be <span class="amp">read</span>.</h1>
     <p class="lede" style="max-width: 56ch; margin-top: 6px;">
-      I&rsquo;m <span class="redact"><span>NameRedact</span></span>, a security and infrastructure engineer based in <span class="redact"><span>LocationRedact</span></span>. This is where I keep a few things I&rsquo;ve made and the occasional note about how they came to be.
+      I&rsquo;m <span class="redact"><span>NameRedact</span></span>, a security and infrastructure engineer based in <span class="redact"><span>LocationRedact</span></span>.
+      I build small command line tools, most of them for working with Claude Code, and each one gets a proper write-up here: what it does, what shaped it, and what it refuses to do.
     </p>
   </div>
 
-  <div class="stack-4" style="margin-bottom: 56px;">
+  <div class="stack-4" style="margin-bottom: 64px;">
     <div class="row-between">
       <h2 class="section"><span class="sec-num">01</span>projects</h2>
       <a href="/projects" class="link" style="font-size:13px;">All projects →</a>
     </div>
     <div class="home-projects-grid">
-      {projects.slice(0, 2).map(p => (
+      {projects.map(p => (
         <ProjectCard
           href={`/projects/${p.id}`}
           tag={p.data.tag}
@@ -45,34 +43,71 @@ const dateLabelLong = (d: Date) =>
     </div>
   </div>
 
+  <div class="stack-4" style="margin-bottom: 64px;">
+    <h2 class="section"><span class="sec-num">02</span>the claude code plugin ecosystem</h2>
+    <div class="split">
+      <div class="split-prose">
+        <p>
+          garlic and shuck started as ordinary CLIs, but I spend most of my day inside <a class="link" href="https://code.claude.com" target="_blank" rel="noopener">Claude Code</a>, so each one also ships as a plugin.
+          garlic&rsquo;s plugin runs the same time-tracking hooks and adds a <code class="inline">/garlic</code> command.
+          shuck&rsquo;s runs a background monitor that feeds the session new CI failures and review comments as they happen, plus a <code class="inline">/shuck</code> skill for asking on demand.
+        </p>
+        <p>
+          All of them are catalogued in one central marketplace, <a class="link" href="https://github.com/justanotherspy/claude-plugins" target="_blank" rel="noopener">justanotherspy/claude-plugins</a>.
+          Each plugin lives in its own tool&rsquo;s repo and the marketplace just points at it, so a plugin is always in sync with the binary it drives.
+          Add the marketplace once, then install whichever plugins you want.
+        </p>
+      </div>
+      <div class="code">
+        <div class="code-hdr"><span>CLAUDE CODE</span><span>PLUGINS</span></div>
+        <pre class="code-body"><span class="tc"># add the marketplace once</span>
+<span class="tk">&gt;</span> /plugin marketplace add justanotherspy/claude-plugins
+&nbsp;
+<span class="tc"># then pick what you want</span>
+<span class="tk">&gt;</span> /plugin install garlic@justanotherspy
+<span class="tk">&gt;</span> /plugin install shuck@justanotherspy</pre>
+      </div>
+    </div>
+  </div>
+
+  <div class="stack-4" style="margin-bottom: 64px;">
+    <h2 class="section"><span class="sec-num">03</span>the homebrew tap</h2>
+    <div class="split">
+      <div class="split-prose">
+        <p>
+          The binaries come from <a class="link" href="https://github.com/justanotherspy/homebrew-tap" target="_blank" rel="noopener">justanotherspy/homebrew-tap</a>.
+          I never edit the casks by hand: every release pipeline regenerates its own cask and pushes it to the tap, and a release only flips to latest once its binaries and cask are both in place.
+          The tap can&rsquo;t point at a half-published release.
+        </p>
+        <p>
+          shuck and sproot install on macOS and Linux. garlic&rsquo;s cask is macOS only; on Linux it installs with <code class="inline">cargo install garlic-ward</code>.
+        </p>
+      </div>
+      <div class="code">
+        <div class="code-hdr"><span>BASH</span><span>INSTALL</span></div>
+        <pre class="code-body"><span class="tc"># tap once</span>
+<span class="tk">$</span> brew tap justanotherspy/tap
+&nbsp;
+<span class="tc"># then install by short name</span>
+<span class="tk">$</span> brew install --cask garlic
+<span class="tk">$</span> brew install --cask shuck</pre>
+      </div>
+    </div>
+  </div>
+
   <div class="stack-4">
     <div class="row-between">
-      <h2 class="section"><span class="sec-num">02</span>recent notes</h2>
-      <a href="/notes" class="link" style="font-size:13px;">All notes →</a>
+      <h2 class="section"><span class="sec-num">04</span>talks</h2>
+      <a href="https://github.com/justanotherspy/talks" target="_blank" rel="noopener" class="link" style="font-size:13px;">The talks repo →</a>
     </div>
-
-    {featuredNote && (
-      <ProjectCard
-        href={`/notes/${featuredNote.id}`}
-        tag={`${dateLabelLong(featuredNote.data.date)} · ${featuredNote.data.readingTime} · LATEST`}
-        title={featuredNote.data.title}
-        description={featuredNote.data.excerpt}
-        ctaLabel="Read →"
-        variant="featured"
-      />
-    )}
-
-    {compactNotes.length > 0 && (
-      <div>
-        {compactNotes.map(n => (
-          <ArchiveRow
-            href={`/notes/${n.id}`}
-            date={monthShort(n.data.date)}
-            title={n.data.title}
-            readingTime={n.data.readingTime}
-          />
-        ))}
-      </div>
-    )}
+    <p class="split-prose" style="max-width: 56ch;">
+      I give the occasional talk at Claude community events, and the slides all land in <a class="link" href="https://github.com/justanotherspy/talks" target="_blank" rel="noopener">justanotherspy/talks</a>.
+      If a talk leaves you with questions, open an issue there and I&rsquo;ll answer.
+    </p>
+    <div>
+      {talks.map(t => (
+        <ArchiveRow href={t.href} date={t.date} title={t.title} meta={`${t.venue} · slides ↗`} external />
+      ))}
+    </div>
   </div>
 </BaseLayout>

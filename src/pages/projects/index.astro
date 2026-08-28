@@ -4,9 +4,28 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
 
 const projects = (await getCollection('projects'))
   .sort((a, b) => (a.data.order ?? 99) - (b.data.order ?? 99));
+
+// Work in progress: real repos, no write-up yet. They get a full page
+// once they have settled; until then the repo is the documentation.
+const wip = [
+  {
+    title: 'sproot',
+    tag: 'CLI TOOL · GO',
+    description:
+      'Bootstraps sprite.dev sprites from a config repo you own. One versioned binary instead of a pile of setup bash scripts.',
+    github: 'https://github.com/justanotherspy/sproot',
+  },
+  {
+    title: 'claude poker',
+    tag: 'MCP SERVER · PYTHON',
+    description:
+      'A Texas Hold’em table where Claude agents play each other. PokerKit runs the game, each seat is a managed agent session, and a web UI lets you watch.',
+    github: 'https://github.com/justanotherspy/poker',
+  },
+];
 ---
 <BaseLayout
-  title="projects — justanotherspy"
+  title="projects · justanotherspy"
   description="Things I've made, in various states of finished."
   active="projects"
 >
@@ -24,6 +43,24 @@ const projects = (await getCollection('projects'))
           <div class="card-title">{p.data.title}</div>
           <div class="card-desc">{p.data.description}</div>
           <span class="card-link">View project →</span>
+        </div>
+      </a>
+    ))}
+  </div>
+
+  <div class="meta" style="margin-top: 56px; margin-bottom: 6px;">IN PROGRESS</div>
+  <p class="lede is-muted" style="margin-top: 0;">
+    Being built in the open. The write-ups come when they&rsquo;ve settled; for now the repo is the story.
+  </p>
+
+  <div class="proj-grid" style="margin-top: 24px;">
+    {wip.map(p => (
+      <a href={p.github} class="card-link-wrap" target="_blank" rel="noopener">
+        <div class="proj-card is-wip">
+          <div class="card-tag">{p.tag}</div>
+          <div class="card-title">{p.title}</div>
+          <div class="card-desc">{p.description}</div>
+          <span class="card-link">View on GitHub ↗</span>
         </div>
       </a>
     ))}

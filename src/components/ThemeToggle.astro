@@ -11,6 +11,15 @@
   };
   syncPressed();
 
+  // Keep the browser-chrome color in step with a manual toggle; the metas
+  // default to prefers-color-scheme, which is wrong once the user overrides it.
+  const syncThemeColor = (theme: string) => {
+    document.querySelectorAll('meta[name="theme-color"]').forEach(meta => {
+      meta.setAttribute('content', theme === 'dark' ? '#1A1814' : '#F5F2EE');
+      meta.removeAttribute('media');
+    });
+  };
+
   buttons.forEach(btn => {
     btn.addEventListener('click', () => {
       const next = document.body.dataset.theme === 'dark' ? 'light' : 'dark';
@@ -19,6 +28,7 @@
       document.body.dataset.theme = next;
       try { localStorage.setItem('theme', next); } catch {}
       syncPressed();
+      syncThemeColor(next);
     });
   });
 </script>

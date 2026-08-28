@@ -1,8 +1,7 @@
 ---
-import { getCollection, getEntry, render } from 'astro:content';
+import { getCollection, render } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import MetaCard from '../../components/MetaCard.astro';
-import ProjectCard from '../../components/ProjectCard.astro';
 import { latestVersionLabel } from '../../lib/latest-release';
 
 export async function getStaticPaths() {
@@ -16,18 +15,12 @@ export async function getStaticPaths() {
 const { project } = Astro.props;
 const { Content } = await render(project);
 
-const relatedNote = project.data.relatedNote
-  ? await getEntry(project.data.relatedNote)
-  : undefined;
-
 // Latest release from the GitHub API at build time; frontmatter `version`
 // is the fallback when the API is unreachable.
 const version = (await latestVersionLabel(project.data.github)) ?? project.data.version;
-
-const isoDate = (d: Date) => d.toISOString().slice(0, 10);
 ---
 <BaseLayout
-  title={`${project.data.title} — justanotherspy`}
+  title={`${project.data.title} · justanotherspy`}
   description={project.data.description}
   active="projects"
   ogType="article"
@@ -39,7 +32,7 @@ const isoDate = (d: Date) => d.toISOString().slice(0, 10);
     <div>
       <div class="meta" style="margin-bottom: 10px;">{project.data.dateLabel}</div>
       <h1 class="page-title">{project.data.title}</h1>
-      <p class="lede" style="margin-top: 14px;">{project.data.lede}</p>
+      <p class="lede" style="margin-top: 14px;">{project.data.description}</p>
 
       <div class="prose is-numbered" style="margin-top: 36px;">
         <Content />
@@ -63,20 +56,6 @@ const isoDate = (d: Date) => d.toISOString().slice(0, 10);
         <div class="pd-meta-key" style="margin-bottom:8px;">INSTALL</div>
         <code class="pd-meta-mono">{project.data.install}</code>
       </div>
-
-      {relatedNote && (
-        <div>
-          <div class="pd-meta-key" style="margin-bottom:10px;">RELATED NOTE</div>
-          <ProjectCard
-            href={`/notes/${relatedNote.id}`}
-            tag={`${isoDate(relatedNote.data.date)} · ${relatedNote.data.readingTime}`}
-            title={relatedNote.data.title}
-            description={relatedNote.data.excerpt}
-            ctaLabel="Read →"
-            variant="compact"
-          />
-        </div>
-      )}
     </aside>
   </div>
 </BaseLayout>
