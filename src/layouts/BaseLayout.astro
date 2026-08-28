@@ -6,7 +6,7 @@ import SiteFooter from '../components/SiteFooter.astro';
 interface Props {
   title: string;
   description?: string;
-  active?: 'home' | 'projects' | 'notes' | 'deaddrop';
+  active?: 'home' | 'projects' | 'deaddrop';
   wide?: boolean;
   ogType?: 'website' | 'article';
   noindex?: boolean;
@@ -14,7 +14,7 @@ interface Props {
 
 const {
   title,
-  description = 'A small place for projects and thinking.',
+  description = 'Small command line tools by a security engineer, most of them built for Claude Code.',
   active,
   wide = false,
   ogType = 'website',
@@ -70,6 +70,14 @@ const ogImage = new URL('/android-chrome-512x512.png', Astro.site);
         const theme = stored ?? (prefers ? 'dark' : 'light');
         document.documentElement.dataset.theme = theme;
         document.body.dataset.theme = theme;
+        // A stored theme is an explicit override, so the browser-chrome
+        // color must follow it rather than prefers-color-scheme.
+        if (stored) {
+          document.querySelectorAll('meta[name="theme-color"]').forEach((meta) => {
+            meta.setAttribute('content', stored === 'dark' ? '#1A1814' : '#F5F2EE');
+            meta.removeAttribute('media');
+          });
+        }
       } catch {}
     })();
   </script>

@@ -4,24 +4,15 @@ interface Props {
   tag: string;
   title: string;
   description?: string;
-  ctaLabel?: string;
-  variant?: 'default' | 'featured' | 'compact';
 }
 
-const {
-  href,
-  tag,
-  title,
-  description,
-  ctaLabel = 'View project →',
-  variant = 'default',
-} = Astro.props;
+const { href, tag, title, description } = Astro.props;
 ---
 <a href={href} class="card-link-wrap">
-  <div class:list={['proj-card', variant === 'featured' && 'is-featured', variant === 'compact' && 'is-compact']}>
+  <div class="proj-card">
     <div class="card-tag">{tag}</div>
     <div class="card-title">{title}</div>
     {description && <div class="card-desc">{description}</div>}
-    <span class="card-link">{ctaLabel}</span>
+    <span class="card-link">View project →</span>
   </div>
 </a>

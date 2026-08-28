@@ -37,15 +37,15 @@ main {
   flex: 1;
 }
 
-/* Selection — a wash of the accent, both themes */
+/* Selection: a wash of the accent, both themes */
 ::selection { background: rgba(168,92,58,0.25); }
 body[data-theme="dark"] ::selection { background: rgba(196,112,74,0.35); }
 
-/* Keyboard a11y — a visible ring on focus, only for keyboard users */
+/* Keyboard a11y: a visible ring on focus, only for keyboard users */
 :focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 2px; }
 body[data-theme="dark"] :focus-visible { outline-color: var(--accent-dk); }
 
-/* Skip link — off-screen until focused */
+/* Skip link: off-screen until focused */
 .skip-link {
   position: absolute; left: 16px; top: -100px; z-index: 10;
   font-family: var(--mono); font-size: 12px; letter-spacing: 0.04em;
@@ -56,7 +56,7 @@ body[data-theme="dark"] :focus-visible { outline-color: var(--accent-dk); }
 .skip-link:focus { top: 16px; }
 body[data-theme="dark"] .skip-link { background: var(--accent-dk); }
 
-/* Redaction — uses current text color so it's visible in both themes */
+/* Redaction: uses current text color so it's visible in both themes */
 .redact { background: currentColor; padding: 0 6px; border-radius: 2px; user-select: none; position: relative; }
 .redact span { color: transparent; }
 
@@ -95,12 +95,13 @@ body[data-theme="dark"] .nav-toggle::before { border-color: var(--border-dk); ba
 .content { max-width: 860px; margin: 0 auto; padding: 56px 56px 80px; }
 .content-wide { max-width: 1100px; margin: 0 auto; padding: 56px 56px 80px; }
 
-/* ── Type ── (lowercase headings, per Dan) */
+/* ── Type ── (lowercase headings, per Dan; display sizes are fluid so they
+   scale smoothly between phone and desktop instead of jumping at breakpoints) */
 h1.display, h1.page-title, h2.section, h3.sub { text-transform: lowercase; text-wrap: balance; }
-h1.display { font-family: var(--serif); font-size: 56px; font-weight: normal; line-height: 1; letter-spacing: -0.6px; }
-h1.page-title { font-family: var(--serif); font-size: 44px; font-weight: normal; line-height: 1.05; letter-spacing: -0.4px; }
-h2.section { font-family: var(--serif); font-size: 26px; font-weight: normal; line-height: 1.2; }
-/* mono index riding above a section heading — 01, 02, … */
+h1.display { font-family: var(--serif); font-size: clamp(36px, 8vw, 60px); font-weight: normal; line-height: 1.02; letter-spacing: -0.6px; }
+h1.page-title { font-family: var(--serif); font-size: clamp(32px, 6vw, 44px); font-weight: normal; line-height: 1.05; letter-spacing: -0.4px; }
+h2.section { font-family: var(--serif); font-size: clamp(22px, 3.4vw, 26px); font-weight: normal; line-height: 1.2; }
+/* mono index riding above a section heading: 01, 02, … */
 h2.section .sec-num { font-family: var(--mono); font-size: 12px; color: var(--accent); letter-spacing: 0.08em; margin-right: 12px; position: relative; top: -5px; }
 body[data-theme="dark"] h2.section .sec-num { color: var(--accent-dk); }
 /* the ampersand in the hero gets the serif's italic voice */
@@ -153,7 +154,7 @@ body[data-theme="dark"] .btn-back { color: var(--accent-dk); }
   background: transparent;
   transition: transform 140ms ease, box-shadow 140ms ease;
 }
-/* catalogue index in the card's top-right corner — 01, 02, … */
+/* catalogue index in the card's top-right corner: 01, 02, … */
 .card-index { position: absolute; top: 18px; right: 20px; font-family: var(--mono); font-size: 10px; color: var(--muted); letter-spacing: 0.08em; }
 body[data-theme="dark"] .card-index { color: var(--muted-dk); }
 .proj-card:hover { transform: translateY(-3px); box-shadow: 0 8px 24px rgba(0,0,0,0.08), 0 2px 6px rgba(0,0,0,0.06); }
@@ -176,25 +177,24 @@ body[data-theme="dark"] .card-link { color: var(--accent-dk); }
 body[data-theme="dark"] .card-link-wrap:hover .card-title { color: var(--accent-dk); }
 .card-link-wrap:hover .card-link { transform: translateX(4px); }
 
-/* card variants — featured (home latest note), hero (notes index latest), compact (sidebar) */
-.proj-card.is-featured { padding: 28px; }
-.proj-card.is-featured .card-title { font-size: 26px; margin-top: 6px; }
-.proj-card.is-featured .card-desc { margin-top: 8px; font-size: 14.5px; line-height: 1.65; max-width: 60ch; }
-.proj-card.is-featured .card-link { margin-top: 6px; }
-.proj-card.is-hero { padding: 32px; }
-.proj-card.is-hero .card-tag { font-size: 11px; }
-.proj-card.is-hero .card-title { font-size: 30px; margin-top: 6px; }
-.proj-card.is-hero .card-desc { margin-top: 10px; font-size: 15px; line-height: 1.65; max-width: 60ch; }
-.proj-card.is-hero .card-link { margin-top: 8px; }
-.proj-card.is-compact { padding: 18px; }
-.proj-card.is-compact .card-title { font-size: 18px; margin-top: 4px; }
-.proj-card.is-compact .card-desc { margin-top: 6px; font-size: 13px; }
-.proj-card.is-compact .card-link { margin-top: 4px; font-size: 12px; }
+/* ── Projects grid ──
+   auto-fit keeps three cards to a row on desktop, two on tablet, one on
+   phones, with no orphan column at any width */
+.proj-grid,
+.home-projects-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(228px, 1fr)); gap: 20px; }
 
-/* ── Projects grid ── */
-.proj-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
-.home-projects-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
-@media (max-width: 720px) { .proj-grid { grid-template-columns: 1fr; } }
+/* work-in-progress cards: same card, dashed top rule + status tag color */
+.proj-card.is-wip { border-top-style: dashed; border-top-width: 2px; }
+.proj-card.is-wip .card-tag::before { content: "WIP · "; color: var(--accent); }
+body[data-theme="dark"] .proj-card.is-wip .card-tag::before { color: var(--accent-dk); }
+
+/* ── Split section: prose beside a code panel, stacked on mobile ── */
+.split { display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr); gap: 32px; align-items: start; }
+.split > * { min-width: 0; }
+.split-prose p { font-size: 15.5px; line-height: 1.7; margin-bottom: 14px; max-width: 58ch; }
+.split-prose p:last-child { margin-bottom: 0; }
+body[data-theme="dark"] .split-prose p { color: var(--text-light); }
+@media (max-width: 760px) { .split { grid-template-columns: 1fr; gap: 20px; } }
 
 /* ── Screenshots & captions ── */
 .prose img { width: 100%; border-radius: 6px; border: 0.5px solid var(--border); display: block; }
@@ -210,7 +210,9 @@ body[data-theme="dark"] .img-cap { color: var(--muted-dk); }
 body[data-theme="dark"] .code { background: #0F0E0C; border-color: #2E2B28; }
 .code-hdr { display: flex; justify-content: space-between; padding: 8px 16px; font-size: 10px; letter-spacing: 0.07em; text-transform: uppercase; background: #D4D0CB; color: #6B6560; }
 body[data-theme="dark"] .code-hdr { background: #1A1814; color: #A8A29C; border-bottom: 0.5px solid #2E2B28; }
-.code-body { padding: 16px 20px; overflow-x: auto; white-space: pre; color: #2A2520; }
+/* works as a div (markdown raw HTML) or a pre (.astro templates, where a pre
+   keeps Astro's HTML compression from collapsing the newlines) */
+.code-body { padding: 16px 20px; overflow-x: auto; white-space: pre; color: #2A2520; font-family: inherit; font-size: inherit; line-height: inherit; }
 body[data-theme="dark"] .code-body { color: #F2EEE8; }
 .tk { color: #A85C3A; } .ts { color: #4E7A40; } .tc { color: #948E88; font-style: italic; } .tp { color: #3F6080; }
 body[data-theme="dark"] .tk { color: #E69468; } body[data-theme="dark"] .ts { color: #9EC785; } body[data-theme="dark"] .tc { color: #8A847E; } body[data-theme="dark"] .tp { color: #84BFE0; }
@@ -224,8 +226,8 @@ code.inline,
 body[data-theme="dark"] code.inline,
 body[data-theme="dark"] .prose :not(pre) > code { background: #0F0E0C; color: #F2EEE8; border: 0.5px solid #2E2B28; }
 
-/* ── Notes & list ── */
-.archive-row { display: grid; grid-template-columns: 90px 1fr auto; gap: 24px; align-items: baseline; padding: 14px 0; border-bottom: 0.5px solid var(--border); transition: transform 160ms ease; }
+/* ── Archive rows (talks, and any future dated list) ── */
+.archive-row { display: grid; grid-template-columns: 110px 1fr auto; gap: 24px; align-items: baseline; padding: 14px 0; border-bottom: 0.5px solid var(--border); transition: transform 160ms ease; }
 body[data-theme="dark"] .archive-row { border-bottom-color: var(--border-dk); }
 .archive-row:last-child { border-bottom: none; }
 .archive-title { font-family: var(--serif); font-size: 17px; color: var(--text); text-decoration: none; text-transform: lowercase; transition: color 150ms ease; }
@@ -239,7 +241,7 @@ body[data-theme="dark"] .card-link-wrap:hover .archive-title { color: var(--acce
 /* ── Project detail layout ── */
 .pd-grid { display: grid; grid-template-columns: 1fr 280px; gap: 56px; align-items: start; }
 /* grid children default to min-width:auto, so a white-space:pre code block
-   would force the column — and the whole page — wider than the viewport */
+   would force the column (and the whole page) wider than the viewport */
 .pd-grid > * { min-width: 0; }
 @media (max-width: 900px) { .pd-grid { grid-template-columns: 1fr; } }
 
@@ -262,7 +264,7 @@ body[data-theme="dark"] .pd-meta-mono { color: #F2EEE8; }
 .prose h2 { font-family: var(--serif); font-size: 24px; font-weight: normal; margin-top: 36px; margin-bottom: 12px; line-height: 1.2; text-transform: lowercase; scroll-margin-top: 24px; }
 body[data-theme="dark"] .prose h2 { color: var(--text-light); }
 
-/* numbered prose — project pages read like a spec, so the sections count up */
+/* numbered prose: project pages read like a spec, so the sections count up */
 .prose.is-numbered { counter-reset: prose-sec; }
 .prose.is-numbered h2 { counter-increment: prose-sec; }
 .prose.is-numbered h2::before {
@@ -272,12 +274,6 @@ body[data-theme="dark"] .prose h2 { color: var(--text-light); }
 }
 body[data-theme="dark"] .prose.is-numbered h2::before { color: var(--accent-dk); }
 
-/* drop cap — notes open like an essay */
-.prose.has-dropcap > p:first-child::first-letter {
-  font-family: var(--serif); font-size: 3.1em; line-height: 0.85;
-  float: left; padding: 5px 10px 0 0; color: var(--accent);
-}
-body[data-theme="dark"] .prose.has-dropcap > p:first-child::first-letter { color: var(--accent-dk); }
 .prose ul { padding-left: 22px; margin-bottom: 16px; }
 .prose ul li { font-size: 16px; line-height: 1.7; margin-bottom: 6px; }
 body[data-theme="dark"] .prose ul li { color: var(--text-light); }
@@ -335,7 +331,7 @@ body[data-theme="dark"] .dd-check-row label { color: var(--text-light); }
 .dd-error { font-family: var(--mono); font-size: 12px; color: var(--accent); letter-spacing: 0.02em; }
 body[data-theme="dark"] .dd-error { color: var(--accent-dk); }
 
-/* off-screen honeypot — must stay invisible to humans but present in the DOM */
+/* off-screen honeypot: must stay invisible to humans but present in the DOM */
 .dd-hp { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
 
 .is-hidden { display: none !important; }
@@ -367,7 +363,7 @@ body[data-theme="dark"] .dd-modal-body { color: var(--muted-dk); }
   main > *:nth-child(3) { animation-delay: 140ms; }
   main > *:nth-child(n+4) { animation-delay: 210ms; }
 
-  /* Cross-document view transitions — pages cross-fade into each other
+  /* Cross-document view transitions: pages cross-fade into each other
      while the nav and footer hold still. Pure CSS; browsers without
      support simply navigate as before. */
   @view-transition { navigation: auto; }
@@ -386,8 +382,7 @@ body[data-theme="dark"] .dd-modal-body { color: var(--muted-dk); }
 }
 
 /* ────────────────────────────────────────────────────────────────
-   Mobile overrides — three breakpoints, mobile-down only.
-   Nothing above 720px changes.
+   Mobile overrides, mobile-down only. Nothing above 720px changes.
    ──────────────────────────────────────────────────────────────── */
 
 /* ── 720px and down ───────── */
@@ -407,24 +402,15 @@ body[data-theme="dark"] .dd-modal-body { color: var(--muted-dk); }
 
   .site-footer { padding: 22px; }
 
-  h1.display { font-size: 38px; line-height: 1.05; letter-spacing: -0.5px; }
-  h1.page-title { font-size: 34px; line-height: 1.05; }
-  h2.section { font-size: 22px; }
-
   .lede { font-size: 16px; line-height: 1.55; }
 
-  .home-projects-grid {
+  /* justified text produces rivers at narrow measures; rag right on phones */
+  .prose p { text-align: left; }
+
+  .home-projects-grid,
+  .proj-grid {
     grid-template-columns: 1fr;
     gap: 16px;
-  }
-
-  .proj-card.is-featured,
-  .proj-card.is-hero {
-    padding: 22px;
-  }
-  .proj-card.is-featured .card-title,
-  .proj-card.is-hero .card-title {
-    font-size: 26px;
   }
 
   .pd-grid { grid-template-columns: 1fr; gap: 32px; }
@@ -441,23 +427,18 @@ body[data-theme="dark"] .dd-modal-body { color: var(--muted-dk); }
     font-size: 14px;
   }
 
+  /* metas on one wrapping line, title on its own line below */
   .archive-row {
-    grid-template-columns: 1fr;
-    gap: 6px;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 4px 8px;
     padding: 18px 0;
   }
-  .archive-row .meta:nth-child(3) {
-    grid-row: 1;
-    justify-self: start;
-    margin-left: 8px;
-  }
-  .archive-row .meta:nth-child(1) {
-    grid-row: 1;
-    justify-self: start;
-  }
-  .archive-row .meta:nth-child(1)::after { content: " ·"; margin-right: 6px; }
+  .archive-row .meta:nth-child(1)::after { content: " ·"; }
   .archive-row .archive-title {
-    grid-row: 2;
+    flex-basis: 100%;
+    order: 2;
     font-size: 19px;
     line-height: 1.25;
   }
@@ -491,6 +472,4 @@ body[data-theme="dark"] .dd-modal-body { color: var(--muted-dk); }
   .site-footer { padding: 20px 18px; }
   .site-nav-links { gap: 14px; flex-wrap: wrap; }
   .site-nav-link { font-size: 12.5px; }
-  h1.display { font-size: 34px; }
-  h1.page-title { font-size: 30px; }
 }

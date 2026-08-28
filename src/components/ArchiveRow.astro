@@ -3,15 +3,16 @@ interface Props {
   href: string;
   date: string;
   title: string;
-  readingTime: string;
+  meta?: string;
+  external?: boolean;
 }
 
-const { href, date, title, readingTime } = Astro.props;
+const { href, date, title, meta, external = false } = Astro.props;
 ---
-<a href={href} class="card-link-wrap">
+<a href={href} class="card-link-wrap" target={external ? '_blank' : undefined} rel={external ? 'noopener' : undefined}>
   <div class="archive-row">
     <div class="meta">{date}</div>
     <div class="archive-title">{title}</div>
-    <div class="meta">{readingTime}</div>
+    {meta && <div class="meta">{meta}</div>}
   </div>
 </a>
