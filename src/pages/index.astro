@@ -95,7 +95,7 @@ const talks = [
     </div>
   </div>
 
-  <div class="stack-4">
+  <div class="stack-4" style="margin-bottom: 64px;">
     <div class="row-between">
       <h2 class="section"><span class="sec-num">04</span>talks</h2>
       <a href="https://github.com/justanotherspy/talks" target="_blank" rel="noopener" class="link" style="font-size:13px;">The talks repo →</a>
@@ -108,6 +108,33 @@ const talks = [
       {talks.map(t => (
         <ArchiveRow href={t.href} date={t.date} title={t.title} meta={`${t.venue} · slides ↗`} external />
       ))}
+    </div>
+  </div>
+
+  <div class="stack-4">
+    <div class="row-between">
+      <h2 class="section"><span class="sec-num">05</span>claude build day</h2>
+      <a href="/clawds-fable/" class="link" style="font-size:13px;">Play Clawd&rsquo;s Fable →</a>
+    </div>
+    <div class="split">
+      <div class="split-prose">
+        <p>
+          The <a class="link" href="https://claudecapetowncommunity.com" target="_blank" rel="noopener">Claude Cape Town Community</a> ran a Claude Fable 5.1 build day: a day of live prompts, run against a fresh repo in front of the room, with the results served straight off a VM.
+          My own demo was <a class="link" href="/clawds-fable/">Clawd&rsquo;s Fable</a>, a small pixel-art platformer where Clawd, the Claude Code mascot, runs one short level stomping out shambling blobs of AI slop that mutter writing tics as they go.
+        </p>
+        <p>
+          It is one self-contained HTML file: every sprite, sound and line of dialogue is generated in code, with no libraries and no assets.
+          Arrow keys or WASD to move, space to jump, and a run takes about ninety seconds.
+        </p>
+      </div>
+      <div class="code">
+        <div class="code-hdr"><span>CLAWD&rsquo;S FABLE</span><span>PLAY</span></div>
+        <pre class="code-body"><span class="tc"># play it in the browser</span>
+<span class="tk">&gt;</span> <a class="link" href="/clawds-fable/">justanotherspy.com/clawds-fable</a>
+&nbsp;
+<span class="tc"># the community</span>
+<span class="tk">&gt;</span> <a class="link" href="https://claudecapetowncommunity.com" target="_blank" rel="noopener">claudecapetowncommunity.com</a></pre>
+      </div>
     </div>
   </div>
 </BaseLayout>
