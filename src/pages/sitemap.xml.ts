@@ -8,6 +8,7 @@ export const GET: APIRoute = async ({ site }) => {
     '/',
     '/projects/',
     '/dead-drop/',
+    '/clawds-fable/',
     ...projects.map(p => `/projects/${p.id}/`),
   ];
 

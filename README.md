@@ -20,6 +20,7 @@ Personal portfolio site. Built with [Astro](https://astro.build) on bun.
 │   ├── dead-drop-api.md          # dead drop API contract (vendor-neutral)
 │   └── instructions.md           # design-handoff notes
 ├── public/                       # static assets served at site root
+│   └── clawds-fable/index.html   # Clawd's Fable, the build day game (self-contained HTML)
 └── src/
     ├── content.config.ts         # Zod-typed `projects` collection
     ├── content/
@@ -54,12 +55,13 @@ Personal portfolio site. Built with [Astro](https://astro.build) on bun.
 | `/projects`        | `src/pages/projects/index.astro`                          |
 | `/projects/<slug>` | `src/pages/projects/[slug].astro` ← `projects` collection |
 | `/dead-drop`       | `src/pages/dead-drop.astro`                               |
+| `/clawds-fable`    | `public/clawds-fable/index.html` (static, copied verbatim) |
 
 The `<slug>` is the markdown filename (without `.md`) for each entry.
 
 ## Home page sections
 
-Besides the hero and project cards, the home page carries three prose sections
+Besides the hero and project cards, the home page carries four prose sections
 kept accurate against their source repos:
 
 - **Claude Code plugin ecosystem**: the central marketplace is
@@ -70,6 +72,12 @@ kept accurate against their source repos:
 - **Talks**: [justanotherspy/talks](https://github.com/justanotherspy/talks) holds
   slides from Claude community talks; the list on the page is a small array in
   `index.astro`. Add a row there when a new talk lands in the repo.
+- **Claude build day**: the Claude Cape Town Community build day, linking to
+  [claudecapetowncommunity.com](https://claudecapetowncommunity.com) and to the
+  game built on the day. The game itself is a single HTML file from
+  [justanotherspy/claude-build-day](https://github.com/justanotherspy/claude-build-day)
+  (`demo/clawds-fable.html`), copied unchanged into `public/clawds-fable/index.html`
+  so it is served at `/clawds-fable`. To update it, copy the file over again.
 
 Work-in-progress projects (currently sproot and claude poker) are a small array
 in `src/pages/projects/index.astro`: cards that link straight to GitHub, with no
