@@ -20,7 +20,8 @@ Personal portfolio site. Built with [Astro](https://astro.build) on bun.
 │   ├── dead-drop-api.md          # dead drop API contract (vendor-neutral)
 │   └── instructions.md           # design-handoff notes
 ├── public/                       # static assets served at site root
-│   └── clawds-fable/index.html   # Clawd's Fable, the build day game (self-contained HTML)
+│   ├── clawds-fable/index.html   # Clawd's Fable, the build day game (self-contained HTML)
+│   └── talks/*.pdf               # talk slides, copied from justanotherspy/talks
 └── src/
     ├── content.config.ts         # Zod-typed `projects` collection
     ├── content/
@@ -56,6 +57,7 @@ Personal portfolio site. Built with [Astro](https://astro.build) on bun.
 | `/projects/<slug>` | `src/pages/projects/[slug].astro` ← `projects` collection |
 | `/dead-drop`       | `src/pages/dead-drop.astro`                               |
 | `/clawds-fable`    | `public/clawds-fable/index.html` (static, copied verbatim) |
+| `/talks/<file>.pdf` | `public/talks/*.pdf` (talk slides, copied verbatim)       |
 
 The `<slug>` is the markdown filename (without `.md`) for each entry.
 
@@ -71,7 +73,10 @@ kept accurate against their source repos:
   casks are regenerated and pushed by each tool's release pipeline, never hand-edited.
 - **Talks**: [justanotherspy/talks](https://github.com/justanotherspy/talks) holds
   slides from Claude community talks; the list on the page is a small array in
-  `index.astro`. Add a row there when a new talk lands in the repo.
+  `index.astro`. Each talk's PDF is copied unchanged into `public/talks/` (e.g.
+  `public/talks/claude-code-2026-08-27.pdf`) and the row links to that copy, so
+  the slides open in the browser's own PDF viewer instead of downloading from
+  GitHub. When a new talk lands in the repo, copy its PDF over and add a row.
 - **Claude build day**: the Claude Cape Town Community build day, linking to
   [claudecapetowncommunity.com](https://claudecapetowncommunity.com) and to the
   game built on the day. The game itself is a single HTML file from
