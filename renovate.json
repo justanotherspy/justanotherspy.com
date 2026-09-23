@@ -2,5 +2,14 @@
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "extends": [
     "local>justanotherspy/renovate"
+  ],
+  "packageRules": [
+    {
+      "description": "Skip TypeScript 7.0.x: `astro check` (@astrojs/check 0.9.10 peers typescript ^5 || ^6) refuses TypeScript 7.0 because the native compiler does not ship the programmatic API it relies on (https://github.com/withastro/roadmap/discussions/1321). Its replacement, @astrojs/ts-content-mapper, needs TypeScript 7.1+ (https://github.com/withastro/astro/tree/main/packages/language-tools/ts-content-mapper#usage), so 7.1 is allowed through and its PR is the cue to migrate.",
+      "matchPackageNames": [
+        "typescript"
+      ],
+      "allowedVersions": "<7.0.0 || >=7.1.0"
+    }
   ]
 }
