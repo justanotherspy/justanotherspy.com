@@ -49,7 +49,7 @@ The shuck repo dogfoods this on itself: its own CI failures arrive through its o
 
 ## install
 
-<div class="code" style="margin-top: 14px;">
+<div class="code">
   <div class="code-hdr"><span>BASH</span><span>INSTALL &amp; SET UP</span></div>
   <div class="code-body"><span class="tc"># the Homebrew cask (macOS and Linux)</span>
 <span class="tk">$</span> brew install --cask justanotherspy/tap/shuck
@@ -66,7 +66,7 @@ Releases are built by GoReleaser with a keyless cosign signature over the checks
 
 ## using it
 
-<div class="code" style="margin-top: 14px;">
+<div class="code">
   <div class="code-hdr"><span>BASH</span><span>A TYPICAL RED ✕</span></div>
   <div class="code-body"><span class="tc"># why is PR 42 failing?</span>
 <span class="tk">$</span> shuck logs justanotherspy/shuck 42

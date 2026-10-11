@@ -17,7 +17,7 @@ Claude Code runs your status line command every second and shows whatever it pri
 
 `garnish` is that status line. It reads the JSON snapshot Claude Code pipes in, renders a small dashboard from a TOML config, and gets out of the way.
 
-<div class="code" style="margin-top: 14px;">
+<div class="code">
   <div class="code-hdr"><span>CLAUDE CODE</span><span>THE DEFAULT PRESET</span></div>
   <div class="code-body">╭─ ❒ ~/projects/garnish │ ⇄ #42 ❍ ───────────────────────── ❯ garnish-dev ─╮
 ├─ ❖ Opus │ ⚙ ▁▃▅▇█ │ ⊞ ████████▍░░░░░░░░░░▏ 42% ──────────────────────────┤
@@ -45,7 +45,7 @@ The whole thing is written by Claude Code, session by session. The repo carries 
 
 ## install
 
-<div class="code" style="margin-top: 14px;">
+<div class="code">
   <div class="code-hdr"><span>BASH</span><span>INSTALL &amp; SET UP</span></div>
   <div class="code-body"><span class="tc"># the Homebrew cask (macOS and Linux)</span>
 <span class="tk">$</span> brew install --cask justanotherspy/tap/garnish
@@ -60,7 +60,7 @@ Releases are signed tags with prebuilt binaries for Linux and macOS on x86_64 an
 
 ## using it
 
-<div class="code" style="margin-top: 14px;">
+<div class="code">
   <div class="code-hdr"><span>BASH</span><span>DAY TO DAY</span></div>
   <div class="code-body"><span class="tc"># browse the gallery</span>
 <span class="tk">$</span> garnish presets

@@ -222,6 +222,12 @@ body[data-theme="dark"] .img-cap { color: var(--muted-dk); }
   background: #ECEAE5; border: 0.5px solid #D4D0CB;
 }
 body[data-theme="dark"] .code { background: #0F0E0C; border-color: #2E2B28; }
+/* in an article, a panel sits on the same rhythm as a paragraph */
+.prose .code { margin: 16px 0; }
+.prose .code:last-child { margin-bottom: 0; }
+/* fenced markdown blocks (Shiki) get the same spacing and shape as a panel */
+.prose pre.astro-code { margin: 16px 0; padding: 16px 20px; border-radius: 8px; font-size: 13px; line-height: 1.75; overflow-x: auto; }
+.prose pre.astro-code:last-child { margin-bottom: 0; }
 .code-hdr { display: flex; justify-content: space-between; padding: 8px 16px; font-size: 10px; letter-spacing: 0.07em; text-transform: uppercase; background: #D4D0CB; color: #6B6560; }
 body[data-theme="dark"] .code-hdr { background: #1A1814; color: #A8A29C; border-bottom: 0.5px solid #2E2B28; }
 /* works as a div (markdown raw HTML) or a pre (.astro templates, where a pre
@@ -281,7 +287,7 @@ body[data-theme="dark"] .pd-meta-val { color: var(--text-light); }
 body[data-theme="dark"] .pd-meta-mono { color: #F2EEE8; }
 
 /* prose */
-.prose p { font-size: 16px; line-height: 1.7; margin-bottom: 16px; max-width: 65ch; text-align: justify; text-wrap: pretty; }
+.prose p { font-size: 16px; line-height: 1.7; margin-bottom: 16px; text-wrap: pretty; }
 .prose p:last-child { margin-bottom: 0; }
 .prose h2 { font-family: var(--serif); font-size: 24px; font-weight: normal; margin-top: 36px; margin-bottom: 12px; line-height: 1.2; text-transform: lowercase; scroll-margin-top: 24px; }
 body[data-theme="dark"] .prose h2 { color: var(--text-light); }
@@ -425,9 +431,6 @@ body[data-theme="dark"] .dd-modal-body { color: var(--muted-dk); }
   .site-footer { padding: 22px; }
 
   .lede { font-size: 16px; line-height: 1.55; }
-
-  /* justified text produces rivers at narrow measures; rag right on phones */
-  .prose p { text-align: left; }
 
   .home-projects-grid,
   .proj-grid {
