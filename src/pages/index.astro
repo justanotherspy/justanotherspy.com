@@ -21,7 +21,7 @@ const talks = [
     <div class="label">/ A PERSONAL SITE /</div>
     <h1 class="display">small tools,<br />built to be <span class="amp">read</span>.</h1>
     <p class="lede" style="max-width: 56ch; margin-top: 6px;">
-      I&rsquo;m <span class="redact"><span>NameRedact</span></span>, a security and infrastructure engineer based in <span class="redact"><span>LocationRedact</span></span>.
+      I&rsquo;m <span class="redact"><span aria-hidden="true">NameRedact</span><span class="sr-only">[name redacted]</span></span>, a security and infrastructure engineer based in <span class="redact"><span aria-hidden="true">LocationRedact</span><span class="sr-only">[location redacted]</span></span>.
       I build small command line tools, most of them for working with Claude Code, and each one gets a proper write-up here: what it does, what shaped it, and what it refuses to do.
     </p>
   </div>
@@ -45,7 +45,7 @@ const talks = [
 
   <div class="stack-4" style="margin-bottom: 64px;">
     <h2 class="section"><span class="sec-num">02</span>the claude code plugin ecosystem</h2>
-    <div class="split">
+    <div class="split is-stacked">
       <div class="split-prose">
         <p>
           garlic and shuck started as ordinary CLIs, but I spend most of my day inside <a class="link" href="https://code.claude.com" target="_blank" rel="noopener">Claude Code</a>, so each one also ships as a plugin.
@@ -53,8 +53,8 @@ const talks = [
           shuck&rsquo;s runs a background monitor that feeds the session new CI failures and review comments as they happen, plus a <code class="inline">/shuck</code> skill for asking on demand.
         </p>
         <p>
-          All of them are catalogued in one central marketplace, <a class="link" href="https://github.com/justanotherspy/claude-plugins" target="_blank" rel="noopener">justanotherspy/claude-plugins</a>.
-          Each plugin lives in its own tool&rsquo;s repo and the marketplace just points at it, so a plugin is always in sync with the binary it drives.
+          All of them are catalogued in one central marketplace, <a class="link" href="https://github.com/justanotherspy/claude-plugins" target="_blank" rel="noopener">justanotherspy/claude-plugins</a>, alongside sproot&rsquo;s config-authoring skills and an <code class="inline">output-styles</code> plugin.
+          A tool&rsquo;s plugin lives in that tool&rsquo;s own repo and the marketplace just points at it, so a plugin is always in sync with the binary it drives.
           Add the marketplace once, then install whichever plugins you want.
         </p>
       </div>
@@ -80,7 +80,7 @@ const talks = [
           The tap can&rsquo;t point at a half-published release.
         </p>
         <p>
-          shuck and sproot install on macOS and Linux. garlic&rsquo;s cask is macOS only; on Linux it installs with <code class="inline">cargo install garlic-ward</code>.
+          The tap carries garlic, garnish, shuck and sproot. garnish, shuck and sproot install on macOS and Linux. garlic&rsquo;s cask is macOS only; on Linux it installs with <code class="inline">cargo install garlic-ward</code>.
         </p>
       </div>
       <div class="code">
@@ -90,7 +90,8 @@ const talks = [
 &nbsp;
 <span class="tc"># then install by short name</span>
 <span class="tk">$</span> brew install --cask garlic
-<span class="tk">$</span> brew install --cask shuck</pre>
+<span class="tk">$</span> brew install --cask shuck
+<span class="tk">$</span> brew install --cask garnish</pre>
       </div>
     </div>
   </div>

@@ -4,7 +4,7 @@ tag: 'CLI TOOL · GO'
 description: 'Shuck the husk, keep the kernel. A background monitor that tells you the moment CI fails on your PR, with the exact failing step logs already in hand.'
 dateLabel: 'CLI TOOL · 2026'
 stack: 'Go · go-github'
-version: 'v0.4.1 · 2026'
+version: 'v1.0.4 · 2026'
 licence: MIT
 github: 'https://github.com/justanotherspy/shuck'
 install: 'brew install --cask justanotherspy/tap/shuck'
@@ -54,7 +54,11 @@ The shuck repo dogfoods this on itself: its own CI failures arrive through its o
   <div class="code-body"><span class="tc"># the Homebrew cask (macOS and Linux)</span>
 <span class="tk">$</span> brew install --cask justanotherspy/tap/shuck
 &nbsp;
-<span class="tc"># then wire the skill into Claude Code</span>
+<span class="tc"># then, inside Claude Code, the plugin (monitor + skill)</span>
+<span class="tk">&gt;</span> /plugin marketplace add justanotherspy/claude-plugins
+<span class="tk">&gt;</span> /plugin install shuck@justanotherspy
+&nbsp;
+<span class="tc"># or just the skill, without the plugin</span>
 <span class="tk">$</span> shuck setup</div>
 </div>
 
@@ -70,8 +74,8 @@ Releases are built by GoReleaser with a keyless cosign signature over the checks
 <span class="tc"># the whole picture: CI + reviews + security</span>
 <span class="tk">$</span> shuck 42
 &nbsp;
-<span class="tc"># follow this working tree in the background</span>
-<span class="tk">$</span> shuck monitor watch
+<span class="tc"># what is the monitor following, and is it green?</span>
+<span class="tk">$</span> shuck monitor
 &nbsp;
 <span class="tc"># pin an action to a SHA, properly</span>
 <span class="tk">$</span> shuck action actions/checkout</div>

@@ -4,7 +4,7 @@ tag: 'CLI TOOL · RUST'
 description: 'Ward off the AI vampire. Track your Claude Code hours and get nudged to rest.'
 dateLabel: 'CLI TOOL · 2026'
 stack: 'Rust · clap · serde'
-version: 'v0.3.4 · 2026'
+version: 'v0.3.5 · 2026'
 licence: MIT
 github: 'https://github.com/justanotherspy/garlic'
 install: 'brew install --cask justanotherspy/tap/garlic'

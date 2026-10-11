@@ -9,6 +9,13 @@ const projects = (await getCollection('projects'))
 // once they have settled; until then the repo is the documentation.
 const wip = [
   {
+    title: 'garnish',
+    tag: 'CLI TOOL · RUST',
+    description:
+      'A fast, cached, themeable status line for Claude Code. Renders model, context, rate limits, cost and git state from a TOML config, with anything slow pushed to a background worker so a tick never waits.',
+    github: 'https://github.com/justanotherspy/garnish',
+  },
+  {
     title: 'sproot',
     tag: 'CLI TOOL · GO',
     description:

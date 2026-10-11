@@ -7,7 +7,7 @@ stack: 'TypeScript · Hono · Cloudflare Workers · Queues'
 version: 'v0.1.0 · 2026'
 licence: MIT
 github: 'https://github.com/justanotherspy/dead-drop'
-install: 'git clone justanotherspy/dead-drop && make dev'
+install: 'git clone https://github.com/justanotherspy/dead-drop && make dev'
 order: 3
 ---
 
@@ -47,7 +47,7 @@ dead-drop runs on Cloudflare Workers in TypeScript, with [Hono](https://hono.dev
 
 The consumer's Slack delivery is idempotent, keyed on the payload's `id` in KV, so a queue message redelivered after a partial failure posts once, not twice. CORS is locked to the site origin rather than left open. The Slack bot token lives in Wrangler's secret store in production and a gitignored `.dev.vars` locally; it is never in the client and never in the repo. Deploys are gated behind a required-reviewer GitHub Environment, so the thing with write access to my Slack can't ship on a whim.
 
-It's covered by unit tests running inside the Workers runtime via `@cloudflare/vitest-pool-workers`, plus an end-to-end smoke test that boots the local stack and drives the real endpoint. The Durable Object's window logic is factored into a pure function so the ceiling can be tested without the runtime.
+It's covered by unit tests running inside the Workers runtime via `@cloudflare/vitest-plugin`, plus an end-to-end smoke test that boots the local stack and drives the real endpoint. The Durable Object's window logic is factored into a pure function so the ceiling can be tested without the runtime.
 
 ## using it
 
