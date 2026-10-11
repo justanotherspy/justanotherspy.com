@@ -24,22 +24,23 @@ const version = (await latestVersionLabel(project.data.github)) ?? project.data.
   description={project.data.description}
   active="projects"
   ogType="article"
+  ogCard={`project-${project.id}`}
   wide
 >
   <a href="/projects" class="btn-back">← Back to projects</a>
 
   <div class="pd-grid" style="margin-top: 28px;">
-    <div>
+    <div class="pd-head">
       <div class="meta" style="margin-bottom: 10px;">{project.data.dateLabel}</div>
       <h1 class="page-title">{project.data.title}</h1>
       <p class="lede" style="margin-top: 14px;">{project.data.description}</p>
-
-      <div class="prose is-numbered" style="margin-top: 36px;">
-        <Content />
-      </div>
     </div>
 
-    <aside class="stack-3" style="position: sticky; top: 28px;">
+    <div class="prose is-numbered pd-body">
+      <Content />
+    </div>
+
+    <aside class="stack-3 pd-side" style="position: sticky; top: 28px;">
       <MetaCard rows={[
         { key: 'STACK', value: project.data.stack },
         { key: 'VERSION', value: version },

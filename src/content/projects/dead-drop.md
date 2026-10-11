@@ -3,55 +3,55 @@ title: dead-drop
 tag: 'INGEST API · TYPESCRIPT'
 description: 'The anonymous tip line behind the site. A hostile-input ingest API that takes a message from a stranger and lands it in Slack, without ever trusting the sender.'
 dateLabel: 'INGEST API · 2026'
-stack: 'TypeScript · Hono · Cloudflare Workers · Queues'
+stack: 'TypeScript · Hono · Cloudflare Workers · Queues · KV · Durable Objects'
 version: 'v0.1.0 · 2026'
 licence: MIT
 github: 'https://github.com/justanotherspy/dead-drop'
-install: 'git clone justanotherspy/dead-drop && make dev'
-order: 3
+install: 'git clone https://github.com/justanotherspy/dead-drop && cd dead-drop && make install && make dev'
+order: 4
 ---
 
 ## the idea
 
-A dead drop is the bit of spycraft where two people who never meet still pass a message: you leave it somewhere agreed, and someone else collects it later. The submission form on this site is exactly that shape. A stranger leaves a note, and it surfaces in a private Slack channel I read when I get to it. No account, no email, no thread to be answered in. Optionally not even a name.
+A dead drop is the bit of spycraft where two people who never meet still pass a message: you leave it somewhere agreed, and someone else collects it later. The submission form on this site is exactly that shape. A stranger leaves a note, and it turns up in a private Slack channel that I read when I get to it. There's no account, no email and no thread to reply in, and you don't even have to leave a name.
 
-`dead-drop` is the small API behind that form. Its whole job is to take a message from someone I've never met and never authenticated, and get it to me intact without trusting a single thing about the sender. Public, unauthenticated, and writing into my Slack: that combination means abuse is the default case, not the edge case, so the whole design starts from "assume the next request is hostile."
+`dead-drop` is the small API behind that form. Its whole job is to take a message from someone I've never met and never authenticated, and get it to me intact without trusting a single thing about the sender. It's public, unauthenticated, and writes into my Slack, so I expect abuse as a matter of course. The whole design starts from "assume the next request is hostile."
 
 ## how it works
 
-The pipeline is four moves: validate, rate-limit, sanitize, enqueue. Then it returns. Everything that can fail slowly happens after the response has already gone out.
+The pipeline is four moves: rate-limit, validate, sanitize, enqueue. Then it returns. Rate limiting goes first, before the body is even read, so a flood costs as little as possible. Everything that can fail slowly happens after the response has already gone out.
 
 ```
 POST /  →  Cloudflare Queue  →  consumer  →  private Slack channel
 ```
 
-The ingest Worker does only the synchronous, cheap work and answers `202 Accepted` the moment the message is safely on the queue. A durable Cloudflare Queue sits between ingest and Slack so that a Slack outage, or just Slack being slow, never blocks a submission and never drops one. A separate consumer drains the queue, formats each message as Slack Block Kit, and posts it. If Slack keeps failing, the message retries with backoff and eventually lands in a dead-letter queue rather than vanishing.
+The ingest Worker does only the synchronous, cheap work and answers `202 Accepted` the moment the message is safely on the queue. A durable Cloudflare Queue sits between ingest and Slack so that a Slack outage, or just Slack being slow, never blocks a submission and never drops one. A separate consumer drains the queue, formats each message as Slack Block Kit, and posts it with [slack-edge](https://www.npmjs.com/package/slack-edge). If Slack keeps failing, the message retries with backoff and eventually lands in a dead-letter queue rather than vanishing.
 
 Three decisions carry most of the weight:
 
-- The response never echoes the message. Not in the success body, not in an error, not anywhere. The endpoint answers in fixed, minimal bodies (`{ "ok": true }`), so there's no reflection surface to turn the tip line into a way to bounce content off my origin.
-- The honeypot gets a `202`, not a `403`. The form carries an off-screen `company` field that humans never fill in. When a bot fills it, the message is silently discarded, but the response is the same `202` a real submission gets, so the bot learns nothing about being caught. Rejection is a signal, and I'd rather not give one.
-- Nothing identifying is queued. The sender's IP is used for rate-limiting at ingest and then thrown away. It never enters the queued payload, so the consumer only ever sees what it needs to post the message, never who sent it.
+- The response never echoes the message, in a success body, an error, or anywhere else. The endpoint answers with fixed, minimal bodies (`{ "ok": true }`), so nobody can use the tip line to bounce content off my origin.
+- The honeypot gets a `202`. The form carries an off-screen `company` field that humans never fill in. When a bot fills it, the message is thrown away, but the bot gets the same `202` a real submission gets and learns nothing about being caught. A rejection is a signal, and I'd rather not give one.
+- Nothing identifying is queued. The sender's IP is only used for rate limiting at ingest: it lives in an hourly KV counter that expires within the hour and is never linked to a message. It never goes into the queued payload, so the consumer sees what it needs to post the message and nothing about who sent it.
 
 ## not trusting the sender
 
-Every field arrives hostile and is treated that way. Types and lengths from the client are re-validated server-side rather than believed: `message` is required and capped at 2000 characters, `alias` is optional, capped at 80, and ignored entirely when the submission is anonymous. Text is trimmed, control characters stripped, and Unicode normalized before anything downstream sees it.
+I treat every field as hostile. Types and lengths from the client get re-validated on the server: `message` is required and capped at 2000 characters, `alias` is optional, capped at 80, and ignored entirely when the submission is anonymous. Text is trimmed, control characters stripped, and Unicode normalized before anything downstream sees it.
 
-The message is plain text from end to end. It is never rendered as HTML anywhere in the pipeline, and when the consumer composes the Slack post it escapes Slack's own `mrkdwn` control characters, including the leading `@`, `#`, and `!` that would otherwise let a submitted string trigger a mention or ping a channel. A stranger's message can't reach into my Slack and make it do something.
+The message is plain text from end to end. It is never rendered as HTML anywhere in the pipeline, and when the consumer composes the Slack post it escapes Slack's own `mrkdwn` control characters, including the leading `@`, `#`, and `!` that would otherwise let a submitted string trigger a mention or ping a channel.
 
-Rate limiting runs in two layers, counted *before* anything is enqueued so a flood can't fill the queue. Per-IP limits (a few requests a minute, a couple of dozen an hour) are enforced with Cloudflare's native rate-limiting binding plus a KV-backed hourly window, and a global hourly ceiling sits behind both as a backstop against a distributed flood, held in a Durable Object so the limit is strict rather than approximate. Over the limit you get a `429` and a `Retry-After`, and the queue stays untouched.
+Rate limiting runs in three layers and is counted *before* anything is enqueued, so a flood can't fill the queue. Per IP, it's three requests a minute through Cloudflare's native rate-limiting binding and twenty an hour in a KV-backed window. Behind both sits a global hourly ceiling for the whole tip line, held in a Durable Object so the limit is exact. I set that ceiling low on purpose: it's a personal tip line, and a distributed flood should hit a wall fast. Over the limit you get a `429` and a `Retry-After`, and the queue stays untouched.
 
 ## how it's built
 
-dead-drop runs on Cloudflare Workers in TypeScript, with [Hono](https://hono.dev) for routing. The platform choice is most of the security story: the Worker is the edge, so rate-limiting and WAF rules live in the same place the request first lands, and Queues, KV, and Durable Objects are all first-party bindings rather than services to stand up and secure separately.
+dead-drop runs on Cloudflare Workers in TypeScript, with [Hono](https://hono.dev) for routing. The platform choice is most of the security story. The Worker is the edge, so rate limiting happens where the request first lands, and Queues, KV, and Durable Objects are all first-party bindings I don't have to stand up and secure separately.
 
-The consumer's Slack delivery is idempotent, keyed on the payload's `id` in KV, so a queue message redelivered after a partial failure posts once, not twice. CORS is locked to the site origin rather than left open. The Slack bot token lives in Wrangler's secret store in production and a gitignored `.dev.vars` locally; it is never in the client and never in the repo. Deploys are gated behind a required-reviewer GitHub Environment, so the thing with write access to my Slack can't ship on a whim.
+The consumer's Slack delivery is idempotent, keyed on the payload's `id` in KV, so a queue message redelivered after a partial failure still posts only once. CORS is locked to the site origin. The Slack bot token lives in Wrangler's secret store in production and a gitignored `.dev.vars` locally; it is never in the client and never in the repo. Deploys need my approval through a GitHub Environment with a required reviewer, so the thing with write access to my Slack can't ship on a whim.
 
-It's covered by unit tests running inside the Workers runtime via `@cloudflare/vitest-pool-workers`, plus an end-to-end smoke test that boots the local stack and drives the real endpoint. The Durable Object's window logic is factored into a pure function so the ceiling can be tested without the runtime.
+It's covered by unit tests running inside the Workers runtime via `@cloudflare/vitest-plugin`, plus an end-to-end smoke test that boots the local stack and drives the real endpoint. The Durable Object's window logic is factored into a pure function so the ceiling can be tested without the runtime.
 
 ## using it
 
-There's nothing to install to *use* it. You use it by submitting the form at [/dead-drop](/dead-drop). But the contract is simple enough to drive by hand:
+There's nothing to install to *use* it: you just submit the form at [/dead-drop](/dead-drop). The contract is simple enough to drive by hand, though:
 
 <div class="code" style="margin-top: 14px;">
   <div class="code-hdr"><span>BASH</span><span>A SUBMISSION</span></div>
@@ -71,4 +71,4 @@ The client treats any `res.ok` as success and only special-cases `429`. Everythi
 
 ## what it doesn't do
 
-dead-drop doesn't reply, doesn't store a history, and doesn't try to work out who you are. There's no inbox, no read receipt, no way for me to write back through it. It's a one-way channel that ends in a Slack message, and it keeps no identifying metadata once a message is on the queue, so even I can't tell who left what. The point of a dead drop is that the drop is all there is.
+dead-drop doesn't reply, doesn't keep a history, and doesn't try to work out who you are. I can't write back through it, and there's no inbox or read receipt. It's a one-way channel that ends in a Slack message, and it keeps no identifying metadata once a message is on the queue, so even I can't tell who left what. That's how a dead drop is supposed to work.

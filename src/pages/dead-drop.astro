@@ -11,6 +11,7 @@ const MAX_ALIAS = 80;
   title="dead drop"
   description="Leave an anonymous message. It goes nowhere public, straight to a private channel."
   active="deaddrop"
+  ogCard="dead-drop"
 >
   <div class="label" style="margin-bottom: 14px;">/ ANONYMOUS · WRITE-ONLY /</div>
   <h1 class="page-title">dead drop</h1>
@@ -112,7 +113,7 @@ const MAX_ALIAS = 80;
 
     const succeed = (storedName?: string) => {
       modalBody.textContent = storedName
-        ? `Thanks. It's on its way to a private channel. We stored your name, ${storedName}, so it's signed.`
+        ? `Thanks. It's on its way to a private channel, signed as ${storedName}.`
         : "Thanks. It's on its way to a private channel. Nothing was stored about you.";
       form.reset();
       renderCount();

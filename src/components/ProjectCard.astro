@@ -4,15 +4,24 @@ interface Props {
   tag: string;
   title: string;
   description?: string;
+  index?: number;
+  stack?: string;
+  linkLabel?: string;
+  external?: boolean;
+  wip?: boolean;
 }
 
-const { href, tag, title, description } = Astro.props;
+const { href, tag, title, description, index, stack, linkLabel = 'View project →', external = false, wip = false } = Astro.props;
 ---
-<a href={href} class="card-link-wrap">
-  <div class="proj-card">
+<a href={href} class="card-link-wrap" target={external ? '_blank' : undefined} rel={external ? 'noopener' : undefined}>
+  <div class:list={['proj-card', wip && 'is-wip']}>
+    {index !== undefined && <span class="card-index">{String(index).padStart(2, '0')}</span>}
     <div class="card-tag">{tag}</div>
     <div class="card-title">{title}</div>
     {description && <div class="card-desc">{description}</div>}
-    <span class="card-link">View project →</span>
+    <div class="card-foot">
+      {stack && <span class="card-stack">{stack}</span>}
+      <span class="card-link">{linkLabel}</span>
+    </div>
   </div>
 </a>
