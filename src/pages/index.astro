@@ -54,7 +54,7 @@ const talks = [
         </p>
         <p>
           All of them are catalogued in one central marketplace, <a class="link" href="https://github.com/justanotherspy/claude-plugins" target="_blank" rel="noopener">justanotherspy/claude-plugins</a>, alongside sproot&rsquo;s config-authoring skills and an <code class="inline">output-styles</code> plugin.
-          A tool&rsquo;s plugin lives in that tool&rsquo;s own repo and the marketplace just points at it, so a plugin is always in sync with the binary it drives.
+          A tool&rsquo;s plugin lives in that tool&rsquo;s own repo and the marketplace points at it, so the plugin and the binary it drives stay in step.
           Add the marketplace once, then install whichever plugins you want.
         </p>
       </div>
@@ -76,8 +76,7 @@ const talks = [
       <div class="split-prose">
         <p>
           The binaries come from <a class="link" href="https://github.com/justanotherspy/homebrew-tap" target="_blank" rel="noopener">justanotherspy/homebrew-tap</a>.
-          I never edit the casks by hand: every release pipeline regenerates its own cask and pushes it to the tap, and a release only flips to latest once its binaries and cask are both in place.
-          The tap can&rsquo;t point at a half-published release.
+          I never edit the casks by hand. Each tool&rsquo;s release pipeline regenerates its own cask and pushes it to the tap, and a release only becomes latest once its binaries and cask are both in place, so the tap never points at a half-published release.
         </p>
         <p>
           The tap carries garlic, garnish, shuck and sproot. garnish, shuck and sproot install on macOS and Linux. garlic&rsquo;s cask is macOS only; on Linux it installs with <code class="inline">cargo install garlic-ward</code>.

@@ -112,7 +112,7 @@ const MAX_ALIAS = 80;
 
     const succeed = (storedName?: string) => {
       modalBody.textContent = storedName
-        ? `Thanks. It's on its way to a private channel. We stored your name, ${storedName}, so it's signed.`
+        ? `Thanks. It's on its way to a private channel, signed as ${storedName}.`
         : "Thanks. It's on its way to a private channel. Nothing was stored about you.";
       form.reset();
       renderCount();
