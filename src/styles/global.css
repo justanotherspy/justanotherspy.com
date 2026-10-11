@@ -93,7 +93,9 @@ body[data-theme="dark"] .nav-toggle::before { border-color: var(--border-dk); ba
 .footer-link:hover { color: #E8956A; }
 
 /* ── Content container ── */
-.content { max-width: 860px; margin: 0 auto; padding: 56px 56px 80px; }
+/* one measure for everything in the column: prose, grids, code panels and
+   lists share both edges, so nothing reads as ragged next to something wider */
+.content { max-width: 760px; margin: 0 auto; padding: 56px 56px 80px; }
 .content-wide { max-width: 1100px; margin: 0 auto; padding: 56px 56px 80px; }
 
 /* ── Type ── (lowercase headings, per Dan; display sizes are fluid so they
@@ -116,7 +118,7 @@ body[data-theme="dark"] h3.sub { color: var(--text-light); }
 .lede { font-size: 17px; line-height: 1.6; color: var(--text); }
 body[data-theme="dark"] .lede { color: var(--text-light); }
 /* page-intro variant: the muted one-liner under index page titles */
-.lede.is-muted { margin-top: 10px; color: var(--muted); max-width: 56ch; }
+.lede.is-muted { margin-top: 10px; color: var(--muted); }
 body[data-theme="dark"] .lede.is-muted { color: var(--muted-dk); }
 body[data-theme="dark"] p { color: var(--text-light); }
 .meta { font-family: var(--mono); font-size: 11px; color: var(--muted); letter-spacing: 0.08em; text-transform: uppercase; }
@@ -170,11 +172,11 @@ body[data-theme="dark"] .card-desc { color: var(--muted-dk); }
 .card-link { font-size: 13px; color: var(--accent); text-decoration: none; margin-top: auto; padding-top: 4px; display: inline-block; transition: transform 160ms ease; }
 /* card footer: stack on the left, the link on the right, pinned to the
    bottom so cards in one row line up */
-.card-foot { margin-top: auto; padding-top: 14px; display: flex; flex-wrap: wrap; justify-content: space-between; align-items: baseline; gap: 6px 12px; border-top: 0.5px solid var(--border); }
+.card-foot { margin-top: auto; padding-top: 14px; display: flex; justify-content: space-between; align-items: baseline; gap: 12px; border-top: 0.5px solid var(--border); }
 body[data-theme="dark"] .card-foot { border-top-color: var(--border-dk); }
-.card-foot .card-link { margin-top: 0; padding-top: 0; margin-left: auto; }
+.card-foot .card-link { margin-top: 0; padding-top: 0; margin-left: auto; flex-shrink: 0; }
 .card-desc { margin-bottom: 14px; }
-.card-stack { font-family: var(--mono); font-size: 10px; color: var(--muted); letter-spacing: 0.06em; }
+.card-stack { font-family: var(--mono); font-size: 10px; color: var(--muted); letter-spacing: 0.06em; min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 body[data-theme="dark"] .card-stack { color: var(--muted-dk); }
 body[data-theme="dark"] .card-link { color: var(--accent-dk); }
 
@@ -203,7 +205,7 @@ body[data-theme="dark"] .proj-card.is-wip .card-tag::before { color: var(--accen
 /* for commands too long for the side column: the panel goes under the prose
    at full width, since overlay scrollbars would hide a clipped command */
 .split.is-stacked { grid-template-columns: minmax(0, 1fr); gap: 20px; }
-.split-prose p { font-size: 15.5px; line-height: 1.7; margin-bottom: 14px; max-width: 58ch; }
+.split-prose p { font-size: 15.5px; line-height: 1.7; margin-bottom: 14px; }
 .split-prose p:last-child { margin-bottom: 0; }
 body[data-theme="dark"] .split-prose p { color: var(--text-light); }
 @media (max-width: 760px) { .split { grid-template-columns: 1fr; gap: 20px; } }
@@ -308,7 +310,7 @@ hr.sep { border: none; border-top: 0.5px solid var(--border); margin: 32px 0; }
 body[data-theme="dark"] hr.sep { border-top-color: var(--border-dk); }
 
 /* ── Dead drop form ── */
-.dd-form { display: flex; flex-direction: column; gap: 24px; max-width: 640px; margin-top: 32px; }
+.dd-form { display: flex; flex-direction: column; gap: 24px; margin-top: 32px; }
 .dd-field { display: flex; flex-direction: column; gap: 8px; }
 .dd-label { font-family: var(--mono); font-size: 11px; color: var(--accent); letter-spacing: 0.1em; text-transform: uppercase; }
 body[data-theme="dark"] .dd-label { color: var(--accent-dk); }

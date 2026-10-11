@@ -12,6 +12,18 @@ interface Props {
 }
 
 const { href, tag, title, description, index, stack, linkLabel = 'View project →', external = false, wip = false } = Astro.props;
+
+// The footer holds one line, so cards in a row line up: as many leading
+// stack items as fit a short budget, with the full list on hover.
+const shortStack = (() => {
+  if (!stack) return undefined;
+  const kept: string[] = [];
+  for (const item of stack.split(' · ')) {
+    if (kept.length > 0 && [...kept, item].join(' · ').length > 26) break;
+    kept.push(item);
+  }
+  return kept.join(' · ');
+})();
 ---
 <a href={href} class="card-link-wrap" target={external ? '_blank' : undefined} rel={external ? 'noopener' : undefined}>
   <div class:list={['proj-card', wip && 'is-wip']}>
@@ -20,7 +32,7 @@ const { href, tag, title, description, index, stack, linkLabel = 'View project �
     <div class="card-title">{title}</div>
     {description && <div class="card-desc">{description}</div>}
     <div class="card-foot">
-      {stack && <span class="card-stack">{stack}</span>}
+      {shortStack && <span class="card-stack" title={stack}>{shortStack}</span>}
       <span class="card-link">{linkLabel}</span>
     </div>
   </div>
