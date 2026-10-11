@@ -168,6 +168,14 @@ body[data-theme="dark"] .card-title { color: var(--text-light); }
 .card-desc { font-size: 14px; color: var(--muted); line-height: 1.55; }
 body[data-theme="dark"] .card-desc { color: var(--muted-dk); }
 .card-link { font-size: 13px; color: var(--accent); text-decoration: none; margin-top: auto; padding-top: 4px; display: inline-block; transition: transform 160ms ease; }
+/* card footer: stack on the left, the link on the right, pinned to the
+   bottom so cards in one row line up */
+.card-foot { margin-top: auto; padding-top: 14px; display: flex; flex-wrap: wrap; justify-content: space-between; align-items: baseline; gap: 6px 12px; border-top: 0.5px solid var(--border); }
+body[data-theme="dark"] .card-foot { border-top-color: var(--border-dk); }
+.card-foot .card-link { margin-top: 0; padding-top: 0; margin-left: auto; }
+.card-desc { margin-bottom: 14px; }
+.card-stack { font-family: var(--mono); font-size: 10px; color: var(--muted); letter-spacing: 0.06em; }
+body[data-theme="dark"] .card-stack { color: var(--muted-dk); }
 body[data-theme="dark"] .card-link { color: var(--accent-dk); }
 
 /* link wrappers around cards stay inert visually; full height so grid rows
@@ -179,10 +187,10 @@ body[data-theme="dark"] .card-link-wrap:hover .card-title { color: var(--accent-
 .card-link-wrap:hover .card-link { transform: translateX(4px); }
 
 /* ── Projects grid ──
-   auto-fit keeps three cards to a row on desktop, two on tablet, one on
-   phones, with no orphan column at any width */
+   two cards to a row on desktop and tablet, one on phones (see the mobile
+   block), so four projects make an even 2x2 */
 .proj-grid,
-.home-projects-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(228px, 1fr)); gap: 20px; }
+.home-projects-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px; }
 
 /* work-in-progress cards: same card, dashed top rule + status tag color */
 .proj-card.is-wip { border-top-style: dashed; border-top-width: 2px; }

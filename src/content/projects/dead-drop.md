@@ -3,12 +3,12 @@ title: dead-drop
 tag: 'INGEST API · TYPESCRIPT'
 description: 'The anonymous tip line behind the site. A hostile-input ingest API that takes a message from a stranger and lands it in Slack, without ever trusting the sender.'
 dateLabel: 'INGEST API · 2026'
-stack: 'TypeScript · Hono · Cloudflare Workers · Queues'
+stack: 'TypeScript · Hono · Cloudflare Workers · Queues · KV · Durable Objects'
 version: 'v0.1.0 · 2026'
 licence: MIT
 github: 'https://github.com/justanotherspy/dead-drop'
-install: 'git clone https://github.com/justanotherspy/dead-drop && make dev'
-order: 3
+install: 'git clone https://github.com/justanotherspy/dead-drop && cd dead-drop && make install && make dev'
+order: 4
 ---
 
 ## the idea
@@ -19,19 +19,19 @@ A dead drop is the bit of spycraft where two people who never meet still pass a 
 
 ## how it works
 
-The pipeline is four moves: validate, rate-limit, sanitize, enqueue. Then it returns. Everything that can fail slowly happens after the response has already gone out.
+The pipeline is four moves: rate-limit, validate, sanitize, enqueue. Then it returns. Rate limiting goes first, before the body is even read, so a flood costs as little as possible. Everything that can fail slowly happens after the response has already gone out.
 
 ```
 POST /  →  Cloudflare Queue  →  consumer  →  private Slack channel
 ```
 
-The ingest Worker does only the synchronous, cheap work and answers `202 Accepted` the moment the message is safely on the queue. A durable Cloudflare Queue sits between ingest and Slack so that a Slack outage, or just Slack being slow, never blocks a submission and never drops one. A separate consumer drains the queue, formats each message as Slack Block Kit, and posts it. If Slack keeps failing, the message retries with backoff and eventually lands in a dead-letter queue rather than vanishing.
+The ingest Worker does only the synchronous, cheap work and answers `202 Accepted` the moment the message is safely on the queue. A durable Cloudflare Queue sits between ingest and Slack so that a Slack outage, or just Slack being slow, never blocks a submission and never drops one. A separate consumer drains the queue, formats each message as Slack Block Kit, and posts it with [slack-edge](https://www.npmjs.com/package/slack-edge). If Slack keeps failing, the message retries with backoff and eventually lands in a dead-letter queue rather than vanishing.
 
 Three decisions carry most of the weight:
 
 - The response never echoes the message, in a success body, an error, or anywhere else. The endpoint answers with fixed, minimal bodies (`{ "ok": true }`), so nobody can use the tip line to bounce content off my origin.
 - The honeypot gets a `202`. The form carries an off-screen `company` field that humans never fill in. When a bot fills it, the message is thrown away, but the bot gets the same `202` a real submission gets and learns nothing about being caught. A rejection is a signal, and I'd rather not give one.
-- Nothing identifying is queued. The sender's IP is used for rate limiting at ingest and then dropped. It never goes into the queued payload, so the consumer sees what it needs to post the message and nothing about who sent it.
+- Nothing identifying is queued. The sender's IP is only used for rate limiting at ingest: it lives in an hourly KV counter that expires within the hour and is never linked to a message. It never goes into the queued payload, so the consumer sees what it needs to post the message and nothing about who sent it.
 
 ## not trusting the sender
 
@@ -39,11 +39,11 @@ I treat every field as hostile. Types and lengths from the client get re-validat
 
 The message is plain text from end to end. It is never rendered as HTML anywhere in the pipeline, and when the consumer composes the Slack post it escapes Slack's own `mrkdwn` control characters, including the leading `@`, `#`, and `!` that would otherwise let a submitted string trigger a mention or ping a channel.
 
-Rate limiting runs in two layers and is counted *before* anything is enqueued, so a flood can't fill the queue. Per-IP limits (a few requests a minute, a couple of dozen an hour) are enforced with Cloudflare's native rate-limiting binding plus a KV-backed hourly window, and a global hourly ceiling sits behind both as a backstop against a distributed flood, held in a Durable Object so the limit is exact. Over the limit you get a `429` and a `Retry-After`, and the queue stays untouched.
+Rate limiting runs in three layers and is counted *before* anything is enqueued, so a flood can't fill the queue. Per IP, it's three requests a minute through Cloudflare's native rate-limiting binding and twenty an hour in a KV-backed window. Behind both sits a global hourly ceiling for the whole tip line, held in a Durable Object so the limit is exact. I set that ceiling low on purpose: it's a personal tip line, and a distributed flood should hit a wall fast. Over the limit you get a `429` and a `Retry-After`, and the queue stays untouched.
 
 ## how it's built
 
-dead-drop runs on Cloudflare Workers in TypeScript, with [Hono](https://hono.dev) for routing. The platform choice is most of the security story. The Worker is the edge, so rate limiting and WAF rules live where the request first lands, and Queues, KV, and Durable Objects are all first-party bindings I don't have to stand up and secure separately.
+dead-drop runs on Cloudflare Workers in TypeScript, with [Hono](https://hono.dev) for routing. The platform choice is most of the security story. The Worker is the edge, so rate limiting happens where the request first lands, and Queues, KV, and Durable Objects are all first-party bindings I don't have to stand up and secure separately.
 
 The consumer's Slack delivery is idempotent, keyed on the payload's `id` in KV, so a queue message redelivered after a partial failure still posts only once. CORS is locked to the site origin. The Slack bot token lives in Wrangler's secret store in production and a gitignored `.dev.vars` locally; it is never in the client and never in the repo. Deploys need my approval through a GitHub Environment with a required reviewer, so the thing with write access to my Slack can't ship on a whim.
 

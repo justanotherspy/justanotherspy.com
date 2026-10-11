@@ -1,6 +1,7 @@
 ---
 import { getCollection } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
+import ProjectCard from '../../components/ProjectCard.astro';
 
 const projects = (await getCollection('projects'))
   .sort((a, b) => (a.data.order ?? 99) - (b.data.order ?? 99));
@@ -8,13 +9,6 @@ const projects = (await getCollection('projects'))
 // Work in progress: real repos, no write-up yet. They get a full page
 // once they have settled; until then the repo is the documentation.
 const wip = [
-  {
-    title: 'garnish',
-    tag: 'CLI TOOL · RUST',
-    description:
-      'A fast, cached, themeable status line for Claude Code. Renders model, context, rate limits, cost and git state from a TOML config, with anything slow pushed to a background worker so a tick never waits.',
-    github: 'https://github.com/justanotherspy/garnish',
-  },
   {
     title: 'sproot',
     tag: 'CLI TOOL · GO',
@@ -35,6 +29,7 @@ const wip = [
   title="projects · justanotherspy"
   description="Things I've made, in various states of finished."
   active="projects"
+  ogCard="projects"
 >
   <h1 class="page-title">projects</h1>
   <p class="lede is-muted">
@@ -43,15 +38,14 @@ const wip = [
 
   <div class="proj-grid" style="margin-top: 40px;">
     {projects.map((p, i) => (
-      <a href={`/projects/${p.id}`} class="card-link-wrap">
-        <div class="proj-card">
-          <span class="card-index">{String(i + 1).padStart(2, '0')}</span>
-          <div class="card-tag">{p.data.tag}</div>
-          <div class="card-title">{p.data.title}</div>
-          <div class="card-desc">{p.data.description}</div>
-          <span class="card-link">View project →</span>
-        </div>
-      </a>
+      <ProjectCard
+        href={`/projects/${p.id}`}
+        index={i + 1}
+        tag={p.data.tag}
+        title={p.data.title}
+        description={p.data.description}
+        stack={p.data.stack}
+      />
     ))}
   </div>
 
@@ -62,14 +56,15 @@ const wip = [
 
   <div class="proj-grid" style="margin-top: 24px;">
     {wip.map(p => (
-      <a href={p.github} class="card-link-wrap" target="_blank" rel="noopener">
-        <div class="proj-card is-wip">
-          <div class="card-tag">{p.tag}</div>
-          <div class="card-title">{p.title}</div>
-          <div class="card-desc">{p.description}</div>
-          <span class="card-link">View on GitHub ↗</span>
-        </div>
-      </a>
+      <ProjectCard
+        href={p.github}
+        tag={p.tag}
+        title={p.title}
+        description={p.description}
+        linkLabel="View on GitHub ↗"
+        external
+        wip
+      />
     ))}
   </div>
 </BaseLayout>

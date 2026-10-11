@@ -23,6 +23,9 @@ Personal portfolio site. Built with [Astro](https://astro.build) on bun.
 │   ├── clawds-fable/index.html   # Clawd's Fable, the build day game (self-contained HTML)
 │   └── talks/*.pdf               # talk slides, copied from justanotherspy/talks
 └── src/
+    ├── og/
+    │   ├── card.ts               # build-time Open Graph card renderer (satori + resvg)
+    │   └── fonts/                # DM Serif Display + IBM Plex Mono TTFs (OFL) for the cards
     ├── content.config.ts         # Zod-typed `projects` collection
     ├── content/
     │   └── projects/*.md         # project entries (frontmatter + body)
@@ -45,6 +48,7 @@ Personal portfolio site. Built with [Astro](https://astro.build) on bun.
         ├── projects/[slug].astro # project detail (case study + sticky sidebar)
         ├── dead-drop.astro       # anonymous message form (client POST to external API)
         ├── 404.astro             # not-found page (GitHub Pages serves 404.html)
+        ├── og/[card].png.ts      # one 1200x630 social preview PNG per page
         └── sitemap.xml.ts        # hand-rolled sitemap endpoint (no integration dep)
 ```
 
@@ -58,31 +62,32 @@ Personal portfolio site. Built with [Astro](https://astro.build) on bun.
 | `/dead-drop`       | `src/pages/dead-drop.astro`                               |
 | `/clawds-fable`    | `public/clawds-fable/index.html` (static, copied verbatim) |
 | `/talks/<file>.pdf` | `public/talks/*.pdf` (talk slides, copied verbatim)       |
+| `/og/<card>.png`   | `src/pages/og/[card].png.ts` (social preview images)      |
 
 The `<slug>` is the markdown filename (without `.md`) for each entry.
 
 ## Home page sections
 
-Besides the hero and project cards, the home page carries four prose sections
-kept accurate against their source repos:
+Besides the hero and the project grid (every entry in the `projects`
+collection, two to a row), the home page has two prose sections kept accurate
+against their source repos:
 
-- **Claude Code plugin ecosystem**: the central marketplace is
-  [justanotherspy/claude-plugins](https://github.com/justanotherspy/claude-plugins);
-  each plugin (garlic, shuck, sproot, output-styles) is sourced from its own repo.
-- **Homebrew tap**: [justanotherspy/homebrew-tap](https://github.com/justanotherspy/homebrew-tap);
-  casks are regenerated and pushed by each tool's release pipeline, never hand-edited.
-- **Talks**: [justanotherspy/talks](https://github.com/justanotherspy/talks) holds
-  slides from Claude community talks; the list on the page is a small array in
-  `index.astro`. Each talk's PDF is copied unchanged into `public/talks/` (e.g.
-  `public/talks/claude-code-2026-08-27.pdf`) and the row links to that copy, so
-  the slides open in the browser's own PDF viewer instead of downloading from
-  GitHub. When a new talk lands in the repo, copy its PDF over and add a row.
-- **Claude build day**: the Claude Cape Town Community build day, linking to
-  [claudecapetowncommunity.com](https://claudecapetowncommunity.com) and to the
-  game built on the day. The game itself is a single HTML file from
+- **Getting them**: the Homebrew tap
+  [justanotherspy/homebrew-tap](https://github.com/justanotherspy/homebrew-tap)
+  (garlic, garnish, shuck, sproot; casks are regenerated and pushed by each
+  tool's release pipeline, never hand-edited) and the Claude Code plugin
+  marketplace [justanotherspy/claude-plugins](https://github.com/justanotherspy/claude-plugins)
+  (garlic, shuck, sproot, output-styles).
+- **Talks & build days**: a short paragraph plus a list (the `community` array
+  in `index.astro`). Talk slides from
+  [justanotherspy/talks](https://github.com/justanotherspy/talks) are copied
+  unchanged into `public/talks/` (e.g. `public/talks/claude-code-2026-08-27.pdf`)
+  so they open in the browser's own PDF viewer; when a new talk lands in the
+  repo, copy its PDF over and add a row. Clawd's Fable, the game from the Claude
+  Cape Town Community build day, is a single HTML file from
   [justanotherspy/claude-build-day](https://github.com/justanotherspy/claude-build-day)
-  (`demo/clawds-fable.html`), copied unchanged into `public/clawds-fable/index.html`
-  so it is served at `/clawds-fable`. To update it, copy the file over again.
+  (`fable5.1/demo/clawds-fable.html`), copied unchanged into
+  `public/clawds-fable/index.html` so it is served at `/clawds-fable`.
 
 Work-in-progress projects (currently sproot and claude poker) are a small array
 in `src/pages/projects/index.astro`: cards that link straight to GitHub, with no
@@ -127,6 +132,16 @@ To keep the deployed site current, `ci.yml` also rebuilds on:
   release goes live (they need a `WEBSITE_DISPATCH_TOKEN` secret with
   `contents: write` on this repo);
 - a daily `schedule` cron, as a safety net if a dispatch is missed.
+
+## Social preview images
+
+Every page names an Open Graph card through `BaseLayout`'s `ogCard` prop
+(default `home`). `src/pages/og/[card].png.ts` renders one 1200x630 PNG per
+card at build time: the fixed pages (`home`, `projects`, `dead-drop`) plus
+`project-<id>` for each project entry, drawn from its `tag`, `title` and
+`description`. A new project gets its card automatically; a new fixed page adds
+an entry to the `fixed` list there. The card colours are copied from the light
+tokens because satori can't read CSS variables.
 
 ## Design system
 

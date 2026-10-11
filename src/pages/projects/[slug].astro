@@ -24,6 +24,7 @@ const version = (await latestVersionLabel(project.data.github)) ?? project.data.
   description={project.data.description}
   active="projects"
   ogType="article"
+  ogCard={`project-${project.id}`}
   wide
 >
   <a href="/projects" class="btn-back">← Back to projects</a>

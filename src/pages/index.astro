@@ -7,12 +7,22 @@ import ArchiveRow from '../components/ArchiveRow.astro';
 const projects = (await getCollection('projects'))
   .sort((a, b) => (a.data.order ?? 99) - (b.data.order ?? 99));
 
-const talks = [
+// Talks and community events, newest first. Talk slides are copied into
+// public/talks/ so they open in the browser's own PDF viewer.
+const community = [
   {
     date: 'AUG 27 2026',
     title: 'claude code',
-    venue: 'Claude community event',
+    meta: 'Claude community talk · slides ↗',
     href: '/talks/claude-code-2026-08-27.pdf',
+    external: true,
+  },
+  {
+    date: 'SEP 2026',
+    title: 'clawd’s fable',
+    meta: 'Claude Fable 5.1 build day · play →',
+    href: '/clawds-fable/',
+    external: false,
   },
 ];
 ---
@@ -32,109 +42,57 @@ const talks = [
       <a href="/projects" class="link" style="font-size:13px;">All projects →</a>
     </div>
     <div class="home-projects-grid">
-      {projects.map(p => (
+      {projects.map((p, i) => (
         <ProjectCard
           href={`/projects/${p.id}`}
+          index={i + 1}
           tag={p.data.tag}
           title={p.data.title}
           description={p.data.description}
+          stack={p.data.stack}
         />
       ))}
     </div>
   </div>
 
   <div class="stack-4" style="margin-bottom: 64px;">
-    <h2 class="section"><span class="sec-num">02</span>the claude code plugin ecosystem</h2>
+    <h2 class="section"><span class="sec-num">02</span>getting them</h2>
     <div class="split is-stacked">
       <div class="split-prose">
         <p>
-          garlic and shuck started as ordinary CLIs, but I spend most of my day inside <a class="link" href="https://code.claude.com" target="_blank" rel="noopener">Claude Code</a>, so each one also ships as a plugin.
-          garlic&rsquo;s plugin runs the same time-tracking hooks and adds a <code class="inline">/garlic</code> command.
-          shuck&rsquo;s runs a background monitor that feeds the session new CI failures and review comments as they happen, plus a <code class="inline">/shuck</code> skill for asking on demand.
+          The binaries come from one Homebrew tap, <a class="link" href="https://github.com/justanotherspy/homebrew-tap" target="_blank" rel="noopener">justanotherspy/homebrew-tap</a>, which carries garlic, garnish, shuck and sproot.
+          I never edit the casks by hand: each tool&rsquo;s release pipeline regenerates its own cask and pushes it, and a release only becomes latest once its binaries and cask are both in place.
+          Everything installs on macOS and Linux except garlic&rsquo;s cask, which is macOS only (on Linux, <code class="inline">cargo install garlic-ward</code>).
         </p>
         <p>
-          All of them are catalogued in one central marketplace, <a class="link" href="https://github.com/justanotherspy/claude-plugins" target="_blank" rel="noopener">justanotherspy/claude-plugins</a>, alongside sproot&rsquo;s config-authoring skills and an <code class="inline">output-styles</code> plugin.
-          A tool&rsquo;s plugin lives in that tool&rsquo;s own repo and the marketplace points at it, so the plugin and the binary it drives stay in step.
-          Add the marketplace once, then install whichever plugins you want.
+          I spend most of my day inside <a class="link" href="https://code.claude.com" target="_blank" rel="noopener">Claude Code</a>, so garlic and shuck also ship as plugins, catalogued in one marketplace, <a class="link" href="https://github.com/justanotherspy/claude-plugins" target="_blank" rel="noopener">justanotherspy/claude-plugins</a>, alongside sproot&rsquo;s config skills and an <code class="inline">output-styles</code> plugin.
+          A tool&rsquo;s plugin lives in its own repo and the marketplace points at it, so the plugin and the binary it drives stay in step. garnish installs its own skills during <code class="inline">garnish setup</code>.
         </p>
       </div>
       <div class="code">
-        <div class="code-hdr"><span>CLAUDE CODE</span><span>PLUGINS</span></div>
-        <pre class="code-body"><span class="tc"># add the marketplace once</span>
-<span class="tk">&gt;</span> /plugin marketplace add justanotherspy/claude-plugins
+        <div class="code-hdr"><span>BASH · CLAUDE CODE</span><span>INSTALL</span></div>
+        <pre class="code-body"><span class="tc"># the binaries: tap once, then install by short name</span>
+<span class="tk">$</span> brew tap justanotherspy/tap
+<span class="tk">$</span> brew install --cask garlic garnish shuck
 &nbsp;
-<span class="tc"># then pick what you want</span>
+<span class="tc"># the plugins, from inside Claude Code</span>
+<span class="tk">&gt;</span> /plugin marketplace add justanotherspy/claude-plugins
 <span class="tk">&gt;</span> /plugin install garlic@justanotherspy
 <span class="tk">&gt;</span> /plugin install shuck@justanotherspy</pre>
       </div>
     </div>
   </div>
 
-  <div class="stack-4" style="margin-bottom: 64px;">
-    <h2 class="section"><span class="sec-num">03</span>the homebrew tap</h2>
-    <div class="split">
-      <div class="split-prose">
-        <p>
-          The binaries come from <a class="link" href="https://github.com/justanotherspy/homebrew-tap" target="_blank" rel="noopener">justanotherspy/homebrew-tap</a>.
-          I never edit the casks by hand. Each tool&rsquo;s release pipeline regenerates its own cask and pushes it to the tap, and a release only becomes latest once its binaries and cask are both in place, so the tap never points at a half-published release.
-        </p>
-        <p>
-          The tap carries garlic, garnish, shuck and sproot. garnish, shuck and sproot install on macOS and Linux. garlic&rsquo;s cask is macOS only; on Linux it installs with <code class="inline">cargo install garlic-ward</code>.
-        </p>
-      </div>
-      <div class="code">
-        <div class="code-hdr"><span>BASH</span><span>INSTALL</span></div>
-        <pre class="code-body"><span class="tc"># tap once</span>
-<span class="tk">$</span> brew tap justanotherspy/tap
-&nbsp;
-<span class="tc"># then install by short name</span>
-<span class="tk">$</span> brew install --cask garlic
-<span class="tk">$</span> brew install --cask shuck
-<span class="tk">$</span> brew install --cask garnish</pre>
-      </div>
-    </div>
-  </div>
-
-  <div class="stack-4" style="margin-bottom: 64px;">
-    <div class="row-between">
-      <h2 class="section"><span class="sec-num">04</span>talks</h2>
-      <a href="https://github.com/justanotherspy/talks" target="_blank" rel="noopener" class="link" style="font-size:13px;">The talks repo →</a>
-    </div>
-    <p class="split-prose" style="max-width: 56ch;">
-      I give the occasional talk at Claude community events, and the slides all land in <a class="link" href="https://github.com/justanotherspy/talks" target="_blank" rel="noopener">justanotherspy/talks</a>.
-      If a talk leaves you with questions, open an issue there and I&rsquo;ll answer.
+  <div class="stack-4">
+    <h2 class="section"><span class="sec-num">03</span>talks &amp; build days</h2>
+    <p class="split-prose" style="max-width: 58ch;">
+      I give the occasional talk at Claude community events, and the slides land in <a class="link" href="https://github.com/justanotherspy/talks" target="_blank" rel="noopener">justanotherspy/talks</a>. If one leaves you with questions, open an issue there and I&rsquo;ll answer.
+      At the <a class="link" href="https://claudecapetowncommunity.com" target="_blank" rel="noopener">Claude Cape Town Community</a>&rsquo;s Fable 5.1 build day I made <a class="link" href="/clawds-fable/">Clawd&rsquo;s Fable</a>, a ninety-second pixel-art platformer where Clawd, the Claude Code mascot, stomps blobs of AI slop. It&rsquo;s one self-contained HTML file with every sprite and sound generated in code, and it runs in the browser (arrow keys or WASD, space to jump).
     </p>
     <div>
-      {talks.map(t => (
-        <ArchiveRow href={t.href} date={t.date} title={t.title} meta={`${t.venue} · slides ↗`} external />
+      {community.map(c => (
+        <ArchiveRow href={c.href} date={c.date} title={c.title} meta={c.meta} external={c.external} />
       ))}
-    </div>
-  </div>
-
-  <div class="stack-4">
-    <div class="row-between">
-      <h2 class="section"><span class="sec-num">05</span>claude build day</h2>
-      <a href="/clawds-fable/" class="link" style="font-size:13px;">Play Clawd&rsquo;s Fable →</a>
-    </div>
-    <div class="split">
-      <div class="split-prose">
-        <p>
-          The <a class="link" href="https://claudecapetowncommunity.com" target="_blank" rel="noopener">Claude Cape Town Community</a> ran a Claude Fable 5.1 build day: a day of live prompts, run against a fresh repo in front of the room, with the results served straight off a VM.
-          My own demo was <a class="link" href="/clawds-fable/">Clawd&rsquo;s Fable</a>, a small pixel-art platformer where Clawd, the Claude Code mascot, runs one short level stomping out shambling blobs of AI slop that mutter writing tics as they go.
-        </p>
-        <p>
-          It is one self-contained HTML file: every sprite, sound and line of dialogue is generated in code, with no libraries and no assets.
-          Arrow keys or WASD to move, space to jump, and a run takes about ninety seconds.
-        </p>
-      </div>
-      <div class="code">
-        <div class="code-hdr"><span>CLAWD&rsquo;S FABLE</span><span>PLAY</span></div>
-        <pre class="code-body"><span class="tc"># play it in the browser</span>
-<span class="tk">&gt;</span> <a class="link" href="/clawds-fable/">justanotherspy.com/clawds-fable</a>
-&nbsp;
-<span class="tc"># the community</span>
-<span class="tk">&gt;</span> <a class="link" href="https://claudecapetowncommunity.com" target="_blank" rel="noopener">claudecapetowncommunity.com</a></pre>
-      </div>
     </div>
   </div>
 </BaseLayout>

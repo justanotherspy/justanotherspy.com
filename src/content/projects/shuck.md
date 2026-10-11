@@ -3,7 +3,7 @@ title: shuck
 tag: 'CLI TOOL · GO'
 description: 'Shuck the husk, keep the kernel. A background monitor that tells you the moment CI fails on your PR, with the exact failing step logs already in hand.'
 dateLabel: 'CLI TOOL · 2026'
-stack: 'Go · go-github'
+stack: 'Go · go-github · go-git'
 version: 'v1.0.4 · 2026'
 licence: MIT
 github: 'https://github.com/justanotherspy/shuck'
@@ -37,7 +37,7 @@ Everything the monitor pushes you can also ask for directly:
 - `shuck pins` audits a checkout's workflows for actions that aren't SHA-pinned or whose pin has gone stale, and `shuck action` resolves the corrected, SHA-pinned line for one action. Everyone agrees pinning is right, and nobody does it because looking up digests by hand is tedious.
 - `shuck security` lists a repo's open code scanning, secret scanning, and Dependabot alerts.
 
-A few decisions I'd defend. Exit codes are operational: producing a report that shows failures is a success and exits `0`, with `--exit-code` to opt in to gating, because a reporting tool that defaults to failing gets wrapped in `|| true`. Security sources degrade independently: a 404 means the feature is disabled, a 403 means the token can't see it, and either way the source is reported as *skipped* instead of a false all-clear. And `--json` is a contract, versioned and kept separate from the internal types, so refactors can't quietly break whatever parses the output.
+A few decisions I'd defend. Exit codes are operational: producing a report that shows failures is a success and exits `0`, with `--exit-code` to opt in to gating, because a reporting tool that defaults to failing gets wrapped in `|| true`. Each gate belongs to the command that owns it, so `shuck pins --exit-code` and `shuck security --exit-code` are separate from the CI verdict. Security sources degrade independently: a 404 means the feature is disabled, a 403 means the token can't see it, and either way the source is reported as *skipped* instead of a false all-clear. And `--json` is a contract, versioned and kept separate from the internal types, so refactors can't quietly break whatever parses the output.
 
 Logs are cached whole under `~/.cache/shuck`, so asking the same question twice, or asking again with `--full` for more context, costs no network. Every parser of untrusted input is fuzzed, with minimized crashers committed as regression seeds before the bug gets fixed.
 
@@ -58,11 +58,11 @@ The shuck repo dogfoods this on itself: its own CI failures arrive through its o
 <span class="tk">&gt;</span> /plugin marketplace add justanotherspy/claude-plugins
 <span class="tk">&gt;</span> /plugin install shuck@justanotherspy
 &nbsp;
-<span class="tc"># or just the skill, without the plugin</span>
+<span class="tc"># or the skill alone, plus a note in ~/.claude/CLAUDE.md</span>
 <span class="tk">$</span> shuck setup</div>
 </div>
 
-Releases are built by GoReleaser with a keyless cosign signature over the checksums, SBOMs, and SLSA provenance. It's a fairly paranoid pipeline for a tool whose whole job is reading other people's CI, which felt about right. `shuck upgrade` replaces the binary in place after verifying the checksum.
+Releases are built by GoReleaser with a keyless cosign signature over the checksums, SBOMs, and SLSA provenance. It's a fairly paranoid pipeline for a tool whose whole job is reading other people's CI, which felt about right. `shuck upgrade` replaces the binary in place after verifying the checksum. There's also an install script, `go install`, and a multi-arch image on GHCR if Homebrew isn't your thing. For auth it takes `GITHUB_TOKEN`, `--token`, or falls back to a logged-in `gh`, which matters for a monitor that outlives the shell you exported a token in.
 
 ## using it
 

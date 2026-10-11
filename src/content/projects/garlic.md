@@ -37,7 +37,7 @@ garlic is a single self-contained Rust binary. No Python, no Node, nothing to in
 
 That shaped the dependencies too. Rust's standard library has no TOML parser, argument parser, or HTTP client, so there's a short and deliberately dull list of widely used crates (clap, serde, toml, chrono) pinned in a committed lockfile, with `cargo audit` running in CI on every push. I can read the whole supply chain in an afternoon, which is the idea.
 
-State lives under `~/.garlic/`: a config file and a tracking file, the latter behind a file lock so several concurrent sessions can share one honest daily total. By default nothing leaves the machine: there's no telemetry and no network calls, with two opt-in exceptions: a once-a-day version check against crates.io, and an optional self-hosted backend (a small axum + Redis service) for people running Claude across several machines who want a single shared total. garlic is local-first either way: the hooks always write locally and never block on the network, so tracking keeps working offline and syncs later.
+State lives under `~/.garlic/`: a config file and a tracking file, the latter behind a file lock so several concurrent sessions can share one honest daily total. By default nothing leaves the machine: there's no telemetry and no network calls, with two opt-in exceptions: a once-a-day version check against crates.io, and an optional self-hosted backend (a small axum + Redis service) for people running Claude across several machines who want a single shared total. garlic is local-first either way: the hooks always write locally and never block on the network, so tracking keeps working offline, and `garlic status` or `garlic sync` (handy on a cron) pushes it up later.
 
 Every nudge garlic can send is hardcoded in the source, so outside input has no way to shape what reaches your agent. You can read every possible message in a single file.
 
@@ -45,7 +45,7 @@ Every nudge garlic can send is hardcoded in the source, so outside input has no 
 
 <div class="code" style="margin-top: 14px;">
   <div class="code-hdr"><span>BASH</span><span>INSTALL &amp; SET UP</span></div>
-  <div class="code-body"><span class="tc"># the Homebrew cask (macOS; on Linux: cargo install garlic-ward)</span>
+  <div class="code-body"><span class="tc"># the Homebrew cask (macOS; elsewhere: cargo install or cargo binstall garlic-ward)</span>
 <span class="tk">$</span> brew install --cask justanotherspy/tap/garlic
 &nbsp;
 <span class="tc"># then wire the hooks into Claude Code</span>
@@ -71,11 +71,11 @@ Day to day I barely touch it; that's the point. The one command I actually look 
 <span class="tc"># turn up the bedside manner</span>
 <span class="tk">$</span> garlic set nudge_style=spicy
 &nbsp;
-<span class="tc"># done thinking about it for today (tracking continues)</span>
+<span class="tc"># no more nudges today (tracking continues; run again to undo)</span>
 <span class="tk">$</span> garlic ignore</div>
 </div>
 
-`garlic statusline` feeds a single line into Claude Code's status bar: `🧛 2h 15m / 4h · agent 1h 30m · user 45m`, my accumulated time against the daily target, split into agent and user time. The icon is the vampire while I'm working (being drained), and it flashes to garlic 🧄 for one refresh when a fresh nudge has just fired, so the ward briefly shows when garlic speaks up. There's also a `/garlic` slash command for checking the same numbers without leaving the conversation. Settings live in `~/.garlic/config.toml`, but `garlic set` edits them in place when I can't be bothered to open the file.
+`garlic statusline` feeds a single line into Claude Code's status bar: `🧛 2h 15m / 4h · agent 1h 30m · user 45m`, my accumulated time against the daily target, split into agent and user time. The icon is the vampire while I'm working (being drained), and it flashes to garlic 🧄 for one refresh when a fresh nudge has just fired, so the ward briefly shows when garlic speaks up. A `⇄` appears when sessions overlap, and `(paused)` when I've told it to stop nudging for the day. There's also a `/garlic` slash command for checking the same numbers without leaving the conversation. Settings live in `~/.garlic/config.toml`, but `garlic set` edits them in place when I can't be bothered to open the file.
 
 ## what it doesn't do
 
