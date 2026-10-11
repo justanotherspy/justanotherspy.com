@@ -30,7 +30,7 @@ const community = [
   <div class="stack-3" style="margin-bottom: 56px;">
     <div class="label">/ A PERSONAL SITE /</div>
     <h1 class="display">small tools,<br />built to be <span class="amp">read</span>.</h1>
-    <p class="lede" style="max-width: 56ch; margin-top: 6px;">
+    <p class="lede" style="margin-top: 6px;">
       I&rsquo;m <span class="redact"><span aria-hidden="true">NameRedact</span><span class="sr-only">[name redacted]</span></span>, a security and infrastructure engineer based in <span class="redact"><span aria-hidden="true">LocationRedact</span><span class="sr-only">[location redacted]</span></span>.
       I build small command line tools, most of them for working with Claude Code, and each one gets a proper write-up here: what it does, what shaped it, and what it refuses to do.
     </p>
@@ -85,10 +85,10 @@ const community = [
 
   <div class="stack-4">
     <h2 class="section"><span class="sec-num">03</span>talks &amp; build days</h2>
-    <p class="split-prose" style="max-width: 58ch;">
+    <div class="split-prose"><p>
       I give the occasional talk at Claude community events, and the slides land in <a class="link" href="https://github.com/justanotherspy/talks" target="_blank" rel="noopener">justanotherspy/talks</a>. If one leaves you with questions, open an issue there and I&rsquo;ll answer.
       At the <a class="link" href="https://claudecapetowncommunity.com" target="_blank" rel="noopener">Claude Cape Town Community</a>&rsquo;s Fable 5.1 build day I made <a class="link" href="/clawds-fable/">Clawd&rsquo;s Fable</a>, a ninety-second pixel-art platformer where Clawd, the Claude Code mascot, stomps blobs of AI slop. It&rsquo;s one self-contained HTML file with every sprite and sound generated in code, and it runs in the browser (arrow keys or WASD, space to jump).
-    </p>
+    </p></div>
     <div>
       {community.map(c => (
         <ArchiveRow href={c.href} date={c.date} title={c.title} meta={c.meta} external={c.external} />
