@@ -43,7 +43,7 @@ Every nudge garlic can send is hardcoded in the source, so outside input has no 
 
 ## install
 
-<div class="code" style="margin-top: 14px;">
+<div class="code">
   <div class="code-hdr"><span>BASH</span><span>INSTALL &amp; SET UP</span></div>
   <div class="code-body"><span class="tc"># the Homebrew cask (macOS; elsewhere: cargo install or cargo binstall garlic-ward)</span>
 <span class="tk">$</span> brew install --cask justanotherspy/tap/garlic
@@ -60,7 +60,7 @@ garlic also ships as a Claude Code plugin via my central marketplace, [justanoth
 
 Day to day I barely touch it; that's the point. The one command I actually look at is `garlic status`, which shows today's total and the agent/user split, with `--week` and `--month` for the longer view.
 
-<div class="code" style="margin-top: 14px;">
+<div class="code">
   <div class="code-hdr"><span>BASH</span><span>A TYPICAL DAY</span></div>
   <div class="code-body"><span class="tc"># how long have I been clauding today?</span>
 <span class="tk">$</span> garlic status

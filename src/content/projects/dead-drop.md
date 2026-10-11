@@ -53,7 +53,7 @@ It's covered by unit tests running inside the Workers runtime via `@cloudflare/v
 
 There's nothing to install to *use* it: you just submit the form at [/dead-drop](/dead-drop). The contract is simple enough to drive by hand, though:
 
-<div class="code" style="margin-top: 14px;">
+<div class="code">
   <div class="code-hdr"><span>BASH</span><span>A SUBMISSION</span></div>
   <div class="code-body"><span class="tc"># an anonymous drop</span>
 <span class="tk">$</span> curl -sX POST https://dead-drop.justanotherspy.com/ \
