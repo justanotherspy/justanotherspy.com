@@ -3,7 +3,7 @@ import { getCollection } from 'astro:content';
 import { renderCard, type Card } from '../../og/card';
 
 // One card per page that sets `ogImage` in BaseLayout: the fixed pages here,
-// plus one per project entry (named after its id).
+// plus one per project entry and one per post (named after its id).
 export const getStaticPaths: GetStaticPaths = async () => {
   const fixed: Array<{ card: string } & Card> = [
     {
@@ -19,6 +19,12 @@ export const getStaticPaths: GetStaticPaths = async () => {
       subtitle: 'Things I’ve made, in various states of finished.',
     },
     {
+      card: 'writing',
+      eyebrow: 'writing',
+      title: 'writing',
+      subtitle: 'Notes on the things I build and how I work with Claude.',
+    },
+    {
       card: 'dead-drop',
       eyebrow: 'anonymous · write-only',
       title: 'dead drop',
@@ -32,7 +38,14 @@ export const getStaticPaths: GetStaticPaths = async () => {
     subtitle: p.data.description,
   }));
 
-  return [...fixed, ...projects].map(({ card, ...props }) => ({ params: { card }, props }));
+  const posts = (await getCollection('writing')).map(p => ({
+    card: `writing-${p.id}`,
+    eyebrow: 'writing',
+    title: p.data.title,
+    subtitle: p.data.description,
+  }));
+
+  return [...fixed, ...projects, ...posts].map(({ card, ...props }) => ({ params: { card }, props }));
 };
 
 export const GET: APIRoute = async ({ props }) => {

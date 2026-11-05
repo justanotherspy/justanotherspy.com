@@ -1,0 +1,35 @@
+---
+import { getCollection, render } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { postDateLabel } from '../../lib/post-date';
+
+export async function getStaticPaths() {
+  const posts = await getCollection('writing');
+  return posts.map(post => ({
+    params: { slug: post.id },
+    props: { post },
+  }));
+}
+
+const { post } = Astro.props;
+const { Content } = await render(post);
+---
+<BaseLayout
+  title={`${post.data.title} · justanotherspy`}
+  description={post.data.description}
+  active="writing"
+  ogType="article"
+  ogCard={`writing-${post.id}`}
+>
+  <a href="/writing" class="btn-back">← Back to writing</a>
+
+  <div style="margin-top: 28px;">
+    <div class="meta" style="margin-bottom: 10px;">{postDateLabel(post.data.date)}</div>
+    <h1 class="page-title">{post.data.title}</h1>
+    <p class="lede" style="margin-top: 14px;">{post.data.description}</p>
+  </div>
+
+  <div class="prose" style="margin-top: 36px;">
+    <Content />
+  </div>
+</BaseLayout>
