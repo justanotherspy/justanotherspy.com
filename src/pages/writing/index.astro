@@ -1,0 +1,27 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import ArchiveRow from '../../components/ArchiveRow.astro';
+import { postDateLabel } from '../../lib/post-date';
+
+// Newest first.
+const posts = (await getCollection('writing'))
+  .sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
+---
+<BaseLayout
+  title="writing · justanotherspy"
+  description="Notes on the things I build and how I work with Claude."
+  active="writing"
+  ogCard="writing"
+>
+  <h1 class="page-title">writing</h1>
+  <p class="lede is-muted">
+    Notes on the things I build and how I work with Claude.
+  </p>
+
+  <div style="margin-top: 40px;">
+    {posts.map(p => (
+      <ArchiveRow href={`/writing/${p.id}`} date={postDateLabel(p.data.date)} title={p.data.title} />
+    ))}
+  </div>
+</BaseLayout>

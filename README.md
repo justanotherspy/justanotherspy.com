@@ -26,11 +26,13 @@ Personal portfolio site. Built with [Astro](https://astro.build) on bun.
     ├── og/
     │   ├── card.ts               # build-time Open Graph card renderer (satori + resvg)
     │   └── fonts/                # DM Serif Display + IBM Plex Mono TTFs (OFL) for the cards
-    ├── content.config.ts         # Zod-typed `projects` collection
+    ├── content.config.ts         # Zod-typed `projects` and `writing` collections
     ├── content/
-    │   └── projects/*.md         # project entries (frontmatter + body)
+    │   ├── projects/*.md         # project entries (frontmatter + body)
+    │   └── writing/*.md          # posts (frontmatter + body)
     ├── lib/
-    │   └── latest-release.ts     # build-time GitHub latest-release lookup
+    │   ├── latest-release.ts     # build-time GitHub latest-release lookup
+    │   └── post-date.ts          # date label for writing rows and post pages
     ├── styles/
     │   └── global.css            # all design tokens + component classes
     ├── layouts/
@@ -46,6 +48,8 @@ Personal portfolio site. Built with [Astro](https://astro.build) on bun.
         ├── index.astro           # home: hero, projects, plugin ecosystem, tap, talks
         ├── projects/index.astro  # all projects + work-in-progress list
         ├── projects/[slug].astro # project detail (case study + sticky sidebar)
+        ├── writing/index.astro   # all posts, newest first
+        ├── writing/[slug].astro  # one post
         ├── dead-drop.astro       # anonymous message form (client POST to external API)
         ├── 404.astro             # not-found page (GitHub Pages serves 404.html)
         ├── og/[card].png.ts      # one 1200x630 social preview PNG per page
@@ -59,6 +63,8 @@ Personal portfolio site. Built with [Astro](https://astro.build) on bun.
 | `/`                | `src/pages/index.astro`                                   |
 | `/projects`        | `src/pages/projects/index.astro`                          |
 | `/projects/<slug>` | `src/pages/projects/[slug].astro` ← `projects` collection |
+| `/writing`         | `src/pages/writing/index.astro`                           |
+| `/writing/<slug>`  | `src/pages/writing/[slug].astro` ← `writing` collection   |
 | `/dead-drop`       | `src/pages/dead-drop.astro`                               |
 | `/clawds-fable`    | `public/clawds-fable/index.html` (static, copied verbatim) |
 | `/talks/<file>.pdf` | `public/talks/*.pdf` (talk slides, copied verbatim)       |
@@ -102,9 +108,9 @@ Set it for production, or point it at a mock echo for local testing. Nothing the
 types is reflected back into the page; success is just a confirmation popup. See
 `design/dead-drop-design.md` (page) and `design/dead-drop-api.md` (API contract).
 
-## Content collection
+## Content collections
 
-The `projects` collection uses Astro's build-time `glob()` loader and a Zod schema
+Both collections use Astro's build-time `glob()` loader and a Zod schema
 defined in `src/content.config.ts`. Frontmatter is type-checked and the resulting
 types flow through `getCollection()` / `render()`.
 
@@ -114,6 +120,13 @@ types flow through `getCollection()` / `render()`.
 - `stack`, `version`, `licence` render in the sidebar `MetaCard`
 - `github` (URL), `install` (string for the install panel)
 - `order?` (number) controls sort on the home grid + projects index
+
+**`writing`** frontmatter (posts at `/writing/<slug>`, newest first):
+
+- `title`, `description` (the lede under the title, and the social card subtitle)
+- `date` (`YYYY-MM-DD`), shown as `5 NOV 2026` on the list and the post
+
+Each post gets its own social card (`/og/writing-<slug>.png`) and a sitemap entry.
 
 ### Project versions track the latest release
 

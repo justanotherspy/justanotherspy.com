@@ -3,13 +3,16 @@ import { getCollection } from 'astro:content';
 
 export const GET: APIRoute = async ({ site }) => {
   const projects = await getCollection('projects');
+  const posts = await getCollection('writing');
 
   const paths = [
     '/',
     '/projects/',
+    '/writing/',
     '/dead-drop/',
     '/clawds-fable/',
     ...projects.map(p => `/projects/${p.id}/`),
+    ...posts.map(p => `/writing/${p.id}/`),
   ];
 
   const urls = paths
