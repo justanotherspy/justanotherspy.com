@@ -4,8 +4,6 @@ description: 'No connector? No problem. All we need to do is give our Claude a p
 date: 2026-11-05
 ---
 
-## No connector? No problem.
-
 *If things go well, this will be stale in a few months*
 
 *Claude Code*'s web-hosted environment is really cool, but by design it's an ephemeral runtime. The main squeeze comes from your context, tools and chats, not the underlying container, which comes and goes. That is the one downside: if it's gone… well, it's gone.
@@ -75,6 +73,6 @@ There are five, and each can be mitigated somewhat:
 - I don't have to handle any tokens just to give Claude access to my email
 - I can bolt on new pieces easily, and the same connector can take on other CLIs too
 - Claude manages the Sprite for me, repairs included, so I don't worry about maintenance
-- I don't have to wait for someone I pay a lot of money to build a connector. Even if they did, I might not use it, given their approach to building at the moment…!
+- I don't have to wait for someone I already pay a lot of money to get round to building a connector. Even if they did, I might not use it, given their approach to building at the moment…!
 
 Not sponsored content, just talking about tech I use!

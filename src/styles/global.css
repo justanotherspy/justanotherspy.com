@@ -62,11 +62,11 @@ body[data-theme="dark"] .skip-link { background: var(--accent-dk); }
 .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
 
 /* ── Site nav ─────── */
-.site-nav { display: flex; justify-content: space-between; align-items: center; padding: 22px 56px; }
+.site-nav { display: flex; justify-content: space-between; align-items: center; gap: 16px; padding: 22px 56px; }
 .site-wm { font-family: var(--serif); font-size: 17px; color: var(--text); text-decoration: none; }
 body[data-theme="dark"] .site-wm { color: var(--text-light); }
 .site-nav-links { display: flex; gap: 22px; align-items: center; }
-.site-nav-link { font-size: 13px; color: var(--muted); text-decoration: none; transition: color 150ms ease; }
+.site-nav-link { font-size: 13px; color: var(--muted); text-decoration: none; white-space: nowrap; transition: color 150ms ease; }
 .site-nav-link:hover { color: var(--text); }
 body[data-theme="dark"] .site-nav-link { color: var(--muted-dk); }
 body[data-theme="dark"] .site-nav-link:hover { color: var(--text-light); }
@@ -302,6 +302,10 @@ body[data-theme="dark"] .prose h2 { color: var(--text-light); }
 }
 body[data-theme="dark"] .prose.is-numbered h2::before { color: var(--accent-dk); }
 
+/* justified prose: posts fill the column edge to edge, hyphenating long words so a narrow screen keeps even spacing */
+.prose.is-justified p,
+.prose.is-justified li { text-align: justify; hyphens: auto; -webkit-hyphens: auto; text-wrap: wrap; }
+
 .prose ul { padding-left: 22px; margin-bottom: 16px; }
 .prose ul li { font-size: 16px; line-height: 1.7; margin-bottom: 6px; }
 body[data-theme="dark"] .prose ul li { color: var(--text-light); }
@@ -423,8 +427,8 @@ body[data-theme="dark"] .dd-modal-body { color: var(--muted-dk); }
     padding: 36px 22px 64px;
   }
 
-  .site-nav { padding: 18px 22px; }
-  .site-nav-links { gap: 18px; }
+  .site-nav { padding: 18px 22px; flex-wrap: wrap; row-gap: 8px; }
+  .site-nav-links { gap: 14px; }
   .site-wm { font-size: 16px; }
   .site-nav-link { font-size: 13px; }
 
