@@ -11,19 +11,23 @@ Astro + bun static site. See `@README.md` for the project tour, structure, and c
 
 ## Design source of truth
 
-`design/Prototype v4.html` is the base visual identity. The outer `.page` frame, the `#E0DCD5` body, the doc-head/tabs/resp-note are **prototype harness only** and don't ship. The live site has since evolved past the prototype (notes pages removed; plugin-ecosystem, tap, and talks sections added; fluid type), so where the two disagree, the shipped `src/` is the reference. Never copy harness rules into the live styles.
+The design system is a Claude Design artifact: https://claude.ai/artifact/RbEXZgp6YzpN4SG38mPWBV (see `design/README.md`). It holds the tokens, the class layer, a guideline and preview per component, and the writing rules. Read its `project/README.md` before design work when the session can open it.
 
-`design/justanotherspy-identity-v05.html` is an older identity doc; treat it as input only.
+`src/styles/global.css` is the shipped copy: a token block that mirrors the artifact's `tokens.json`, then a class layer kept identical to its `components/bundle.css`. A design change lands in both in the same piece of work.
 
 ## Patterns to keep
 
-- Component class names match the prototype 1:1 where a prototype counterpart exists (`.proj-card`, `.archive-row`, `.pd-grid`, `.prose`, `.code`, `.site-nav`, …). New components follow the same naming style.
-- All design tokens are CSS variables in `src/styles/global.css`. Don't hardcode colors or sizes in component files; read from tokens.
-- Theming flips on `body[data-theme]`. Every component that needs different dark-mode treatment ships both rules in `global.css`. Don't introduce a separate dark stylesheet or `prefers-color-scheme` media queries in components.
+- Component class names match the design system 1:1 (`.proj-card`, `.archive-row`, `.pd-grid`, `.prose`, `.code`, `.term`, `.stamp`, `.redact`, `.site-nav`, ...). New components follow the same naming style and get added to the design system too.
+- All design tokens are CSS variables at the top of `src/styles/global.css`. Don't hardcode colors, sizes, radii or shadows in component files; read from tokens. The exceptions are places CSS variables can't reach, which copy the light values by hand: `src/og/card.ts`, the `theme-color` metas in `BaseLayout.astro` and `ThemeToggle.astro`, and `public/site.webmanifest`.
+- Theming flips on `[data-theme]` (set on both `html` and `body`). The color and shadow tokens re-scope under `[data-theme="dark"]`, so components need no dark rule of their own. Don't add `body[data-theme="dark"] .thing` rules, a separate dark stylesheet, or `prefers-color-scheme` media queries in components.
+- One accent, the stamp red. Text on an accent fill uses `--on-accent`, never a hardcoded white.
+- Motion is short and happens once: `.rise` with `--i` for stagger, `.redact--draw`, `.stamp--in`, `.type-on`, and the built-in hover states. The direct children of `<main>` rise on their own. No scroll-triggered animation, parallax, or looping animation other than the terminal caret. All of it is off under `prefers-reduced-motion: reduce`.
+- The redaction bar and the stamp are the two flourishes. One stamp per page.
+- Fonts are self-hosted from `public/fonts/` (DM Serif Display, IBM Plex Mono). No font CDN.
 - The lowercase-headings rule is intentional and applies only to display heading classes. Don't lowercase body copy, captions, stack values, or proper nouns.
 - Project markdown can contain raw HTML for the install code block + screenshot (see `src/content/projects/garlic.md`). This preserves the prose/code interleaving without bespoke per-page templates. Keep this pattern instead of adding template slots.
 - **No em or en dashes anywhere in this repo**: not in prose, comments, UI strings, or metadata. Use a comma, colon, period, or parentheses instead.
-- Site copy must stay accurate against the tool repos (garlic, shuck, claude-plugins, homebrew-tap, talks). When a tool's surface changes, the project page changes in the same spirit; don't let the site describe removed features.
+- Site copy must stay accurate against the tool repos (garlic, shuck, claude-plugins, homebrew-tap, talks). When a tool's surface changes, the project page changes in the same spirit; don't let the site describe removed features. Terminal output shown on the site (the home page `garlic statusline` line) is copied from the tool's own docs.
 
 ## Working with the user
 

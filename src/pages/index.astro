@@ -3,6 +3,7 @@ import { getCollection } from 'astro:content';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import ProjectCard from '../components/ProjectCard.astro';
 import ArchiveRow from '../components/ArchiveRow.astro';
+import Terminal from '../components/Terminal.astro';
 
 const projects = (await getCollection('projects'))
   .sort((a, b) => (a.data.order ?? 99) - (b.data.order ?? 99));
@@ -27,16 +28,24 @@ const community = [
 ];
 ---
 <BaseLayout title="justanotherspy" active="home">
-  <div class="stack-3" style="margin-bottom: 56px;">
-    <div class="label">/ A PERSONAL SITE /</div>
-    <h1 class="display">small tools,<br />built to be <span class="amp">read</span>.</h1>
-    <p class="lede" style="margin-top: 6px;">
-      I&rsquo;m <span class="redact"><span aria-hidden="true">NameRedact</span><span class="sr-only">[name redacted]</span></span>, a security and infrastructure engineer based in <span class="redact"><span aria-hidden="true">LocationRedact</span><span class="sr-only">[location redacted]</span></span>.
+  <div class="hero">
+    <div class="hero-top rise">
+      <div class="label"><span class="type-on" style="--chars:19; --ls:0.1em; --delay:200ms">/ A PERSONAL SITE /</span></div>
+      <span class="stamp stamp--in" style="--i:20">Redacted</span>
+    </div>
+    <h1 class="display rise" style="--i:1">small tools,<br />built to be <span class="amp">read</span>.</h1>
+    <p class="lede rise" style="--i:2">
+      I&rsquo;m <span class="redact redact--draw" style="--i:10"><span aria-hidden="true">NameRedact</span><span class="sr-only">[name redacted]</span></span>, a security and infrastructure engineer based in <span class="redact redact--draw" style="--i:14"><span aria-hidden="true">LocationRedact</span><span class="sr-only">[location redacted]</span></span>.
       I build small command line tools, most of them for working with Claude Code, and each one gets a proper write-up here: what it does, what shaped it, and what it refuses to do.
     </p>
+    <div class="rise" style="--i:4">
+      <Terminal title="garlic · statusline" command="garlic statusline" delay={900}>
+        <span class="term-line">🧛 <span class="term-prompt">2h 15m</span> / 4h <span class="term-dim">·</span> agent 1h 30m <span class="term-dim">·</span> user 45m</span>
+      </Terminal>
+    </div>
   </div>
 
-  <div class="stack-4" style="margin-bottom: 64px;">
+  <div class="stack-4" style="margin-bottom: var(--sp-10);">
     <div class="row-between">
       <h2 class="section"><span class="sec-num">01</span>projects</h2>
       <a href="/projects" class="link" style="font-size:13px;">All projects →</a>
@@ -55,7 +64,7 @@ const community = [
     </div>
   </div>
 
-  <div class="stack-4" style="margin-bottom: 64px;">
+  <div class="stack-4" style="margin-bottom: var(--sp-10);">
     <h2 class="section"><span class="sec-num">02</span>getting them</h2>
     <div class="split is-stacked">
       <div class="split-prose">

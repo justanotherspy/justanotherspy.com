@@ -6,20 +6,20 @@ Personal portfolio site. Built with [Astro](https://astro.build) on bun.
 
 - **Astro** (static output, file-based routing, content collections)
 - **bun** as the package manager and runtime
-- **DM Serif Display** (Google Fonts) for display / heading type; system sans + system mono otherwise
+- **DM Serif Display** for display / heading type, **IBM Plex Mono** for labels and code, system sans for body copy. Both faces are self-hosted from `public/fonts/`
 - No CSS framework, no JS framework: one global stylesheet, plain `.astro` components, a small inline theme-bootstrap script
 
 ## Structure
 
 ```text
 .
-├── design/                       # source of truth for the visual design
-│   ├── Prototype v4.html         # 4-page prototype (HTML/CSS), the approved design
-│   ├── justanotherspy-identity-v05.html  # earlier identity document (input only)
+├── design/
+│   ├── README.md                 # where the design system lives (a Claude Design artifact)
 │   ├── dead-drop-design.md       # dead drop page / UX spec
-│   ├── dead-drop-api.md          # dead drop API contract (vendor-neutral)
-│   └── instructions.md           # design-handoff notes
+│   └── dead-drop-api.md          # dead drop API contract (vendor-neutral)
 ├── public/                       # static assets served at site root
+│   ├── fonts/*.woff2             # DM Serif Display + IBM Plex Mono (OFL)
+│   ├── favicon.svg, *.png, .ico  # the "js" mark
 │   ├── clawds-fable/index.html   # Clawd's Fable, the build day game (self-contained HTML)
 │   └── talks/*.pdf               # talk slides, copied from justanotherspy/talks
 └── src/
@@ -42,7 +42,8 @@ Personal portfolio site. Built with [Astro](https://astro.build) on bun.
     │   ├── SiteFooter.astro
     │   ├── ThemeToggle.astro     # the small dot button in the nav
     │   ├── ProjectCard.astro     # default / featured / compact variants
-    │   ├── ArchiveRow.astro      # date · title · meta row (talks list)
+    │   ├── ArchiveRow.astro      # date · title · meta row (writing, talks)
+    │   ├── Terminal.astro            # terminal window with one typed command
     │   └── MetaCard.astro        # the sidebar key/value card on project pages
     └── pages/
         ├── index.astro           # home: hero, projects, plugin ecosystem, tap, talks
@@ -158,20 +159,26 @@ tokens because satori can't read CSS variables.
 
 ## Design system
 
-All tokens live as CSS custom properties at the top of `src/styles/global.css`:
+The design system is a Claude Design artifact (see `design/README.md`). `src/styles/global.css` is its shipped copy: the tokens as CSS custom properties, then the class layer.
 
 | Token | Light | Dark |
 | ----- | ----- | ---- |
-| `--bg` / `--bg-dark` | `#F5F2EE` | `#1A1814` |
-| `--text` / `--text-light` | `#1A1814` | `#F5F2EE` |
-| `--accent` / `--accent-dk` | `#A85C3A` | `#C4704A` |
-| `--muted` / `--muted-dk` | `#6B6560` | `#A8A29C` |
-| `--border` / `--border-dk` | `#D8D4CF` | `#2E2B28` |
-| `--surface` / `--surface-dk` | `#EDEAE5` | `#252220` |
+| `--bg` | `#f2f3f0` | `#121516` |
+| `--surface` | `#e7e9e5` | `#1b1f21` |
+| `--surface-2` | `#fafbf9` | `#20262a` |
+| `--text` | `#15191b` | `#eceee9` |
+| `--muted` | `#586166` | `#9aa3a6` |
+| `--border` | `#d2d6d1` | `#2b3236` |
+| `--accent` | `#b3262b` | `#f0625d` |
+| `--on-accent` | `#ffffff` | `#190909` |
+
+The color and shadow tokens re-scope under `[data-theme="dark"]`, so no component carries a dark rule. Spacing (`--sp-1` to `--sp-11`), radii, type sizes and shadows are tokens too.
 
 Type rule: only display headings (`h1.display`, `h1.page-title`, `h2.section`, `h3.sub`, `.card-title`, `.archive-title`) are lowercased. Body copy, captions, stack values, and proper nouns keep natural casing. Display sizes are fluid (`clamp()`), so they scale between phone and desktop without breakpoint jumps.
 
-Theming is handled by `body[data-theme="light" | "dark"]`; an inline script in `BaseLayout` reads `localStorage.theme` (falling back to `prefers-color-scheme`) before paint to avoid a flash, and pins the `theme-color` metas when the user has an explicit override.
+Motion: blocks rise once on load, redaction bars draw across, stamps drop in, one mono line types out, and links, cards, nav links and rows have hover states. Nothing loops except the terminal caret, nothing is triggered by scroll, and all of it is off under `prefers-reduced-motion: reduce`.
+
+Theming is handled by `data-theme="light" | "dark"` on `html` and `body`; an inline script in `BaseLayout` reads `localStorage.theme` (falling back to `prefers-color-scheme`) before paint to avoid a flash, and pins the `theme-color` metas when the user has an explicit override.
 
 House style for all copy in this repo: no em or en dashes anywhere, in prose,
 comments, or UI strings. Use a comma, colon, period, or parentheses instead.
@@ -196,4 +203,4 @@ Project case studies often interleave prose and code snippets. Markdown body
 content can include raw HTML (`<div class="code">…</div>` for the framed code
 panel, `<img>` + `<div class="img-cap">` for a captioned screenshot) at the
 right insertion points; this is how `src/content/projects/garlic.md` and
-`shuck.md` preserve the prototype's exact layout.
+`shuck.md` keep prose and code panels in step.

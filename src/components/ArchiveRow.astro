@@ -5,14 +5,17 @@ interface Props {
   title: string;
   meta?: string;
   external?: boolean;
+  /** A one or two word status, shown as a solid stamp. One per page. */
+  stamp?: string;
 }
 
-const { href, date, title, meta, external = false } = Astro.props;
+const { href, date, title, meta, external = false, stamp } = Astro.props;
 ---
 <a href={href} class="card-link-wrap" target={external ? '_blank' : undefined} rel={external ? 'noopener' : undefined}>
   <div class="archive-row">
     <div class="meta">{date}</div>
     <div class="archive-title">{title}</div>
     {meta && <div class="meta">{meta}</div>}
+    {stamp && <span class="stamp stamp--solid stamp--in" style="--i:8">{stamp}</span>}
   </div>
 </a>
