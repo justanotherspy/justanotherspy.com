@@ -7,11 +7,11 @@ import serifUrl from './fonts/DMSerifDisplay-Regular.ttf?inline';
 import serifItalicUrl from './fonts/DMSerifDisplay-Italic.ttf?inline';
 import monoUrl from './fonts/IBMPlexMono-Regular.ttf?inline';
 
-const BG = '#F5F2EE';
-const TEXT = '#1A1814';
-const ACCENT = '#A85C3A';
-const MUTED = '#6B6560';
-const BORDER = '#D8D4CF';
+const BG = '#f2f3f0';
+const TEXT = '#15191b';
+const ACCENT = '#b3262b';
+const MUTED = '#586166';
+const BORDER = '#d2d6d1';
 
 export interface Card {
   eyebrow: string;

@@ -40,7 +40,7 @@ const version = (await latestVersionLabel(project.data.github)) ?? project.data.
       <Content />
     </div>
 
-    <aside class="stack-3 pd-side" style="position: sticky; top: 28px;">
+    <aside class="stack-3 pd-side">
       <MetaCard rows={[
         { key: 'STACK', value: project.data.stack },
         { key: 'VERSION', value: version },

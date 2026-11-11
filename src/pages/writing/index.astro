@@ -20,8 +20,8 @@ const posts = (await getCollection('writing'))
   </p>
 
   <div style="margin-top: 40px;">
-    {posts.map(p => (
-      <ArchiveRow href={`/writing/${p.id}`} date={postDateLabel(p.data.date)} title={p.data.title} />
+    {posts.map((p, i) => (
+      <ArchiveRow href={`/writing/${p.id}`} date={postDateLabel(p.data.date)} title={p.data.title} stamp={i === 0 ? 'Latest' : undefined} />
     ))}
   </div>
 </BaseLayout>

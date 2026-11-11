@@ -15,7 +15,7 @@
   // default to prefers-color-scheme, which is wrong once the user overrides it.
   const syncThemeColor = (theme: string) => {
     document.querySelectorAll('meta[name="theme-color"]').forEach(meta => {
-      meta.setAttribute('content', theme === 'dark' ? '#1A1814' : '#F5F2EE');
+      meta.setAttribute('content', theme === 'dark' ? '#121516' : '#f2f3f0');
       meta.removeAttribute('media');
     });
   };

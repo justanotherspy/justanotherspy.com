@@ -2,14 +2,17 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 ---
 <BaseLayout title="not found · justanotherspy" description="This page doesn't exist." noindex>
-  <div class="stack-3">
-    <div class="label">/ 404 /</div>
-    <h1 class="display">nothing buried here.</h1>
-    <p class="lede is-muted">
+  <div class="hero">
+    <div class="hero-top rise">
+      <div class="label"><span class="type-on" style="--chars:7; --ls:0.1em; --delay:200ms">/ 404 /</span></div>
+      <span class="stamp stamp--in" style="--i:12">Not found</span>
+    </div>
+    <h1 class="display rise" style="--i:1">nothing buried here.</h1>
+    <p class="lede is-muted rise" style="--i:2">
       Whatever was at this address has been moved, removed, or never existed.
       No record of your visit was kept.
     </p>
-    <p style="margin-top: 10px;">
+    <p class="rise" style="margin-top: 10px; --i:3">
       <a href="/" class="btn-back">← Back to the start</a>
     </p>
   </div>

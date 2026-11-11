@@ -1,0 +1,19 @@
+---
+// A terminal window: one typed command, then its output. It stays dark in
+// both themes. Pass output lines in the slot as <span class="term-line">.
+interface Props {
+  title: string;
+  command: string;
+  /** ms before the command starts typing */
+  delay?: number;
+}
+
+const { title, command, delay = 0 } = Astro.props;
+const chars = command.length;
+// the output lands just after the last character (55ms each) is typed
+const outDelay = delay + chars * 55 + 160;
+---
+<div class="term" data-theme="dark">
+  <div class="term-bar">{title}</div>
+  <pre class="term-body"><span class="term-dim">~ </span><span class="term-prompt">$ </span><span class="type-on" style={`--chars:${chars}; --delay:${delay}ms`}>{command}</span><span class="term-out" style={`--delay:${outDelay}ms`}><slot /><span class="term-line"><span class="term-dim">~ </span><span class="term-prompt">$ </span><span class="caret"></span></span></span></pre>
+</div>
