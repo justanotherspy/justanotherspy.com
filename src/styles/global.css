@@ -147,7 +147,8 @@ body {
   flex-direction: column;
   transition: background-color 200ms var(--ease-out), color 200ms var(--ease-out);
 }
-main { flex: 1; }
+/* clip, not hidden: keeps the stamp's scaled first frame from widening a phone's layout */
+main { flex: 1; overflow-x: clip; }
 [data-theme] { color: var(--text); }
 ::selection { background: var(--accent); color: var(--on-accent); }
 :focus-visible { outline: 2px solid var(--focus-ring); outline-offset: 2px; border-radius: var(--radius-sm); }
@@ -253,7 +254,7 @@ a.link:hover, .prose a:hover { background-size: 100% 100%; color: var(--on-accen
 .site-footer { background: var(--footer-bg); padding: 26px var(--content-pad); display: flex; justify-content: space-between; align-items: center; }
 .site-footer-wm { font-family: var(--serif); font-style: italic; font-size: 18px; color: var(--footer-text); opacity: 0.35; }
 .footer-links { display: flex; gap: 22px; }
-.footer-link { font-size: 12px; font-family: var(--mono); color: var(--footer-link); text-decoration: none; letter-spacing: 0.04em; transition: color var(--motion-link) var(--ease-out); }
+.footer-link { padding: 12px 0; margin: -12px 0; font-size: 12px; font-family: var(--mono); color: var(--footer-link); text-decoration: none; letter-spacing: 0.04em; transition: color var(--motion-link) var(--ease-out); }
 .footer-link:hover { color: var(--footer-link-hover); }
 
 /* ── Content container ──
@@ -278,7 +279,7 @@ a.link:hover, .prose a:hover { background-size: 100% 100%; color: var(--on-accen
 .btn-primary svg { flex-shrink: 0; transition: transform var(--motion-card) var(--ease-out); }
 .btn-primary:hover svg:last-child { transform: translate(2px, -2px); }
 
-.btn-back { display: inline-block; font-family: var(--mono); font-size: 12px; color: var(--accent); text-decoration: none; letter-spacing: 0.04em; transition: transform var(--motion-card) var(--ease-out); }
+.btn-back { display: inline-block; padding: 10px 0; margin: -10px 0; font-family: var(--mono); font-size: 12px; color: var(--accent); text-decoration: none; letter-spacing: 0.04em; transition: transform var(--motion-card) var(--ease-out); }
 .btn-back:hover { transform: translateX(-3px); }
 
 /* ── Project card ── */
