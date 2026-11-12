@@ -10,7 +10,7 @@ export const getStaticPaths: GetStaticPaths = async () => {
       card: 'home',
       eyebrow: 'a personal site',
       title: 'small tools, built to be read.',
-      subtitle: 'Command line tools by a security engineer, most of them for Claude Code.',
+      subtitle: 'Command line tools by a site reliability engineer, most of them for Claude Code.',
     },
     {
       card: 'projects',
