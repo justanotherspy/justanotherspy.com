@@ -4,9 +4,15 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import ProjectCard from '../components/ProjectCard.astro';
 import ArchiveRow from '../components/ArchiveRow.astro';
 import Terminal from '../components/Terminal.astro';
+import { postDateLabel } from '../lib/post-date';
 
 const projects = (await getCollection('projects'))
   .sort((a, b) => (a.data.order ?? 99) - (b.data.order ?? 99));
+
+// The five newest posts.
+const posts = (await getCollection('writing'))
+  .sort((a, b) => b.data.date.getTime() - a.data.date.getTime())
+  .slice(0, 5);
 
 // Talks and community events, newest first. Talk slides are copied into
 // public/talks/ so they open in the browser's own PDF viewer.
@@ -35,7 +41,8 @@ const community = [
     </div>
     <h1 class="display rise" style="--i:1">small tools,<br />built to be <span class="amp">read</span>.</h1>
     <p class="lede rise" style="--i:2">
-      I&rsquo;m <span class="redact redact--draw" style="--i:10"><span aria-hidden="true">NameRedact</span><span class="sr-only">[name redacted]</span></span>, a security and infrastructure engineer based in <span class="redact redact--draw" style="--i:14"><span aria-hidden="true">LocationRedact</span><span class="sr-only">[location redacted]</span></span>.
+      I&rsquo;m <span class="redact redact--draw redact--reveal" style="--i:10" tabindex="0"><span>Daniel</span></span>, a site reliability engineer based in <span class="redact redact--draw redact--reveal" style="--i:14" tabindex="0"><span>Cape Town</span></span>, with a focus on platform, security, CI/CD, cloud infrastructure and AI.
+      I&rsquo;m also a Claude Ambassador, and I host events in the city.
       I build small command line tools, most of them for working with Claude Code, and each one gets a proper write-up here: what it does, what shaped it, and what it refuses to do.
     </p>
     <div class="rise" style="--i:4">
@@ -92,8 +99,20 @@ const community = [
     </div>
   </div>
 
+  <div class="stack-4" style="margin-bottom: var(--sp-10);">
+    <div class="row-between">
+      <h2 class="section"><span class="sec-num">03</span>writing</h2>
+      <a href="/writing" class="link" style="font-size:13px;">All writing →</a>
+    </div>
+    <div>
+      {posts.map(p => (
+        <ArchiveRow href={`/writing/${p.id}`} date={postDateLabel(p.data.date)} title={p.data.title} />
+      ))}
+    </div>
+  </div>
+
   <div class="stack-4">
-    <h2 class="section"><span class="sec-num">03</span>talks &amp; build days</h2>
+    <h2 class="section"><span class="sec-num">04</span>talks &amp; build days</h2>
     <div class="split-prose"><p>
       I give the occasional talk at Claude community events, and the slides land in <a class="link" href="https://github.com/justanotherspy/talks" target="_blank" rel="noopener">justanotherspy/talks</a>. If one leaves you with questions, open an issue there and I&rsquo;ll answer.
       At the <a class="link" href="https://claudecapetowncommunity.com" target="_blank" rel="noopener">Claude Cape Town Community</a>&rsquo;s Fable 5.1 build day I made <a class="link" href="/clawds-fable/">Clawd&rsquo;s Fable</a>, a ninety-second pixel-art platformer where Clawd, the Claude Code mascot, stomps blobs of AI slop. It&rsquo;s one self-contained HTML file with every sprite and sound generated in code, and it runs in the browser (arrow keys or WASD, space to jump).

@@ -200,13 +200,16 @@ a.link:hover, .prose a:hover { background-size: 100% 100%; color: var(--on-accen
   padding: 0 6px; border-radius: var(--radius-sm); user-select: none; position: relative;
 }
 .redact > span:first-child { color: transparent; }
-/* .redact--reveal: the bar wipes off on hover or focus and the word shows */
+/* .redact--reveal: the bar wipes off on hover, tap or focus and the word shows.
+   Plain :focus (not :focus-visible) so a tap on a phone, which focuses the bar, reveals it too. */
 .redact--reveal { cursor: help; transition: background-size var(--motion-reveal) var(--ease-out); }
 .redact--reveal > span:first-child { transition: color var(--motion-fast) linear; }
-.redact--reveal:hover, .redact--reveal:focus-visible { background-size: 0% 100%; }
-.redact--reveal:hover > span:first-child, .redact--reveal:focus-visible > span:first-child { color: inherit; transition-delay: 160ms; }
+.redact--reveal:hover, .redact--reveal:focus { background-size: 0% 100%; }
+.redact--reveal:hover > span:first-child, .redact--reveal:focus > span:first-child { color: inherit; transition-delay: 160ms; }
 /* .redact--draw: the bar draws across once, on load */
 .redact--draw { animation: redact-draw var(--motion-reveal) var(--ease-out) both; animation-delay: calc(var(--i, 0) * var(--stagger)); background-position: 0 0; }
+/* Drawn and revealable: let go of the bar once it is drawn, so the reveal can wipe it off */
+.redact--draw.redact--reveal { animation-fill-mode: backwards; }
 @keyframes redact-draw { from { background-size: 0% 100%; } to { background-size: 100% 100%; } }
 
 /* ── Stamp ── */
